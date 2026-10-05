@@ -65,18 +65,17 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C12] via-[#0A0C12]/75 via-45% to-[#0A0C12]/10 lg:hidden" />
       <div className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0C12]/90 to-transparent lg:block" />
 
-      {/* Content — left, vertically centered on desktop; bottom-aligned on mobile */}
-      <div className="relative z-10 flex h-full items-end pb-44 lg:items-center lg:pb-16">
+      {/* Content — left side, vertically centered */}
+      <div className="relative z-10 flex h-full items-center">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="max-w-xl">
+          <div className="max-w-xl text-left">
             {active.eyebrow && (
               <p className="mb-5 flex items-center gap-3 text-sm font-medium text-[#F5A623]">
-             
                 {active.eyebrow}
               </p>
             )}
 
-            <h1 className="mb-5 text-[2.5rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            <h1 className="mb-5 text-[2.5rem] font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
               {active.heading}
             </h1>
 
