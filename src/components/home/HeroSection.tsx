@@ -15,13 +15,6 @@ interface HeroSectionProps {
 
 const SLIDE_MS = 6000;
 
-const FEATURES = [
-  { icon: Shield, label: 'Custom teamwear' },
-  { icon: Layers, label: 'Wide product range' },
-  { icon: Award, label: 'Top sports brands' },
-  { icon: Truck, label: 'Pan India delivery' },
-];
-
 export function HeroSection({ slides, company }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
 
@@ -61,7 +54,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               fill
               sizes="100vw"
               priority={i === 0}
-              className="object-cover object-[72%_center] lg:object-right"
+              className="object-contain object-[72%_center] lg:object-right"
             />
           )}
         </div>
