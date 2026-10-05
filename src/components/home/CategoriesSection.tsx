@@ -16,22 +16,22 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const offset = direction === 'left' ? -380 : 380;
-      scrollContainerRef.current.scrollBy({ left: offset, behavior: 'smooth' });
-    }
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const offset = direction === 'left' ? -400 : 400;
+    el.scrollBy({ left: offset, behavior: 'smooth' });
   };
 
   const activeCategories = (categories || []).filter((c) => c.is_active);
 
   if (activeCategories.length === 0) {
     return (
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="EXPLORE"
-          title="SHOP THE GAME"
-          highlightWord="GAME"
-          subtitle="Quality Equipment for Every Sport"
+          eyebrow="Explore"
+          title="Shop the game"
+          highlightWord="game"
+          subtitle="Quality equipment for every sport"
         />
         <EmptyState
           icon={Trophy}
@@ -45,86 +45,84 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   }
 
   return (
-    <section className="py-20 relative overflow-hidden bg-[#080A0F]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-[#080A0F] py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="EXPLORE"
-          title="SHOP THE GAME"
-          highlightWord="GAME"
-          subtitle="Quality Equipment for Every Sport"
+          eyebrow="Explore"
+          title="Shop the game"
+          highlightWord="game"
+          subtitle="Quality equipment for every sport"
           align="between"
           action={
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden items-center gap-2 sm:flex">
               <button
                 onClick={() => scroll('left')}
-                aria-label="Scroll Categories Left"
-                className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+                aria-label="Scroll categories left"
+                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => scroll('right')}
-                aria-label="Scroll Categories Right"
-                className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+                aria-label="Scroll categories right"
+                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           }
         />
 
-        {/* Categories Grid / Horizontal Scroll on mobile */}
+        {/* Horizontal scroller with snap; arrows above scroll it */}
         <div
           ref={scrollContainerRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {activeCategories.map((category, index) => {
-            const indexNumber = String(index + 1).padStart(2, '0');
+          {activeCategories.map((category, index) => (
+            <Link
+              key={category.id}
+              href={`/collections/${category.slug}`}
+              className="group relative min-h-[210px] w-[90%] shrink-0 snap-start overflow-hidden rounded-2xl bg-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623] sm:w-[420px] lg:w-[460px]"
+            >
+              {/* Photo, pushed right and darkened */}
+              {category.image_url ? (
+                <Image
+                  src={category.image_url}
+                  alt=""
+                  fill
+                  sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 85vw"
+                  className="object-cover object-right transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
+                />
+              ) : (
+                <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />
+              )}
 
-            return (
-              <Link
-                key={category.id}
-                href={`/collections/${category.slug}`}
-                className="group relative h-64 rounded-3xl overflow-hidden bg-gradient-to-br from-[#141923] via-[#0E121B] to-[#0A0D14] p-7 flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-[#F5A623]/10"
-              >
-                {/* Background image with smooth gradient overlay */}
-                {category.image_url ? (
-                  <div className="absolute inset-0 z-0">
-                    <Image
-                      src={category.image_url}
-                      alt={category.name}
-                      fill
-                      className="object-cover object-right group-hover:scale-105 transition-transform duration-700 opacity-60 mix-blend-luminosity group-hover:opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0E121B] via-[#0E121B]/80 to-transparent" />
-                  </div>
-                ) : (
-                  <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-[#F5A623]/5 blur-2xl group-hover:bg-[#F5A623]/10 transition-colors pointer-events-none" />
+              {/* Lighter fade: only darkens the text side, photo stays clear */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/30 to-transparent" />
+
+              {/* Content */}
+              <div className="relative flex h-full min-h-[210px] flex-col justify-center p-6 sm:p-7">
+                <span className="mb-1 text-sm font-medium tabular-nums text-[#F5A623]">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
+                <h3 className="text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl">
+                  {category.name}
+                </h3>
+
+                {category.short_description && (
+                  <p className="mt-1 line-clamp-2 max-w-[16rem] text-sm text-gray-400">
+                    {category.short_description}
+                  </p>
                 )}
 
-                {/* Content */}
-                <div className="relative z-10">
-                  <span className="text-xs font-mono font-bold tracking-widest text-[#F5A623]/80">
-                    {indexNumber}
-                  </span>
-                  <h3 className="text-2xl font-black uppercase tracking-tight text-white mt-1 group-hover:text-[#F5A623] transition-colors">
-                    {category.name}
-                  </h3>
-                  {category.short_description && (
-                    <p className="text-xs text-gray-400 mt-1 max-w-[200px] line-clamp-2">
-                      {category.short_description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Action Link */}
-                <div className="relative z-10 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#F5A623] group-hover:text-white transition-colors">
-                  <span>Explore</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
-                </div>
-              </Link>
-            );
-          })}
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#F5A623]">
+                  Explore
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
