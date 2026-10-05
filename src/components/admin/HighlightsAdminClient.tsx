@@ -67,7 +67,7 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
   const labelCls = 'block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2';
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-7xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black uppercase tracking-tight text-white">Business Highlights</h1>

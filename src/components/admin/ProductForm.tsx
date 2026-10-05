@@ -195,7 +195,7 @@ export function ProductForm({ initialData, mode, categories, brands }: ProductFo
   const labelCls = 'block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2';
 
   return (
-    <form onSubmit={handleSave} className="space-y-6 max-w-4xl">
+    <form onSubmit={handleSave} className="space-y-6 max-w-7xl">
       {saveStatus === 'error' && (
         <div className="p-4 rounded-xl bg-red-950/40 border border-red-700/40 flex items-center gap-3 text-red-300 text-sm">
           <AlertCircle className="w-4 h-4 shrink-0" /> <span>{errorMsg}</span>
