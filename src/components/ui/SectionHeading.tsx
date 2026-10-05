@@ -20,39 +20,48 @@ export function SectionHeading({
   align = 'left',
   action,
 }: SectionHeadingProps) {
-  // If highlightWord is provided, split the title and colorize that word
   let renderedTitle: React.ReactNode = title;
   if (highlightWord && title.includes(highlightWord)) {
     const parts = title.split(highlightWord);
     renderedTitle = (
       <>
         {parts[0]}
-        <span className="text-[#F5A623]">{highlightWord}</span>
+        <span className="relative whitespace-nowrap text-[#F5A623]">
+          {highlightWord}
+          {/* soft underline stroke */}
+       
+        </span>
         {parts.slice(1).join(highlightWord)}
       </>
     );
   }
 
+  const centered = align === 'center';
+
   return (
     <div
       className={cn(
-        'mb-8 sm:mb-12',
-        align === 'center' && 'text-center max-w-2xl mx-auto',
-        align === 'between' && 'flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4',
+        'mb-10 sm:mb-14',
+        centered && 'mx-auto max-w-2xl text-center',
+        align === 'between' &&
+          'flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between',
         className
       )}
     >
-      <div>
-        {eyebrow && (
-          <p className="text-xs uppercase tracking-[0.25em] font-semibold text-[#F5A623] mb-2">
-            {eyebrow}
-          </p>
-        )}
-        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold uppercase tracking-tight text-white leading-tight">
+      <div className={cn(centered && 'flex flex-col items-center')}>
+        
+
+        <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl uppercase">
           {renderedTitle}
         </h2>
+
         {subtitle && (
-          <p className="mt-2.5 text-sm sm:text-base text-gray-400 font-normal max-w-xl">
+          <p
+            className={cn(
+              'mt-4 max-w-xl text-xs md:text-sm m-0 leading-relaxed text-gray-400',
+              centered && 'mx-auto'
+            )}
+          >
             {subtitle}
           </p>
         )}
