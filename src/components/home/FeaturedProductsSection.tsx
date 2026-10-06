@@ -3,107 +3,94 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product, CompanySettings } from '@/types/database';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
-import { ArrowRight, Tag } from 'lucide-react';
+import { FEATURED_BG_COLORS } from '@/lib/featuredColors';
+import type { FeaturedColorOption } from '@/lib/featuredColors';
+import { Tag } from 'lucide-react';
+
+interface FeaturedSettings {
+  colorId: string;
+  color: FeaturedColorOption;
+  /** Per-card override: productId → colorId */
+  cardColors?: Record<string, string>;
+}
 
 interface FeaturedProductsSectionProps {
   products: Product[];
   company?: CompanySettings | null;
+  settings?: FeaturedSettings | null;
+  /** Short text shown under the heading on the left */
+  description?: string;
 }
 
-export function FeaturedProductsSection({ products, company }: FeaturedProductsSectionProps) {
-  // If there are no featured products from Supabase, cleanly hide the section (per requirements)
-  if (!products || products.length === 0) {
-    return null;
-  }
+const DEFAULT_DESCRIPTION =
+  'Hand-picked gear our team trusts. Browse the top picks and open any product for full details.';
+
+export function FeaturedProductsSection({
+  products,
+  settings,
+  description = DEFAULT_DESCRIPTION,
+}: FeaturedProductsSectionProps) {
+  if (!products || products.length === 0) return null;
+
+  const sectionColor = settings?.color ?? FEATURED_BG_COLORS[0];
+
+  /** Card background: per-card override or section default */
+  const getCardBg = (productId: string): string => {
+    const overrideId = settings?.cardColors?.[productId];
+    if (overrideId) {
+      const override = FEATURED_BG_COLORS.find((c) => c.id === overrideId);
+      if (override) return override.cardBg;
+    }
+    return sectionColor.cardBg;
+  };
 
   return (
-    <section className="py-20 bg-[#06080C] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="EQUIPMENT & GEAR"
-          title="FEATURED PRODUCTS"
-          highlightWord="PRODUCTS"
-          subtitle="Engineered for peak performance, tournaments and intense training"
-          align="between"
-          action={
-            <Link
-              href="/collections"
-              className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-wider text-[#F5A623] hover:text-white transition-colors"
-            >
-              <span>View All Products</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          }
-        />
+    <section style={{ backgroundColor: sectionColor.sectionBg }} className="py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Top: heading, then short description, both left-aligned */}
+        <div className="mb-10 sm:mb-12">
+          <SectionHeading
+            eyebrow="Equipment & gear"
+            title="Featured products"
+            highlightWord="products"
+            align="left"
+            className="!mb-0 !pb-0 [&_*]:!mb-0 [&_*]:!pb-0"
+          />
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+            {description}
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="group rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black"
+        {/* Bottom: products */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
+          {products.map((p) => (
+            <Link
+              key={p.id}
+              href={`/products/${p.slug}`}
+              className="group block focus-visible:outline-none"
             >
-              {/* Product Image */}
-              <Link
-                href={`/products/${product.slug}`}
-                className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-6 overflow-hidden block"
+              <div
+                className="relative aspect-[4/5] overflow-hidden rounded-2xl transition-shadow duration-300 group-hover:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-[#F5A623]"
+                style={{ backgroundColor: getCardBg(p.id) }}
               >
-                {product.image_url ? (
+                {p.image_url ? (
                   <Image
-                    src={product.image_url}
-                    alt={product.name}
+                    src={p.image_url}
+                    alt={p.name}
                     fill
-                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                    className="object-contain p-4 transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center text-gray-600">
-                    <Tag className="w-10 h-10 mb-2 text-gray-500" />
-                    <span className="text-xs uppercase tracking-wider">Product Gear</span>
+                  <div className="flex h-full items-center justify-center text-white/40">
+                    <Tag className="h-8 w-8" />
                   </div>
                 )}
-
-                {product.brand?.name && (
-                  <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-                    {product.brand.name}
-                  </div>
-                )}
-              </Link>
-
-              {/* Product Info */}
-              <div className="p-6 flex flex-col flex-1 justify-between">
-                <div>
-                  {product.category?.name && (
-                    <p className="text-[11px] font-semibold text-[#F5A623] uppercase tracking-wider mb-1">
-                      {product.category.name}
-                    </p>
-                  )}
-                  <Link href={`/products/${product.slug}`}>
-                    <h3 className="text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                  </Link>
-                  {product.short_description && (
-                    <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
-                      {product.short_description}
-                    </p>
-                  )}
-                </div>
-
-                {/* WhatsApp Enquiry Button */}
-                <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between gap-3">
-                  <WhatsAppButton
-                    phoneNumber={company?.whatsapp_number}
-                    type="product"
-                    productName={product.name}
-                    variant="whatsapp"
-                    size="sm"
-                    className="w-full justify-center"
-                  >
-                    Enquire on WhatsApp
-                  </WhatsAppButton>
-                </div>
               </div>
-            </div>
+              <h3 className="mt-3 line-clamp-2 text-center text-sm font-semibold text-white sm:text-base">
+                {p.name}
+              </h3>
+            </Link>
           ))}
         </div>
       </div>
