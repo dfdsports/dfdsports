@@ -733,7 +733,7 @@ export function Header({ company }: HeaderProps) {
           {/* Glowing Search Bar */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center gap-3.5 rounded-2xl border border-white/20 bg-[#0E121B]/95 px-5 py-4 shadow-2xl shadow-black/80 backdrop-blur-xl"
+            className="flex items-center gap-3.5 rounded-2xl  bg-[#0E121B]/95 px-5 py-4 shadow-2xl shadow-black/80 backdrop-blur-xl"
           >
             {searchLoading ? (
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#F5A623]" />
@@ -770,7 +770,7 @@ export function Header({ company }: HeaderProps) {
 
           {/* Suggestions Dropdown (ONLY shown when typing search query) */}
           {searchQuery.trim().length > 0 && (
-            <div className="mt-3 overflow-hidden rounded-2xl border border-white/15 bg-[#0B0E14]/95 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="mt-3 overflow-hidden rounded-2xl bg-[#0B0E14]/95 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
               {searchLoading ? (
                 <div className="px-5 py-8 flex items-center justify-center gap-2 text-gray-400 text-sm">
                   <Loader2 className="w-4 h-4 animate-spin text-[#F5A623]" />
@@ -778,7 +778,7 @@ export function Header({ company }: HeaderProps) {
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="px-5 pt-4 pb-2 flex items-center justify-between border-b border-white/5">
+                  <div className="px-5 pt-4 pb-2 flex items-center justify-between">
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                       Suggested Products ({searchResults.length})
                     </p>
@@ -822,7 +822,7 @@ export function Header({ company }: HeaderProps) {
                   <Link
                     href={`/collections?q=${encodeURIComponent(searchQuery.trim())}`}
                     onClick={() => setSearchOpen(false)}
-                    className="block border-t border-white/10 px-5 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                    className="block px-5 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
                   >
                     View all matching results for &ldquo;{searchQuery.trim()}&rdquo; →
                   </Link>

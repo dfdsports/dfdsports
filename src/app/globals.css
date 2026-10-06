@@ -75,3 +75,39 @@
   transform: translateY(-4px);
   box-shadow: 0 20px 40px -15px rgba(245, 166, 35, 0.12), 0 10px 25px -10px rgba(0, 0, 0, 0.8);
 }
+
+/* Dual range slider utility */
+.range-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #F5A623;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #080A0F;
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.range-slider-input::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.range-slider-input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #F5A623;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #080A0F;
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.range-slider-input::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
