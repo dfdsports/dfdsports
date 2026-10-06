@@ -39,7 +39,9 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadingMobile, setUploadingMobile] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const mobileFileRef = useRef<HTMLInputElement>(null);
 
   const openCreate = () => { setEditing(null); setForm({ ...emptySlide, display_order: slides.length }); setShowForm(true); setError(''); };
   const openEdit = (slide: HeroSlide) => {
@@ -85,6 +87,23 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
     }
   };
 
+  const handleMobileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingMobile(true);
+    try {
+      if (form.mobile_image_url) {
+        await deleteImageFromCloudinary(form.mobile_image_url);
+      }
+      const url = await uploadImageToCloudinary(file, 'dfd-sports/heroes');
+      setForm((p) => ({ ...p, mobile_image_url: url }));
+    } catch (err: any) {
+      setError('Mobile upload failed: ' + err?.message);
+    } finally {
+      setUploadingMobile(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -111,6 +130,9 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
     try {
       if (slide.image_url) {
         await deleteImageFromCloudinary(slide.image_url);
+      }
+      if (slide.mobile_image_url) {
+        await deleteImageFromCloudinary(slide.mobile_image_url);
       }
       const supabase = createClient();
       await supabase.from('hero_slides').delete().eq('id', slide.id);
@@ -191,29 +213,55 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             </div>
           </div>
 
-          {/* Image Upload */}
-          <div>
-            <label className={labelCls}>Hero Background Image</label>
-            <div className="flex items-center gap-4 mb-3">
-              {form.image_url && (
-                <div className="relative w-40 h-24 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
-                  <Image src={form.image_url} alt="Preview" fill className="object-cover" />
-                  <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <Upload className="w-4 h-4 text-amber-600" /> {uploading ? 'Uploading...' : 'Upload Hero Image'}
-              </button>
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+          {/* Image Uploads: Desktop + Mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className={labelCls}>Desktop Background Image</label>
+              <div className="flex items-center gap-4 mb-3">
+                {form.image_url && (
+                  <div className="relative w-32 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
+                    <Image src={form.image_url} alt="Desktop Preview" fill className="object-cover" />
+                    <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 text-amber-600" /> {uploading ? 'Uploading...' : 'Upload Desktop'}
+                </button>
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+              </div>
+              <input name="image_url" value={form.image_url} onChange={handleChange} className={inputCls} placeholder="Or paste desktop image URL" />
             </div>
-            <input name="image_url" value={form.image_url} onChange={handleChange} className={inputCls} placeholder="Or paste image URL" />
+
+            <div>
+              <label className={labelCls}>Mobile Banner Image (Optional)</label>
+              <div className="flex items-center gap-4 mb-3">
+                {form.mobile_image_url && (
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
+                    <Image src={form.mobile_image_url} alt="Mobile Preview" fill className="object-cover" />
+                    <button type="button" onClick={() => setForm((p) => ({ ...p, mobile_image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => mobileFileRef.current?.click()}
+                  disabled={uploadingMobile}
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 text-amber-600" /> {uploadingMobile ? 'Uploading...' : 'Upload Mobile'}
+                </button>
+                <input ref={mobileFileRef} type="file" accept="image/*" className="hidden" onChange={handleMobileUpload} />
+              </div>
+              <input name="mobile_image_url" value={form.mobile_image_url} onChange={handleChange} className={inputCls} placeholder="Or paste mobile image URL" />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -232,7 +280,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
           <div className="flex items-center gap-4 pt-3 border-t border-slate-100">
             <button
               type="submit"
-              disabled={isPending || uploading}
+              disabled={isPending || uploading || uploadingMobile}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
@@ -275,6 +323,8 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
               <div className="relative w-28 h-18 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                 {slide.image_url ? (
                   <Image src={slide.image_url} alt={slide.heading} fill className="object-cover" />
+                ) : slide.mobile_image_url ? (
+                  <Image src={slide.mobile_image_url} alt={slide.heading} fill className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center"><ImageIcon className="w-5 h-5 text-slate-400" /></div>
                 )}
@@ -288,6 +338,11 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                     {slide.is_active ? 'Active' : 'Hidden'}
                   </span>
                   <span className="text-[11px] text-slate-400 font-mono">Order: {slide.display_order}</span>
+                  {slide.mobile_image_url && (
+                    <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                      Mobile banner set
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
