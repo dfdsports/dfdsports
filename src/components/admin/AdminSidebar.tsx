@@ -14,29 +14,69 @@ import {
   Shirt,
   Gauge,
   Mail,
-  Settings,
+  ShoppingBag,
   LogOut,
   Menu,
   X,
   ChevronRight,
   ShieldCheck,
   Star,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const navItems = [
-  { label: 'Overview', href: '/admin', icon: LayoutDashboard, exact: true },
-  { label: 'Company Details', href: '/admin/company', icon: Building2 },
-  { label: 'Hero Banners', href: '/admin/hero', icon: ImageIcon },
-  { label: 'Categories', href: '/admin/categories', icon: Layers },
-  { label: 'Products', href: '/admin/products', icon: Package },
-  { label: 'Featured Products', href: '/admin/featured', icon: Star },
-  { label: 'Brands', href: '/admin/brands', icon: Tag },
-  { label: 'Custom Teamwear', href: '/admin/teamwear', icon: Shirt },
-  { label: 'Fabrics', href: '/admin/fabrics', icon: Gauge },
-  { label: 'Highlights', href: '/admin/highlights', icon: Gauge },
-  { label: 'Why Choose Us', href: '/admin/why-choose-us', icon: ShieldCheck },
-  { label: 'Enquiries', href: '/admin/enquiries', icon: Mail },
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  exact?: boolean;
+  badge?: string;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+const navSections: NavSection[] = [
+  {
+    title: 'Main',
+    items: [
+      { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
+    ],
+  },
+  {
+    title: 'Sales & Inquiries',
+    items: [
+      { label: 'Orders', href: '/admin/orders', icon: ShoppingBag, badge: 'Live' },
+      { label: 'Enquiries', href: '/admin/enquiries', icon: Mail },
+    ],
+  },
+  {
+    title: 'Catalog Management',
+    items: [
+      { label: 'Products', href: '/admin/products', icon: Package },
+      { label: 'Categories', href: '/admin/categories', icon: Layers },
+      { label: 'Featured Products', href: '/admin/featured', icon: Star },
+      { label: 'Brands', href: '/admin/brands', icon: Tag },
+    ],
+  },
+  {
+    title: 'Customization & Tech',
+    items: [
+      { label: 'Custom Teamwear', href: '/admin/teamwear', icon: Shirt },
+      { label: 'Fabrics & Tech', href: '/admin/fabrics', icon: Gauge },
+      { label: 'Highlights', href: '/admin/highlights', icon: Gauge },
+    ],
+  },
+  {
+    title: 'Store Settings',
+    items: [
+      { label: 'Hero Banners', href: '/admin/hero', icon: ImageIcon },
+      { label: 'Company Details', href: '/admin/company', icon: Building2 },
+      { label: 'Why Choose Us', href: '/admin/why-choose-us', icon: ShieldCheck },
+    ],
+  },
 ];
 
 interface AdminSidebarProps {
@@ -57,76 +97,118 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
     router.refresh();
   };
 
-  const isActive = (item: { href: string; exact?: boolean }) => {
+  const isActive = (item: NavItem) => {
     if (item.exact) return pathname === item.href;
     return pathname.startsWith(item.href);
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="p-6 border-b border-white/5">
-        <Link href="/admin" className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1E3A8A] to-[#F5A623] flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-white" />
+    <div className="flex flex-col h-full bg-gradient-to-b from-[#0F172A] via-[#131E35] to-[#0A1020] text-white border-r border-slate-800 shadow-2xl">
+      {/* Brand Header */}
+      <div className="p-5 border-b border-slate-800/80">
+        <Link href="/admin" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <ShieldCheck className="w-5 h-5 text-slate-950 font-bold" />
           </div>
-          <div>
-            <p className="text-sm font-black uppercase tracking-tight text-white">DFD Sports</p>
-            <p className="text-[10px] text-gray-400 font-medium">Admin Portal</p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-black uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                DFD Sports
+              </span>
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                PRO
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium truncate">Admin Management</p>
           </div>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const active = isActive(item);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
-                active
-                  ? 'bg-[#F5A623]/10 text-[#F5A623] font-semibold'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+      {/* Navigation with Section Headings */}
+      <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto custom-scrollbar">
+        {navSections.map((section, sIdx) => (
+          <div key={section.title} className="space-y-1">
+            {/* Section Heading */}
+            <div className="px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-amber-400/80 flex items-center justify-between">
+              <span>{section.title}</span>
+              {sIdx === 0 && (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               )}
-            >
-              <item.icon className={cn('w-4 h-4 shrink-0', active ? 'text-[#F5A623]' : 'text-gray-500')} />
-              <span>{item.label}</span>
-              {active && <ChevronRight className="w-3 h-3 ml-auto text-[#F5A623]" />}
-            </Link>
-          );
-        })}
+            </div>
+
+            {/* Section Items */}
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const active = isActive(item);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative',
+                      active
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 font-bold'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        'w-4 h-4 shrink-0 transition-transform group-hover:scale-110',
+                        active ? 'text-slate-950' : 'text-slate-400 group-hover:text-amber-400'
+                      )}
+                    />
+                    <span className="truncate">{item.label}</span>
+
+                    {item.badge && !active && (
+                      <span className="ml-auto px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                        {item.badge}
+                      </span>
+                    )}
+
+                    {active && (
+                      <ChevronRight className="w-3.5 h-3.5 ml-auto text-slate-950 shrink-0" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
-      {/* Footer: User info and logout */}
-      <div className="p-4 border-t border-white/5 space-y-3">
+      {/* Footer Section */}
+      <div className="p-3 border-t border-slate-800/80 space-y-2 bg-[#0a0f1d]/60">
         <Link
           href="/"
           target="_blank"
-          className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors px-3 py-2 rounded-lg hover:bg-white/5"
+          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all border border-slate-800"
         >
-          <ChevronRight className="w-3.5 h-3.5 rotate-180" />
-          <span>View Public Website</span>
+          <span className="flex items-center gap-2">
+            <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+            <span>View Public Store</span>
+          </span>
+          <ChevronRight className="w-3 h-3 text-slate-500" />
         </Link>
 
-        <div className="px-3 py-3 rounded-xl bg-white/5">
-          <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider mb-0.5">
-            Logged in as
-          </p>
-          <p className="text-xs text-white font-semibold truncate">{userEmail || 'Admin'}</p>
+        {/* User Card */}
+        <div className="p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] text-slate-400 font-medium">Logged in</p>
+            <p className="text-xs text-slate-200 font-bold truncate">
+              {userEmail || 'Administrator'}
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            title="Sign Out"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors shrink-0"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
-
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all"
-        >
-          <LogOut className="w-4 h-4 text-gray-500" />
-          <span>{loggingOut ? 'Signing out...' : 'Sign Out'}</span>
-        </button>
       </div>
     </div>
   );
@@ -134,22 +216,22 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-[#0B0E16] h-screen sticky top-0 overflow-hidden">
+      <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 overflow-hidden z-30">
         <SidebarContent />
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0B0E16] border-b border-white/5 sticky top-0 z-50">
-        <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#1E3A8A] to-[#F5A623] flex items-center justify-center">
-            <ShieldCheck className="w-4 h-4 text-white" />
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800 sticky top-0 z-50">
+        <Link href="/admin" className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center">
+            <ShieldCheck className="w-4 h-4 text-slate-950 font-bold" />
           </div>
-          <span className="text-sm font-black uppercase text-white">DFD Admin</span>
+          <span className="text-sm font-black uppercase text-white tracking-tight">DFD Admin</span>
         </Link>
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 text-gray-400 hover:text-white"
+          className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-colors"
           aria-label="Toggle admin menu"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -158,12 +240,12 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
 
       {/* Mobile Drawer Overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 flex">
+        <div className="lg:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm animate-in fade-in"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="relative w-72 bg-[#0B0E16] h-full overflow-y-auto z-50">
+          <aside className="relative w-72 h-full overflow-y-auto z-50 animate-in slide-in-from-left">
             <SidebarContent />
           </aside>
         </div>
