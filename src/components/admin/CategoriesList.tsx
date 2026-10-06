@@ -9,6 +9,8 @@ import { Category } from '@/types/database';
 import { Plus, Edit2, Trash2, Eye, EyeOff, ImageIcon, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { deleteImageFromCloudinary } from '@/lib/media';
+import { AdminModal } from '@/components/admin/AdminModal';
+import { CategoryForm } from '@/components/admin/CategoryForm';
 
 interface CategoriesListProps {
   categories: Category[];
@@ -18,6 +20,15 @@ export function CategoriesList({ categories }: CategoriesListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    mode: 'create' | 'edit';
+    category?: Category | null;
+  }>({
+    open: false,
+    mode: 'create',
+    category: null,
+  });
 
   const handleToggleActive = async (cat: Category) => {
     const supabase = createClient();
@@ -52,16 +63,17 @@ export function CategoriesList({ categories }: CategoriesListProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Categories</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{categories.length} total categories</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Categories</h1>
+          <p className="text-sm text-slate-600 mt-0.5">{categories.length} total categories</p>
         </div>
-        <Link
-          href="/admin/categories/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
+        <button
+          type="button"
+          onClick={() => setModalState({ open: true, mode: 'create', category: null })}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Category</span>
-        </Link>
+        </button>
       </div>
 
       {error && (
@@ -74,14 +86,15 @@ export function CategoriesList({ categories }: CategoriesListProps) {
       {categories.length === 0 ? (
         <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
           <ImageIcon className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-2">No Categories Yet</h3>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Add sports categories to organize your product catalog.</p>
-          <Link
-            href="/admin/categories/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm"
+          <h3 className="text-lg font-bold text-black mb-2">No Categories Yet</h3>
+          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add sports categories to organize your product catalog.</p>
+          <button
+            type="button"
+            onClick={() => setModalState({ open: true, mode: 'create', category: null })}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors"
           >
             <Plus className="w-4 h-4" /> Create First Category
-          </Link>
+          </button>
         </div>
       ) : (
         <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
@@ -89,11 +102,11 @@ export function CategoriesList({ categories }: CategoriesListProps) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Category</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden md:table-cell">Slug</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden sm:table-cell">Order</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
-                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Actions</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Category</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Slug</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden sm:table-cell">Order</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
+                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -111,17 +124,17 @@ export function CategoriesList({ categories }: CategoriesListProps) {
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900">{cat.name}</p>
+                          <p className="font-bold text-black">{cat.name}</p>
                           {cat.short_description && (
-                            <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{cat.short_description}</p>
+                            <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">{cat.short_description}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell">
-                      <code className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">{cat.slug}</code>
+                      <code className="text-xs text-black font-semibold bg-slate-100 px-2 py-1 rounded border border-slate-200">{cat.slug}</code>
                     </td>
-                    <td className="px-5 py-4 hidden sm:table-cell text-slate-600 font-mono text-xs">{cat.display_order}</td>
+                    <td className="px-5 py-4 hidden sm:table-cell text-black font-mono text-xs font-semibold">{cat.display_order}</td>
                     <td className="px-5 py-4">
                       <span className={cn(
                         'px-2.5 py-1 rounded-lg text-[11px] font-bold border',
@@ -137,21 +150,22 @@ export function CategoriesList({ categories }: CategoriesListProps) {
                         <button
                           onClick={() => handleToggleActive(cat)}
                           title={cat.is_active ? 'Hide category' : 'Show category'}
-                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                         >
                           {cat.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
-                        <Link
-                          href={`/admin/categories/${cat.id}/edit`}
-                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => setModalState({ open: true, mode: 'edit', category: cat })}
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                           title="Edit category"
                         >
                           <Edit2 className="w-4 h-4" />
-                        </Link>
+                        </button>
                         <button
                           onClick={() => handleDelete(cat)}
                           disabled={deletingId === cat.id}
-                          className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50"
+                          className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50 cursor-pointer"
                           title="Delete category and media"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -165,6 +179,31 @@ export function CategoriesList({ categories }: CategoriesListProps) {
           </div>
         </div>
       )}
+
+      {/* Reusable Category Modal */}
+      <AdminModal
+        isOpen={modalState.open}
+        onClose={() => setModalState((prev) => ({ ...prev, open: false }))}
+        title={modalState.mode === 'create' ? 'Create category' : 'Edit category'}
+        subtitle={
+          modalState.mode === 'create'
+            ? 'Add a new sports category to organize your catalog products'
+            : `Update details and imagery for ${modalState.category?.name || 'category'}`
+        }
+        maxWidth="2xl"
+      >
+        <CategoryForm
+          key={modalState.category?.id || 'new-category'}
+          mode={modalState.mode}
+          initialData={modalState.category || undefined}
+          onSuccess={() => {
+            setModalState((prev) => ({ ...prev, open: false }));
+            router.refresh();
+          }}
+          onCancel={() => setModalState((prev) => ({ ...prev, open: false }))}
+        />
+      </AdminModal>
     </div>
   );
+
 }

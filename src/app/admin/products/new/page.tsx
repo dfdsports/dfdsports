@@ -11,8 +11,8 @@ export default async function NewProductPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black uppercase tracking-tight text-white">Add New Product</h1>
-        <p className="text-sm text-gray-400 mt-1">Add a product to your sports equipment catalog.</p>
+        <h1 className="text-2xl font-bold uppercase tracking-tight text-black">Add New Product</h1>
+        <p className="text-sm text-slate-600 mt-1">Add a product to your sports equipment catalog.</p>
       </div>
       <ProductForm mode="create" categories={categories} brands={brands} />
     </div>

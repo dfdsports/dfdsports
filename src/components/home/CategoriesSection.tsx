@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Category } from '@/types/database';
@@ -12,17 +12,42 @@ interface CategoriesSectionProps {
   categories: Category[];
 }
 
-export function CategoriesSection({ categories }: CategoriesSectionProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+const ITEMS_PER_PAGE = 6;
 
-  const scroll = (direction: 'left' | 'right') => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const offset = direction === 'left' ? -400 : 400;
-    el.scrollBy({ left: offset, behavior: 'smooth' });
-  };
+export function CategoriesSection({ categories }: CategoriesSectionProps) {
+  const [currentPage, setCurrentPage] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   const activeCategories = (categories || []).filter((c) => c.is_active);
+  const totalPages = Math.ceil(activeCategories.length / ITEMS_PER_PAGE);
+  const safeCurrentPage = Math.min(currentPage, Math.max(0, totalPages - 1));
+
+  const handlePrev = () => {
+    if (totalPages <= 1) return;
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
+  };
+
+  const handleNext = () => {
+    if (totalPages <= 1) return;
+    setCurrentPage((prev) => (prev + 1 < totalPages ? prev + 1 : 0));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+    touchStartX.current = null;
+  };
 
   if (activeCategories.length === 0) {
     return (
@@ -44,6 +69,12 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
     );
   }
 
+  // Split categories into pages of 6 items (3 items row 1, 3 items row 2 on desktop)
+  const pages: Category[][] = [];
+  for (let i = 0; i < activeCategories.length; i += ITEMS_PER_PAGE) {
+    pages.push(activeCategories.slice(i, i + ITEMS_PER_PAGE));
+  }
+
   return (
     <section className="relative overflow-hidden bg-[#080A0F] py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -54,18 +85,22 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           subtitle="Quality equipment for every sport"
           align="between"
           action={
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => scroll('left')}
-                aria-label="Scroll categories left"
-                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
+                type="button"
+                onClick={handlePrev}
+                disabled={totalPages <= 1}
+                aria-label="Previous categories"
+                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623] disabled:opacity-30 disabled:pointer-events-none"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
-                onClick={() => scroll('right')}
-                aria-label="Scroll categories right"
-                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
+                type="button"
+                onClick={handleNext}
+                disabled={totalPages <= 1}
+                aria-label="Next categories"
+                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-gray-300 transition-colors hover:border-[#F5A623]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623] disabled:opacity-30 disabled:pointer-events-none"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -73,56 +108,72 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           }
         />
 
-        {/* Horizontal scroller with snap; arrows above scroll it */}
+        {/* 6 categories per view: 2 rows of 3 fully visible cards */}
         <div
-          ref={scrollContainerRef}
-          className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {activeCategories.map((category, index) => (
-            <Link
-              key={category.id}
-              href={`/collections/${category.slug}`}
-              className="group relative min-h-[210px] w-[90%] shrink-0 snap-start overflow-hidden rounded-2xl bg-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623] sm:w-[420px] lg:w-[460px]"
-            >
-              {/* Photo, pushed right and darkened */}
-              {category.image_url ? (
-                <Image
-                  src={category.image_url}
-                  alt=""
-                  fill
-                  sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 85vw"
-                  className="object-cover object-right transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
-                />
-              ) : (
-                <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />
-              )}
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${safeCurrentPage * 100}%)` }}
+          >
+            {pages.map((pageCategories, pageIndex) => (
+              <div
+                key={pageIndex}
+                className="grid w-full shrink-0 grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+              >
+                {pageCategories.map((category, index) => {
+                  const itemNumber = pageIndex * ITEMS_PER_PAGE + index + 1;
+                  return (
+                    <Link
+                      key={category.id}
+                      href={`/collections/${category.slug}`}
+                      className="group relative min-h-[210px] w-full overflow-hidden rounded-2xl bg-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
+                    >
+                      {/* Photo, pushed right and darkened */}
+                      {category.image_url ? (
+                        <Image
+                          src={category.image_url}
+                          alt=""
+                          fill
+                          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                          className="object-cover object-right transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
+                        />
+                      ) : (
+                        <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />
+                      )}
 
-              {/* Lighter fade: only darkens the text side, photo stays clear */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/30 to-transparent" />
+                      {/* Lighter fade: only darkens the text side, photo stays clear */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
 
-              {/* Content */}
-              <div className="relative flex h-full min-h-[210px] flex-col justify-center p-6 sm:p-7">
-                <span className="mb-1 text-sm font-medium tabular-nums text-[#F5A623]">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+                      {/* Content */}
+                      <div className="relative flex h-full min-h-[210px] flex-col justify-center p-6 sm:p-7">
+                        <span className="mb-1 text-sm font-medium tabular-nums text-[#F5A623]">
+                          {String(itemNumber).padStart(2, '0')}
+                        </span>
 
-                <h3 className="text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl">
-                  {category.name}
-                </h3>
+                        <h3 className="text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl">
+                          {category.name}
+                        </h3>
 
-                {category.short_description && (
-                  <p className="mt-1 line-clamp-2 max-w-[16rem] text-sm text-gray-400">
-                    {category.short_description}
-                  </p>
-                )}
+                        {category.short_description && (
+                          <p className="mt-1 line-clamp-2 max-w-[16rem] text-sm text-gray-400">
+                            {category.short_description}
+                          </p>
+                        )}
 
-                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#F5A623]">
-                  Explore
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
-                </span>
+                        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#F5A623]">
+                          Explore
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

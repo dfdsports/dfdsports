@@ -8,6 +8,8 @@ import Image from 'next/image';
 import { slugify } from '@/lib/utils';
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
 
+import { Category } from '@/types/database';
+
 interface CategoryFormData {
   name: string;
   slug: string;
@@ -21,17 +23,20 @@ interface CategoryFormData {
 }
 
 interface CategoryFormProps {
-  initialData?: (CategoryFormData & { id?: string }) | null;
+  initialData?: (Partial<Category> & { id?: string }) | null;
   mode: 'create' | 'edit';
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export function CategoryForm({ initialData, mode }: CategoryFormProps) {
+export function CategoryForm({ initialData, mode, onSuccess, onCancel }: CategoryFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [isSlugTouched, setIsSlugTouched] = useState(mode === 'edit' && Boolean(initialData?.slug));
 
   const [form, setForm] = useState<CategoryFormData>({
     name: initialData?.name || '',
@@ -50,17 +55,28 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
     setForm((prev) => ({
       ...prev,
       name,
-      slug: prev.slug || slugify(name),
-      seo_title: prev.seo_title || `${name} Sports Equipment | DFD Sports`,
+      slug: !isSlugTouched ? slugify(name) : prev.slug,
+      seo_title: (!prev.seo_title || prev.seo_title === `${prev.name} Sports Equipment | DFD Sports`)
+        ? (name ? `${name} Sports Equipment | DFD Sports` : '')
+        : prev.seo_title,
     }));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    if (name === 'slug') {
+      setIsSlugTouched(value.trim() !== '');
+    }
     setForm((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
+  };
+
+  const handleRegenerateSlug = () => {
+    const newSlug = slugify(form.name);
+    setForm((prev) => ({ ...prev, slug: newSlug }));
+    setIsSlugTouched(false);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +127,12 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
         }
 
         setSaveStatus('success');
-        router.push('/admin/categories');
-        router.refresh();
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.push('/admin/categories');
+          router.refresh();
+        }
       } catch (err: any) {
         setSaveStatus('error');
         setErrorMsg(err?.message || 'Failed to save category');
@@ -120,8 +140,8 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
     });
   };
 
-  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-200 transition-all shadow-xs';
-  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2';
+  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-300 transition-all shadow-xs font-medium';
+  const labelCls = 'block text-xs font-semibold uppercase tracking-wider text-black mb-2';
 
   return (
     <form onSubmit={handleSave} className="space-y-6 max-w-4xl">
@@ -133,16 +153,27 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
       )}
 
       <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
-        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">Category Details</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Category Details</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={labelCls}>Category Name <span className="text-amber-600">*</span></label>
             <input name="name" value={form.name} onChange={handleNameChange} className={inputCls} placeholder="e.g. Football" required />
           </div>
           <div>
-            <label className={labelCls}>URL Slug <span className="text-amber-600">*</span></label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-black">URL Slug <span className="text-amber-600">*</span></label>
+              {form.name && (
+                <button
+                  type="button"
+                  onClick={handleRegenerateSlug}
+                  className="text-[11px] font-bold text-amber-600 hover:text-amber-700 hover:underline cursor-pointer"
+                >
+                  Auto-create from name
+                </button>
+              )}
+            </div>
             <input name="slug" value={form.slug} onChange={handleChange} className={inputCls} placeholder="football" required />
-            <p className="text-[11px] text-slate-400 mt-1">Used in URL: /collections/<strong>{form.slug || 'slug'}</strong></p>
+            <p className="text-[11px] text-slate-500 mt-1">Used in URL: /collections/<strong className="text-black">{form.slug || 'slug'}</strong></p>
           </div>
         </div>
 
@@ -165,7 +196,7 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
                 onChange={handleChange}
                 className="w-4 h-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
               />
-              <span className="text-sm font-bold text-slate-800">Active (visible on website)</span>
+              <span className="text-sm font-bold text-black">Active (visible on website)</span>
             </label>
           </div>
         </div>
@@ -173,7 +204,7 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
 
       {/* Image Upload */}
       <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-4 shadow-sm">
-        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">Category Image</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Category Image</h3>
 
         {form.image_url ? (
           <div className="relative w-full max-w-sm aspect-video rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
@@ -182,7 +213,7 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
               type="button"
               onClick={handleRemoveImage}
               title="Delete from Cloudinary"
-              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 flex items-center justify-center text-white shadow-sm transition-colors"
+              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 flex items-center justify-center text-white shadow-sm transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -192,15 +223,15 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="w-full max-w-sm aspect-video rounded-xl bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 flex flex-col items-center justify-center text-slate-500 hover:text-slate-800 transition-all cursor-pointer shadow-xs"
+            className="w-full max-w-sm aspect-video rounded-xl bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 flex flex-col items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shadow-xs"
           >
             {uploading ? (
               <div className="w-6 h-6 rounded-full border-2 border-amber-300 border-t-amber-600 animate-spin" />
             ) : (
               <>
                 <Upload className="w-8 h-8 mb-2 text-amber-600" />
-                <span className="text-xs font-bold">Click to upload category image</span>
-                <span className="text-[11px] text-slate-400 mt-1">JPG, PNG, WebP (max 5MB)</span>
+                <span className="text-xs font-bold text-black">Click to upload category image</span>
+                <span className="text-[11px] text-slate-500 mt-1">JPG, PNG, WebP (max 5MB)</span>
               </>
             )}
           </button>
@@ -222,7 +253,7 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
 
       {/* SEO */}
       <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
-        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">SEO Metadata</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">SEO Metadata</h3>
         <div>
           <label className={labelCls}>SEO Title</label>
           <input name="seo_title" value={form.seo_title} onChange={handleChange} className={inputCls} placeholder="Football Sports Equipment | DFD Sports" />
@@ -237,15 +268,24 @@ export function CategoryForm({ initialData, mode }: CategoryFormProps) {
         <button
           type="submit"
           disabled={isPending || uploading}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
-          <Save className="w-4 h-4" />
+          {isPending ? (
+            <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
           <span>{isPending ? 'Saving...' : mode === 'create' ? 'Create Category' : 'Save Changes'}</span>
         </button>
-        <button type="button" onClick={() => router.back()} className="px-5 py-3 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+        <button
+          type="button"
+          onClick={() => (onCancel ? onCancel() : router.back())}
+          className="px-5 py-3 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
+        >
           Cancel
         </button>
       </div>
     </form>
   );
 }
+

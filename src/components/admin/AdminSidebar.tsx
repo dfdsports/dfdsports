@@ -83,36 +83,39 @@ interface AdminSidebarProps {
   userEmail?: string;
 }
 
-export function AdminSidebar({ userEmail }: AdminSidebarProps) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
+interface SidebarContentProps {
+  pathname: string;
+  userEmail?: string;
+  onItemClick?: () => void;
+  onLogout: () => void;
+  loggingOut: boolean;
+}
 
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push('/admin/login');
-    router.refresh();
-  };
-
+function SidebarContent({
+  pathname,
+  userEmail,
+  onItemClick,
+  onLogout,
+  loggingOut,
+}: SidebarContentProps) {
   const isActive = (item: NavItem) => {
-    if (item.exact) return pathname === item.href;
-    return pathname.startsWith(item.href);
+    const normPath = (pathname || '').replace(/\/$/, '') || '/';
+    const normHref = item.href.replace(/\/$/, '') || '/';
+    if (item.exact) return normPath === normHref;
+    return normPath === normHref || normPath.startsWith(normHref + '/');
   };
 
-  const SidebarContent = () => (
+  return (
     <div className="flex flex-col h-full bg-gradient-to-b from-[#0F172A] via-[#131E35] to-[#0A1020] text-white border-r border-slate-800 shadow-2xl">
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800/80">
-        <Link href="/admin" className="flex items-center gap-3 group">
+        <Link href="/admin" prefetch={true} className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-5 h-5 text-slate-950 font-bold" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-black uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
+              <span className="text-sm font-bold uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
                 DFD Sports
               </span>
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -129,7 +132,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
         {navSections.map((section, sIdx) => (
           <div key={section.title} className="space-y-1">
             {/* Section Heading */}
-            <div className="px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-amber-400/80 flex items-center justify-between">
+            <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-400/80 flex items-center justify-between">
               <span>{section.title}</span>
               {sIdx === 0 && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -145,7 +148,8 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setMobileOpen(false)}
+                    prefetch={true}
+                    onClick={onItemClick}
                     className={cn(
                       'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative',
                       active
@@ -162,7 +166,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
                     <span className="truncate">{item.label}</span>
 
                     {item.badge && !active && (
-                      <span className="ml-auto px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                      <span className="ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
                         {item.badge}
                       </span>
                     )}
@@ -183,6 +187,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
         <Link
           href="/"
           target="_blank"
+          prefetch={false}
           className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all border border-slate-800"
         >
           <span className="flex items-center gap-2">
@@ -201,7 +206,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
             </p>
           </div>
           <button
-            onClick={handleLogout}
+            onClick={onLogout}
             disabled={loggingOut}
             title="Sign Out"
             className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors shrink-0"
@@ -212,21 +217,41 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
       </div>
     </div>
   );
+}
+
+export function AdminSidebar({ userEmail }: AdminSidebarProps) {
+  const pathname = usePathname() || '';
+  const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/admin/login');
+    router.refresh();
+  };
 
   return (
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 overflow-hidden z-30">
-        <SidebarContent />
+        <SidebarContent
+          pathname={pathname}
+          userEmail={userEmail}
+          onLogout={handleLogout}
+          loggingOut={loggingOut}
+        />
       </aside>
 
       {/* Mobile Top Bar */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800 sticky top-0 z-50">
-        <Link href="/admin" className="flex items-center gap-2.5">
+        <Link href="/admin" prefetch={true} className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center">
             <ShieldCheck className="w-4 h-4 text-slate-950 font-bold" />
           </div>
-          <span className="text-sm font-black uppercase text-white tracking-tight">DFD Admin</span>
+          <span className="text-sm font-bold uppercase text-white tracking-tight">DFD Admin</span>
         </Link>
 
         <button
@@ -246,10 +271,17 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
             onClick={() => setMobileOpen(false)}
           />
           <aside className="relative w-72 h-full overflow-y-auto z-50 animate-in slide-in-from-left">
-            <SidebarContent />
+            <SidebarContent
+              pathname={pathname}
+              userEmail={userEmail}
+              onItemClick={() => setMobileOpen(false)}
+              onLogout={handleLogout}
+              loggingOut={loggingOut}
+            />
           </aside>
         </div>
       )}
     </>
   );
 }
+

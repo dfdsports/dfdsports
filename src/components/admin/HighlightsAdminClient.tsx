@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Highlight } from '@/types/database';
 import { Plus, Edit2, Trash2, Save, X, TrendingUp, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AdminModal } from '@/components/admin/AdminModal';
 
 interface HighlightsAdminClientProps {
   highlights: Highlight[];
@@ -63,19 +64,19 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
     router.refresh();
   };
 
-  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-200 transition-all shadow-xs';
-  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2';
+  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-300 transition-all shadow-xs font-medium';
+  const labelCls = 'block text-xs font-semibold uppercase tracking-wider text-black mb-2';
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Business Highlights</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Key factual performance metrics displayed across the store.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Business Highlights</h1>
+          <p className="text-sm text-slate-600 mt-0.5">Key factual performance metrics displayed across the store.</p>
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Highlight Stat
         </button>
@@ -87,12 +88,19 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
         </div>
       )}
 
-      {showForm && (
-        <form onSubmit={handleSave} className="rounded-2xl bg-white border-2 border-amber-400/80 shadow-md p-6 space-y-5">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">{editing ? 'Edit Highlight' : 'Add Highlight'}</h3>
-            <button type="button" onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-700"><X className="w-5 h-5" /></button>
-          </div>
+      {/* Create/Edit Modal */}
+      <AdminModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        title={editing ? 'Edit highlight stat' : 'Add highlight stat'}
+        subtitle={
+          editing
+            ? `Update metric numbers for ${editing.label}`
+            : 'Add a verified milestone or statistical achievement to display'
+        }
+        maxWidth="2xl"
+      >
+        <form onSubmit={handleSave} className="space-y-5">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="col-span-2">
               <label className={labelCls}>Stat Label <span className="text-amber-600">*</span></label>
@@ -111,23 +119,42 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
             <label className={labelCls}>Short Description (Optional)</label>
             <input name="description" value={form.description} onChange={handleChange} className={inputCls} placeholder="Across schools, clubs and academies" />
           </div>
-          <div className="flex items-center gap-4 pt-2">
-            <button type="submit" disabled={isPending} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm disabled:opacity-50">
-              <Save className="w-4 h-4" /> {isPending ? 'Saving...' : editing ? 'Save Changes' : 'Add Highlight'}
+          <div className="flex items-center gap-4 pt-3 border-t border-slate-100">
+            <button
+              type="submit"
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+            >
+              {isPending ? (
+                <>
+                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>{editing ? 'Save Changes' : 'Add Highlight'}</span>
+                </>
+              )}
             </button>
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
+            >
               Cancel
             </button>
           </div>
         </form>
-      )}
+      </AdminModal>
+
 
       {highlights.length === 0 && !showForm ? (
         <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
           <TrendingUp className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-2">No Statistics Added Yet</h3>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Add verified figures such as jerseys delivered or teams outfitted.</p>
-          <button onClick={openCreate} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm">
+          <h3 className="text-lg font-bold text-black mb-2">No Statistics Added Yet</h3>
+          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add verified figures such as jerseys delivered or teams outfitted.</p>
+          <button onClick={openCreate} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer">
             <Plus className="w-4 h-4" /> Add First Stat
           </button>
         </div>
@@ -136,8 +163,8 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
           {highlights.map((h) => (
             <div key={h.id} className={cn('rounded-2xl bg-white border shadow-sm p-5 flex items-center justify-between hover:shadow-md transition-shadow', h.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
               <div>
-                <p className="text-3xl font-black text-slate-900">{h.value}<span className="text-amber-600">{h.suffix}</span></p>
-                <p className="text-sm font-bold text-slate-700 mt-0.5">{h.label}</p>
+                <p className="text-3xl font-bold text-black">{h.value}<span className="text-amber-600">{h.suffix}</span></p>
+                <p className="text-sm font-bold text-black mt-0.5">{h.label}</p>
                 {h.description && <p className="text-xs text-slate-500 mt-0.5">{h.description}</p>}
                 <span className={cn('text-[11px] font-bold mt-1.5 block', h.is_active ? 'text-emerald-700' : 'text-slate-400')}>{h.is_active ? '• Visible' : '• Hidden'}</span>
               </div>

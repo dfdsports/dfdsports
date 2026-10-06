@@ -5,19 +5,32 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Product } from '@/types/database';
+import { Category, Brand, Product } from '@/types/database';
 import { Plus, Edit2, Trash2, Eye, EyeOff, Star, StarOff, Tag, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { deleteImageFromCloudinary } from '@/lib/media';
+import { AdminModal } from '@/components/admin/AdminModal';
+import { ProductForm } from '@/components/admin/ProductForm';
 
 interface ProductsListProps {
   products: Product[];
+  categories?: Category[];
+  brands?: Brand[];
 }
 
-export function ProductsList({ products }: ProductsListProps) {
+export function ProductsList({ products, categories = [], brands = [] }: ProductsListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    mode: 'create' | 'edit';
+    product?: Product | null;
+  }>({
+    open: false,
+    mode: 'create',
+    product: null,
+  });
 
   const handleToggle = async (product: Product, field: 'is_active' | 'is_featured') => {
     setError('');
@@ -68,16 +81,17 @@ export function ProductsList({ products }: ProductsListProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Products Catalog</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{products.length} total products in database</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Products Catalog</h1>
+          <p className="text-sm text-slate-600 mt-0.5">{products.length} total products in database</p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
+        <button
+          type="button"
+          onClick={() => setModalState({ open: true, mode: 'create', product: null })}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Product</span>
-        </Link>
+        </button>
       </div>
 
       {error && (
@@ -89,11 +103,15 @@ export function ProductsList({ products }: ProductsListProps) {
       {products.length === 0 ? (
         <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
           <Tag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-2">No Products Yet</h3>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
-          <Link href="/admin/products/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm">
+          <h3 className="text-lg font-bold text-black mb-2">No Products Yet</h3>
+          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
+          <button
+            type="button"
+            onClick={() => setModalState({ open: true, mode: 'create', product: null })}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors"
+          >
             <Plus className="w-4 h-4" /> Add First Product
-          </Link>
+          </button>
         </div>
       ) : (
         <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
@@ -101,12 +119,12 @@ export function ProductsList({ products }: ProductsListProps) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Product</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden lg:table-cell">Category</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden md:table-cell">Brand</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Featured</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
-                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Actions</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Product</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden lg:table-cell">Category</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Brand</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Featured</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
+                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -124,18 +142,18 @@ export function ProductsList({ products }: ProductsListProps) {
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 line-clamp-1">{product.name}</p>
-                          <code className="text-[11px] text-slate-400">{product.slug}</code>
+                          <p className="font-bold text-black line-clamp-1">{product.name}</p>
+                          <code className="text-[11px] text-slate-600 font-mono">{product.slug}</code>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 hidden lg:table-cell text-slate-600 font-medium text-xs">{product.category?.name || '—'}</td>
-                    <td className="px-5 py-4 hidden md:table-cell text-slate-600 font-medium text-xs">{product.brand?.name || '—'}</td>
+                    <td className="px-5 py-4 hidden lg:table-cell text-black font-semibold text-xs">{product.category?.name || '—'}</td>
+                    <td className="px-5 py-4 hidden md:table-cell text-black font-semibold text-xs">{product.brand?.name || '—'}</td>
                     <td className="px-5 py-4">
                       <button
                         onClick={() => handleToggle(product, 'is_featured')}
                         title={product.is_featured ? 'Remove from featured' : 'Mark as featured'}
-                        className="p-1 rounded-lg hover:bg-slate-100 transition-colors"
+                        className="p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
                       >
                         {product.is_featured
                           ? <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -155,21 +173,23 @@ export function ProductsList({ products }: ProductsListProps) {
                       <div className="flex items-center gap-1 justify-end">
                         <button
                           onClick={() => handleToggle(product, 'is_active')}
-                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                           title="Toggle visibility"
                         >
                           {product.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
-                        <Link
-                          href={`/admin/products/${product.id}/edit`}
-                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => setModalState({ open: true, mode: 'edit', product })}
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                          title="Edit product"
                         >
                           <Edit2 className="w-4 h-4" />
-                        </Link>
+                        </button>
                         <button
                           onClick={() => handleDelete(product)}
                           disabled={deletingId === product.id}
-                          className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50"
+                          className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50 cursor-pointer"
                           title="Delete product and media"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -183,6 +203,50 @@ export function ProductsList({ products }: ProductsListProps) {
           </div>
         </div>
       )}
+
+      {/* Reusable Product Modal */}
+      <AdminModal
+        isOpen={modalState.open}
+        onClose={() => setModalState((prev) => ({ ...prev, open: false }))}
+        title={modalState.mode === 'create' ? 'Create product' : 'Edit product'}
+        subtitle={
+          modalState.mode === 'create'
+            ? 'Add a new sports product to your equipment catalog'
+            : `Update product specs and media for ${modalState.product?.name || 'product'}`
+        }
+        maxWidth="4xl"
+      >
+        <ProductForm
+          key={modalState.product?.id || 'new-product'}
+          mode={modalState.mode}
+          initialData={
+            modalState.product
+              ? {
+                  ...modalState.product,
+                  specifications: (modalState.product.specifications as Record<string, string>) || {},
+                  sizes: modalState.product.sizes || [],
+                  features: modalState.product.features || [],
+                  images: modalState.product.images || [],
+                  category_id: modalState.product.category_id || '',
+                  brand_id: modalState.product.brand_id || '',
+                  short_description: modalState.product.short_description || '',
+                  long_description: modalState.product.long_description || '',
+                  image_url: modalState.product.image_url || '',
+                  seo_title: modalState.product.seo_title || '',
+                  seo_description: modalState.product.seo_description || '',
+                }
+              : undefined
+          }
+          categories={categories}
+          brands={brands}
+          onSuccess={() => {
+            setModalState((prev) => ({ ...prev, open: false }));
+            router.refresh();
+          }}
+          onCancel={() => setModalState((prev) => ({ ...prev, open: false }))}
+        />
+      </AdminModal>
     </div>
   );
+
 }

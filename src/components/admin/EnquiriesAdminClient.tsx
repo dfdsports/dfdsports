@@ -53,11 +53,11 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
             <Mail className="w-7 h-7 text-emerald-600" />
             Customer Enquiries
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             {enquiries.length} total website inquiries • {counts.new} new
           </p>
         </div>
@@ -72,8 +72,8 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
             className={cn(
               'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border shadow-xs',
               filterStatus === status
-                ? 'bg-amber-500 text-slate-950 border-amber-500 font-extrabold shadow-sm'
-                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-slate-200'
+                ? 'bg-amber-500 text-black border-amber-500 font-bold shadow-sm'
+                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-50 border-slate-200'
             )}
           >
             {status === 'all' ? 'All Enquiries' : status} ({count})
@@ -141,45 +141,45 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
                       {enq.email && (
                         <div>
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Email Address</p>
-                          <p className="text-slate-800 font-medium">{enq.email}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Email Address</p>
+                          <p className="text-black font-medium">{enq.email}</p>
                         </div>
                       )}
                       {enq.product_name && (
                         <div>
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Product / Service</p>
-                          <p className="text-slate-800 font-medium">{enq.product_name}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Product / Service</p>
+                          <p className="text-black font-medium">{enq.product_name}</p>
                         </div>
                       )}
                       {enq.quantity && (
                         <div>
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Quantity</p>
-                          <p className="text-slate-800 font-medium">{enq.quantity}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Quantity</p>
+                          <p className="text-black font-medium">{enq.quantity}</p>
                         </div>
                       )}
                       {enq.size_or_requirement && (
                         <div>
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Requirement Details</p>
-                          <p className="text-slate-800 font-medium">{enq.size_or_requirement}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Requirement Details</p>
+                          <p className="text-black font-medium">{enq.size_or_requirement}</p>
                         </div>
                       )}
                       {enq.customization_details && (
                         <div className="sm:col-span-2">
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Customization Requirements</p>
-                          <p className="text-slate-800 font-medium">{enq.customization_details}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Customization Requirements</p>
+                          <p className="text-black font-medium">{enq.customization_details}</p>
                         </div>
                       )}
                       {enq.message && (
                         <div className="sm:col-span-2">
-                          <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Customer Message</p>
-                          <p className="text-slate-800 font-medium whitespace-pre-line leading-relaxed">{enq.message}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Customer Message</p>
+                          <p className="text-black font-medium whitespace-pre-line leading-relaxed">{enq.message}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Actions */}
                     <div className="flex flex-wrap items-center gap-2 pt-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">
+                      <span className="text-xs font-bold uppercase tracking-wider text-black mr-1">
                         Mark status:
                       </span>
                       {(['new', 'contacted', 'completed', 'archived'] as const).map((s) => (
@@ -190,8 +190,8 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
                           className={cn(
                             'px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs',
                             enq.status === s
-                              ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-extrabold')
-                              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-slate-200'
+                              ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-bold')
+                              : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
                           )}
                         >
                           Mark {s}

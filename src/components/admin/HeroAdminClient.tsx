@@ -9,6 +9,7 @@ import { HeroSlide } from '@/types/database';
 import { Plus, Edit2, Trash2, Eye, EyeOff, Save, X, Upload, GripVertical, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
+import { AdminModal } from '@/components/admin/AdminModal';
 
 interface HeroAdminClientProps {
   slides: HeroSlide[];
@@ -125,19 +126,19 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
     router.refresh();
   };
 
-  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-200 transition-all shadow-xs';
-  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2';
+  const inputCls = 'w-full px-4 py-3 rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-300 transition-all shadow-xs font-medium';
+  const labelCls = 'block text-xs font-semibold uppercase tracking-wider text-black mb-2';
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Hero Banners</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{slides.length} slides configured for homepage</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Hero Banners</h1>
+          <p className="text-sm text-slate-600 mt-0.5">{slides.length} slides configured for homepage</p>
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Hero Slide
         </button>
@@ -145,13 +146,19 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
 
       {error && <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-xs">{error}</div>}
 
-      {showForm && (
-        <form onSubmit={handleSave} className="rounded-2xl bg-white border-2 border-amber-400/80 shadow-md p-6 space-y-5">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">{editing ? 'Edit Hero Slide' : 'New Hero Slide'}</h3>
-            <button type="button" onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-700"><X className="w-5 h-5" /></button>
-          </div>
-
+      {/* Create/Edit Modal */}
+      <AdminModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        title={editing ? 'Edit hero slide' : 'Create hero slide'}
+        subtitle={
+          editing
+            ? 'Update slide typography, CTAs, and background imagery'
+            : 'Configure a new promotional banner for the storefront hero section'
+        }
+        maxWidth="3xl"
+      >
+        <form onSubmit={handleSave} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label className={labelCls}>Eyebrow Text</label>
@@ -191,7 +198,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
               {form.image_url && (
                 <div className="relative w-40 h-24 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
                   <Image src={form.image_url} alt="Preview" fill className="object-cover" />
-                  <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs">
+                  <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -200,7 +207,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
-                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2"
+                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Upload className="w-4 h-4 text-amber-600" /> {uploading ? 'Uploading...' : 'Upload Hero Image'}
               </button>
@@ -217,21 +224,40 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             <div className="flex items-end pb-2">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input type="checkbox" name="is_active" checked={form.is_active} onChange={handleChange} className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
-                <span className="text-sm font-bold text-slate-800">Active Slide</span>
+                <span className="text-sm font-bold text-black">Active Slide</span>
               </label>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 pt-2">
-            <button type="submit" disabled={isPending} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm disabled:opacity-50">
-              <Save className="w-4 h-4" /> {isPending ? 'Saving...' : editing ? 'Save Changes' : 'Create Slide'}
+          <div className="flex items-center gap-4 pt-3 border-t border-slate-100">
+            <button
+              type="submit"
+              disabled={isPending || uploading}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+            >
+              {isPending ? (
+                <>
+                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>{editing ? 'Save Changes' : 'Create Slide'}</span>
+                </>
+              )}
             </button>
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
+            >
               Cancel
             </button>
           </div>
         </form>
-      )}
+      </AdminModal>
+
 
       {slides.length === 0 && !showForm ? (
         <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
