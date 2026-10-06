@@ -1,10 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import { Brand } from '@/types/database';
+import { BadgeCheck } from 'lucide-react';
 
 interface BrandsSectionProps {
   brands: Brand[];
 }
+
+/** Marquee only when there are enough logos to fill the row */
+const MARQUEE_MIN = 6;
 
 export function BrandsSection({ brands }: BrandsSectionProps) {
   const activeBrands = (brands || []).filter((b) => b.is_active);
@@ -14,41 +18,81 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
     return null;
   }
 
+  const slides = activeBrands.length >= MARQUEE_MIN;
+  const items = slides ? [...activeBrands, ...activeBrands] : activeBrands;
+
   return (
-    <section className="py-14 bg-[#05060A] border-y border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
-          {/* Section Label */}
-          <div className="shrink-0">
-            <h3 className="text-xs uppercase tracking-[0.25em] font-extrabold text-[#F5A623] whitespace-nowrap">
-              BRANDS WE SUPPLY
-            </h3>
-            <p className="text-[11px] text-gray-500 font-medium">100% Genuine Certified Gear</p>
+    <section className="bg-[#05060A] py-14 sm:py-20">
+      <style>{`
+        @keyframes brands-marquee { to { transform: translateX(-50%); } }
+        .brands-track { animation: brands-marquee var(--brands-dur, 30s) linear infinite; }
+        .brands-viewport:hover .brands-track,
+        .brands-viewport:focus-within .brands-track { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) {
+          .brands-track { animation: none; }
+          .brands-viewport { overflow-x: auto; }
+        }
+      `}</style>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header: title + trust line */}
+        <div className="mb-8 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Brands we <span className="text-[#F5A623]">supply</span>
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-gray-400 sm:text-base">
+              Trusted sports brands, stocked and sold directly to you.
+            </p>
           </div>
 
-          {/* Brand Logos Row */}
-          <div className="flex-1 flex flex-wrap items-center justify-between gap-8 sm:gap-12 overflow-x-auto py-2">
-            {activeBrands.map((brand) => (
-              <div
-                key={brand.id}
-                className="relative h-10 min-w-[90px] flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0 duration-300"
-                title={brand.name}
-              >
-                {brand.logo_url ? (
-                  <Image
-                    src={brand.logo_url}
-                    alt={brand.name}
-                    width={110}
-                    height={40}
-                    className="object-contain max-h-9 w-auto"
-                  />
-                ) : (
-                  <span className="text-base font-black uppercase tracking-wider text-gray-300">
-                    {brand.name}
-                  </span>
-                )}
-              </div>
-            ))}
+          <p className="inline-flex items-center gap-2 text-sm font-medium text-gray-300">
+            <BadgeCheck className="h-5 w-5 text-[#F5A623]" />
+            100% genuine certified gear
+          </p>
+        </div>
+
+        {/* Logo tiles */}
+        <div
+          className={
+            slides
+              ? 'brands-viewport overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]'
+              : ''
+          }
+        >
+          <div
+            className={slides ? 'brands-track flex w-max gap-4' : 'flex flex-wrap justify-center gap-4'}
+            style={
+              slides
+                ? ({ '--brands-dur': `${activeBrands.length * 4}s` } as React.CSSProperties)
+                : undefined
+            }
+          >
+            {items.map((brand, i) => {
+              const isClone = slides && i >= activeBrands.length;
+              return (
+                <div
+                  key={`${brand.id}-${i}`}
+                  title={brand.name}
+                  aria-hidden={isClone || undefined}
+                  className="group flex h-20 w-40 shrink-0 items-center justify-center rounded-2xl bg-white/[0.04] px-6 transition-colors duration-300 hover:border-transparent hover:bg-white sm:h-24 sm:w-48"
+                >
+                  {brand.logo_url ? (
+                    <Image
+                      src={brand.logo_url}
+                      alt={isClone ? '' : brand.name}
+                      width={120}
+                      height={48}
+                      className="max-h-10 w-auto max-w-full object-contain brightness-0 invert transition duration-300 group-hover:brightness-100 group-hover:invert-0 sm:max-h-12"
+                    />
+                  ) : (
+                    <span className="text-center text-base font-extrabold uppercase tracking-wide text-white transition-colors duration-300 group-hover:text-[#05060A]">
+                      {brand.name}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

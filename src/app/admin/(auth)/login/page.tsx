@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#F5A623] flex items-center justify-center shadow-xl mx-auto mb-4">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">
+          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
             DFD SPORTS
           </h1>
           <p className="text-xs font-medium text-gray-400 tracking-[0.2em] uppercase mt-1">

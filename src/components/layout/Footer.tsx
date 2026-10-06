@@ -1,34 +1,120 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CompanySettings } from '@/types/database';
-import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import {
   Phone,
   Mail,
   MapPin,
-  Clock,
-  ShieldCheck,
-  ChevronRight,
+  ChevronDown,
+  MessageCircle,
 } from 'lucide-react';
 
 interface FooterProps {
   company?: CompanySettings | null;
 }
 
+// ── Accordion section (mobile-only) ─────────────────────────────────────────
+function FooterAccordion({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-b border-white/5 md:border-none">
+      {/* Mobile toggle */}
+      <button
+        onClick={() => setOpen((p) => !p)}
+        className="w-full flex items-center justify-between py-4 md:hidden"
+        aria-expanded={open}
+      >
+        <span className="text-white font-bold text-xs uppercase tracking-[0.2em]">
+          {title}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+            open ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+
+      {/* Desktop heading */}
+      <h4 className="hidden md:block text-white font-bold text-xs uppercase tracking-[0.2em] mb-5">
+        {title}
+      </h4>
+
+      {/* Content: always visible on md+, collapsible on mobile */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${
+          open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ── Link list helper ─────────────────────────────────────────────────────────
+function FooterLinkList({
+  items,
+}: {
+  items: { label: string; href: string }[];
+}) {
+  return (
+    <ul className="space-y-3 pb-1">
+      {items.map((item) => (
+        <li key={item.label}>
+          <Link
+            href={item.href}
+            className="text-gray-400 hover:text-white transition-colors text-sm"
+          >
+            {item.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ── Main Footer ──────────────────────────────────────────────────────────────
 export function Footer({ company }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const brandName = company?.company_name || 'DFD SPORTS';
   const fullName = company?.full_name || 'DESTINATION FOR DREAMS';
 
+  const whatsappHref = company?.whatsapp_number
+    ? `https://wa.me/${company.whatsapp_number.replace(/\D/g, '')}`
+    : '#';
+
+  const quickLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'All Collections', href: '/collections' },
+    { label: 'About Us', href: '/about' },
+  ];
+
+  const policyLinks = [
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Delivery Policy', href: '/delivery-policy' },
+    { label: 'Contact Us', href: '/contact' },
+    { label: 'Inquiry', href: '/contact#enquiry' },
+  ];
+
   return (
     <footer className="bg-[#06080C] text-gray-400 text-sm mt-24">
-      {/* Upper Footer Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* ── Upper Footer ──────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* Brand Info */}
+
+          {/* Brand Info — 2 cols on lg */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4 group">
+            <Link href="/" className="flex items-center gap-3 mb-5 group">
               {company?.logo_url ? (
                 <div className="relative w-12 h-12">
                   <Image
@@ -58,6 +144,7 @@ export function Footer({ company }: FooterProps) {
                 'High-performance sports equipment supplier and custom teamwear provider for schools, clubs, academies and tournaments across India.'}
             </p>
 
+            {/* Social icons */}
             <div className="flex items-center gap-3">
               {company?.instagram_url && (
                 <a
@@ -114,126 +201,114 @@ export function Footer({ company }: FooterProps) {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* ── Quick Links ───────────────────────────────────────────── */}
           <div>
-            <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-4">
-              Explore
-            </h4>
-            <ul className="space-y-2.5">
-              {[
-                { label: 'Home', href: '/' },
-                { label: 'All Collections', href: '/collections' },
-                { label: 'Custom Teamwear', href: '/custom-jerseys' },
-                { label: 'About Us', href: '/about' },
-                { label: 'Contact', href: '/contact' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <FooterAccordion title="Quick Links">
+              <FooterLinkList items={quickLinks} />
+            </FooterAccordion>
           </div>
 
-          {/* Teamwear Services */}
+          {/* ── Customer Policies ─────────────────────────────────────── */}
           <div>
-            <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-4">
-              Custom Teamwear
-            </h4>
-            <ul className="space-y-2.5">
-              {[
-                { label: 'Sublimation Jerseys', href: '/custom-jerseys' },
-                { label: 'School & Academy Kits', href: '/custom-jerseys' },
-                { label: 'Club Tournament Wear', href: '/custom-jerseys' },
-                { label: 'Fabric Technologies', href: '/custom-jerseys#fabrics' },
-                { label: 'Custom Quote Enquiry', href: '/contact' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <FooterAccordion title="Customer Policies">
+              <FooterLinkList items={policyLinks} />
+            </FooterAccordion>
           </div>
 
-          {/* Contact Details (From Supabase) */}
+          {/* ── Contact Us ────────────────────────────────────────────── */}
           <div>
-            <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-4">
-              Contact Us
-            </h4>
-            <div className="space-y-3 text-xs leading-relaxed">
-              {company?.phone && (
-                <div className="flex items-start gap-2.5">
-                  <Phone className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                  <a href={`tel:${company.phone}`} className="hover:text-white transition-colors">
-                    {company.phone}
+            <FooterAccordion title="Contact Us">
+              <div className="space-y-3.5 text-sm pb-1">
+                {/* Address */}
+                {company?.address && (
+                  <div className="flex items-start gap-2.5">
+                    <MapPin className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{company.address}</span>
+                  </div>
+                )}
+
+                {/* Phone */}
+                {company?.phone && (
+                  <div className="flex items-center gap-2.5">
+                    <Phone className="w-4 h-4 text-[#F5A623] shrink-0" />
+                    <a
+                      href={`tel:${company.phone}`}
+                      className="hover:text-white transition-colors"
+                    >
+                      {company.phone}
+                    </a>
+                  </div>
+                )}
+
+                {/* Email */}
+                {company?.email && (
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-[#F5A623] shrink-0" />
+                    <a
+                      href={`mailto:${company.email}`}
+                      className="hover:text-white transition-colors break-all"
+                    >
+                      {company.email}
+                    </a>
+                  </div>
+                )}
+
+                {/* WhatsApp */}
+                {company?.whatsapp_number && (
+                  <div className="flex items-center gap-2.5">
+                    {/* WhatsApp icon (brand SVG) */}
+                    <svg
+                      className="w-4 h-4 fill-[#25D366] shrink-0"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      {company.whatsapp_number}
+                    </a>
+                  </div>
+                )}
+
+                {/* WhatsApp chat button */}
+                {company?.whatsapp_number && (
+                  <a
+                    href={`${whatsappHref}?text=Hi%2C%20I%27m%20interested%20in%20your%20sports%20products.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-semibold hover:bg-[#25D366]/20 transition-colors"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    Chat on WhatsApp
                   </a>
-                </div>
-              )}
-
-              {company?.email && (
-                <div className="flex items-start gap-2.5">
-                  <Mail className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                  <a href={`mailto:${company.email}`} className="hover:text-white transition-colors">
-                    {company.email}
-                  </a>
-                </div>
-              )}
-
-              {company?.address && (
-                <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                  <span>{company.address}</span>
-                </div>
-              )}
-
-              {company?.business_hours && (
-                <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                  <span>{company.business_hours}</span>
-                </div>
-              )}
-
-              <div className="pt-2">
-                <WhatsAppButton
-                  phoneNumber={company?.whatsapp_number}
-                  type="general"
-                  variant="whatsapp"
-                  size="sm"
-                  className="w-full justify-center"
-                >
-                  Direct WhatsApp Chat
-                </WhatsAppButton>
+                )}
               </div>
-            </div>
+            </FooterAccordion>
           </div>
         </div>
       </div>
 
-      {/* Sub Footer */}
+      {/* ── Sub Footer ────────────────────────────────────────────────── */}
       <div className="bg-[#040508] py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>© {currentYear} {brandName} ({fullName}). All rights reserved.</p>
-
-          <div className="flex items-center gap-6">
-            <span>Pan-India Supply & Custom Teamwear</span>
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 hover:text-gray-300 transition-colors"
+          <p>
+            © {currentYear} {brandName} ({fullName}). All rights reserved.
+          </p>
+          <div className="flex items-center gap-1">
+            <span>Crafted by</span>
+            <a
+              href="https://www.ekodrix.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#F5A623] hover:text-white transition-colors font-semibold"
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Admin Portal</span>
-            </Link>
+              Ekodrix
+            </a>
           </div>
         </div>
       </div>

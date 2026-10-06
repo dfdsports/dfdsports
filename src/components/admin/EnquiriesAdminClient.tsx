@@ -4,7 +4,7 @@ import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Enquiry } from '@/types/database';
-import { Mail, MessageCircle, Trash2, ChevronDown, ChevronUp, Phone } from 'lucide-react';
+import { Mail, MessageCircle, Trash2, ChevronDown, ChevronUp, Phone, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 
@@ -13,29 +13,29 @@ interface EnquiriesAdminClientProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  new: 'bg-[#F5A623]/15 text-[#F5A623]',
-  contacted: 'bg-blue-900/30 text-blue-300',
-  completed: 'bg-emerald-900/30 text-emerald-300',
-  archived: 'bg-white/5 text-gray-500',
+  new: 'bg-amber-100 text-amber-900 border-amber-300',
+  contacted: 'bg-blue-100 text-blue-900 border-blue-300',
+  completed: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+  archived: 'bg-slate-100 text-slate-700 border-slate-300',
 };
 
 export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleStatusUpdate = async (id: string, status: string) => {
     const supabase = createClient();
     await supabase.from('enquiries').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-    router.refresh();
+    startTransition(() => router.refresh());
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this enquiry permanently?')) return;
     const supabase = createClient();
     await supabase.from('enquiries').delete().eq('id', id);
-    router.refresh();
+    startTransition(() => router.refresh());
   };
 
   const filtered = filterStatus === 'all' ? enquiries : enquiries.filter((e) => e.status === filterStatus);
@@ -49,10 +49,18 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-2xl font-black uppercase tracking-tight text-white">Customer Enquiries</h1>
-        <p className="text-sm text-gray-400 mt-1">{enquiries.length} total enquiries from the website</p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
+            <Mail className="w-7 h-7 text-emerald-600" />
+            Customer Enquiries
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">
+            {enquiries.length} total website inquiries • {counts.new} new
+          </p>
+        </div>
       </div>
 
       {/* Status Filter Tabs */}
@@ -62,22 +70,26 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
             key={status}
             onClick={() => setFilterStatus(status)}
             className={cn(
-              'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all',
+              'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border shadow-xs',
               filterStatus === status
-                ? 'bg-[#F5A623] text-[#080A0F]'
-                : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                ? 'bg-amber-500 text-black border-amber-500 font-bold shadow-sm'
+                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-50 border-slate-200'
             )}
           >
-            {status === 'all' ? 'All' : status} ({count})
+            {status === 'all' ? 'All Enquiries' : status} ({count})
           </button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-[#0E121B] border border-white/5 p-12 text-center">
-          <Mail className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-white mb-2">No {filterStatus !== 'all' ? filterStatus : ''} Enquiries</h3>
-          <p className="text-sm text-gray-400">Enquiries submitted from the website will appear here.</p>
+        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+          <Mail className="w-14 h-14 text-slate-300 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-slate-800 mb-1">
+            No {filterStatus !== 'all' ? filterStatus : ''} Enquiries Found
+          </h3>
+          <p className="text-sm text-slate-500 max-w-md mx-auto">
+            Customer questions submitted from contact forms will appear here.
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -89,83 +101,97 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
             });
 
             return (
-              <div key={enq.id} className={cn('rounded-2xl bg-[#0E121B] border transition-all', enq.status === 'new' ? 'border-[#F5A623]/20' : 'border-white/5')}>
+              <div
+                key={enq.id}
+                className={cn(
+                  'rounded-2xl bg-white border transition-all shadow-xs overflow-hidden',
+                  enq.status === 'new'
+                    ? 'border-amber-400/80 ring-1 ring-amber-400/20'
+                    : 'border-slate-200 hover:border-slate-300'
+                )}
+              >
                 {/* Row Header */}
                 <div
-                  className="flex items-center gap-4 px-5 py-4 cursor-pointer"
+                  className="flex items-center gap-4 px-5 py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : enq.id)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className="font-bold text-white">{enq.name}</span>
-                      <span className={cn('px-2 py-0.5 rounded-md text-[11px] font-bold', STATUS_COLORS[enq.status] || 'bg-white/5 text-gray-400')}>
+                      <span className="font-bold text-slate-900 text-sm">{enq.name}</span>
+                      <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border uppercase', STATUS_COLORS[enq.status] || 'bg-slate-100 text-slate-700 border-slate-200')}>
                         {enq.status}
                       </span>
-                      <span className="text-xs text-gray-500 font-mono capitalize">{enq.enquiry_type?.replace('_', ' ')}</span>
+                      <span className="text-xs text-slate-500 font-medium capitalize bg-slate-100 px-2 py-0.5 rounded-md">
+                        {enq.enquiry_type?.replace('_', ' ')}
+                      </span>
                     </div>
-                    <p className="text-xs text-gray-400 mt-0.5 font-mono">{enq.phone}</p>
+                    <p className="text-xs text-slate-500 mt-0.5 font-mono">{enq.phone}</p>
                   </div>
-                  <div className="text-xs text-gray-500 font-mono hidden sm:block shrink-0">
+                  <div className="text-xs text-slate-400 font-mono hidden sm:block shrink-0">
                     {new Date(enq.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </div>
-                  {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-gray-500 shrink-0" />}
+                  <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </div>
                 </div>
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t border-white/5 pt-4 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div className="px-5 pb-5 border-t border-slate-100 bg-slate-50/60 pt-5 space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
                       {enq.email && (
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Email</p>
-                          <p className="text-gray-300">{enq.email}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Email Address</p>
+                          <p className="text-black font-medium">{enq.email}</p>
                         </div>
                       )}
                       {enq.product_name && (
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Product / Service</p>
-                          <p className="text-gray-300">{enq.product_name}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Product / Service</p>
+                          <p className="text-black font-medium">{enq.product_name}</p>
                         </div>
                       )}
                       {enq.quantity && (
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Quantity</p>
-                          <p className="text-gray-300">{enq.quantity}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Quantity</p>
+                          <p className="text-black font-medium">{enq.quantity}</p>
                         </div>
                       )}
                       {enq.size_or_requirement && (
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Requirement</p>
-                          <p className="text-gray-300">{enq.size_or_requirement}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Requirement Details</p>
+                          <p className="text-black font-medium">{enq.size_or_requirement}</p>
                         </div>
                       )}
                       {enq.customization_details && (
                         <div className="sm:col-span-2">
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Customization Details</p>
-                          <p className="text-gray-300">{enq.customization_details}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Customization Requirements</p>
+                          <p className="text-black font-medium">{enq.customization_details}</p>
                         </div>
                       )}
                       {enq.message && (
                         <div className="sm:col-span-2">
-                          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Message</p>
-                          <p className="text-gray-300 whitespace-pre-line">{enq.message}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Customer Message</p>
+                          <p className="text-black font-medium whitespace-pre-line leading-relaxed">{enq.message}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-white/5">
-                      {/* Status Update Buttons */}
+                    <div className="flex flex-wrap items-center gap-2 pt-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-black mr-1">
+                        Mark status:
+                      </span>
                       {(['new', 'contacted', 'completed', 'archived'] as const).map((s) => (
                         <button
                           key={s}
                           onClick={() => handleStatusUpdate(enq.id, s)}
                           disabled={enq.status === s}
                           className={cn(
-                            'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
+                            'px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs',
                             enq.status === s
-                              ? 'bg-[#F5A623]/20 text-[#F5A623] cursor-default'
-                              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                              ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-bold')
+                              : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
                           )}
                         >
                           Mark {s}
@@ -177,14 +203,14 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
                           href={waUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] text-xs font-bold transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Reply on WhatsApp</span>
                         </a>
                         <button
                           onClick={() => handleDelete(enq.id)}
-                          className="p-2 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-950/20 transition-colors"
+                          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
                           title="Delete enquiry"
                         >
                           <Trash2 className="w-4 h-4" />
