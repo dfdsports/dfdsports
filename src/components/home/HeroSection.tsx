@@ -15,6 +15,35 @@ interface HeroSectionProps {
 
 const SLIDE_MS = 6000;
 
+function renderHeading(heading: string, highlightText?: string | null) {
+  if (!heading) return null;
+  const trimmedHighlight = highlightText?.trim();
+  if (trimmedHighlight && heading.includes(trimmedHighlight)) {
+    const parts = heading.split(trimmedHighlight);
+    return (
+      <>
+        {parts[0]}
+        <span className="text-[#F5A623]">{trimmedHighlight}</span>
+        {parts.slice(1).join(trimmedHighlight)}
+      </>
+    );
+  }
+
+  const words = heading.trim().split(/\s+/);
+  if (words.length <= 1) {
+    return <span className="text-[#F5A623]">{heading}</span>;
+  }
+  const lastWord = words[words.length - 1];
+  const lastIndex = heading.lastIndexOf(lastWord);
+  return (
+    <>
+      {heading.slice(0, lastIndex)}
+      <span className="text-[#F5A623]">{lastWord}</span>
+      {heading.slice(lastIndex + lastWord.length)}
+    </>
+  );
+}
+
 export function HeroSection({ slides, company }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
 
@@ -33,7 +62,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
   const go = (i: number) => setCurrent((i + slides.length) % slides.length);
 
   return (
-    <section className="relative h-screen h-[100svh] min-h-[560px] w-full overflow-hidden bg-[#0A0C12]">
+    <section className="relative h-screen h-[100dvh] min-h-[100dvh] w-full overflow-hidden bg-[#0A0C12]">
       <style>{`@keyframes heroProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){.hero-progress{animation:none!important;transform:scaleX(1)!important}}`}</style>
 
@@ -47,45 +76,67 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
             i === current ? 'opacity-100' : 'opacity-0'
           )}
         >
-          {slide.image_url && (
-            <Image
-              src={slide.image_url}
-              alt={slide.heading}
-              fill
-              sizes="100vw"
-              priority={i === 0}
-              className="object-contain object-[72%_center] lg:object-right"
-            />
+          {slide.mobile_image_url ? (
+            <>
+              <Image
+                src={slide.mobile_image_url}
+                alt={slide.heading}
+                fill
+                sizes="100vw"
+                priority={i === 0}
+                className="object-cover object-center lg:hidden"
+              />
+              {slide.image_url && (
+                <Image
+                  src={slide.image_url}
+                  alt={slide.heading}
+                  fill
+                  sizes="100vw"
+                  priority={i === 0}
+                  className="hidden object-cover lg:block lg:object-right"
+                />
+              )}
+            </>
+          ) : (
+            slide.image_url && (
+              <Image
+                src={slide.image_url}
+                alt={slide.heading}
+                fill
+                sizes="100vw"
+                priority={i === 0}
+                className="object-cover object-center lg:object-right"
+              />
+            )
           )}
         </div>
       ))}
 
-      {/* Overlays: solid dark on text side on desktop, bottom fade on mobile */}
+      {/* Overlays: desktop only */}
       <div className="absolute inset-0 hidden bg-gradient-to-r from-[#0A0C12] from-30% via-[#0A0C12]/70 via-45% to-transparent to-65% lg:block" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C12] via-[#0A0C12]/75 via-45% to-[#0A0C12]/10 lg:hidden" />
       <div className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0C12]/90 to-transparent lg:block" />
 
-      {/* Content — left side, vertically centered */}
-      <div className="relative z-10 flex h-full items-center">
+      {/* Content — bottom on mobile, vertically centered on desktop */}
+      <div className="relative z-10 flex h-full items-end pb-16 sm:pb-20 lg:items-center lg:pb-0">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="max-w-xl text-left">
             {active.eyebrow && (
-              <p className="mb-5 flex items-center gap-3 text-sm font-medium text-[#F5A623]">
+              <p className="mb-3 sm:mb-5 flex items-center gap-3 text-xs sm:text-sm font-medium text-[#F5A623]">
                 {active.eyebrow}
               </p>
             )}
 
-            <h1 className="mb-5 text-[2.5rem] font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
-              {active.heading}
+            <h1 className="mb-4 sm:mb-5 text-[2.25rem] font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+              {renderHeading(active.heading, active.highlight_text)}
             </h1>
 
             {active.description && (
-              <p className="mb-8 max-w-md text-xs leading-relaxed text-gray-300 sm:text-sm">
+              <p className="mb-8 hidden max-w-md text-xs leading-relaxed text-gray-300 sm:text-sm lg:block">
                 {active.description}
               </p>
             )}
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-3">
               {active.primary_cta_text && active.primary_cta_link && (
                 <Link
                   href={active.primary_cta_link}
@@ -96,14 +147,33 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               )}
 
               {active.secondary_cta_text && (
-                <WhatsAppButton
-                  phoneNumber={company?.whatsapp_number}
-                  type="custom_jersey"
-                  variant="dark"
-                  size="lg"
-                >
-                  {active.secondary_cta_text}
-                </WhatsAppButton>
+                <>
+                  {/* Mobile: WhatsApp icon button on right side */}
+                  <div className="lg:hidden">
+                    <WhatsAppButton
+                      phoneNumber={company?.whatsapp_number}
+                      type="custom_jersey"
+                      variant="whatsapp"
+                      size="lg"
+                      className="!h-[48px] !w-[48px] !p-0 !rounded-lg !gap-0"
+                      aria-label={active.secondary_cta_text}
+                    >
+                      <span className="sr-only">{active.secondary_cta_text}</span>
+                    </WhatsAppButton>
+                  </div>
+
+                  {/* Desktop: Full WhatsApp button */}
+                  <div className="hidden lg:block">
+                    <WhatsAppButton
+                      phoneNumber={company?.whatsapp_number}
+                      type="custom_jersey"
+                      variant="whatsapp"
+                      size="lg"
+                    >
+                      {active.secondary_cta_text}
+                    </WhatsAppButton>
+                  </div>
+                </>
               )}
             </div>
           </div>
