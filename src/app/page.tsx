@@ -3,6 +3,7 @@ import { getCompanySettings } from '@/services/company';
 import { getActiveHeroSlides } from '@/services/hero';
 import { getActiveCategories } from '@/services/categories';
 import { getFeaturedProducts } from '@/services/products';
+import { getFeaturedSettings } from '@/services/featuredSettings';
 import { getActiveTeamwear } from '@/services/teamwear';
 import { getActiveFabrics } from '@/services/fabrics';
 import { getActiveBrands } from '@/services/brands';
@@ -39,13 +40,15 @@ export default async function HomePage() {
     getCompanySettings(),
     getActiveHeroSlides(),
     getActiveCategories(),
-    getFeaturedProducts(8),
+    getFeaturedProducts(5),
     getActiveTeamwear(),
     getActiveFabrics(),
     getActiveBrands(),
     getActiveWhyChooseUs(),
     getActiveHighlights(),
   ]);
+
+  const featuredSettings = getFeaturedSettings();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#F5A623] selection:text-black">
@@ -61,7 +64,7 @@ export default async function HomePage() {
         <CategoriesSection categories={categories} />
 
         {/* 3. Featured Products Showcase */}
-        <FeaturedProductsSection products={featuredProducts} company={company} />
+        <FeaturedProductsSection products={featuredProducts} company={company} settings={featuredSettings} />
 
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
         <CustomTeamwearSection teamwear={teamwear} company={company} />

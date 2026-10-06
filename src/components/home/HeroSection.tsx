@@ -80,7 +80,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
             </h1>
 
             {active.description && (
-              <p className="mb-8 max-w-md text-base leading-relaxed text-gray-300 sm:text-lg">
+              <p className="mb-8 max-w-md text-xs leading-relaxed text-gray-300 sm:text-sm">
                 {active.description}
               </p>
             )}

@@ -20,6 +20,7 @@ import {
   X,
   ChevronRight,
   ShieldCheck,
+  Star,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +30,7 @@ const navItems = [
   { label: 'Hero Banners', href: '/admin/hero', icon: ImageIcon },
   { label: 'Categories', href: '/admin/categories', icon: Layers },
   { label: 'Products', href: '/admin/products', icon: Package },
+  { label: 'Featured Products', href: '/admin/featured', icon: Star },
   { label: 'Brands', href: '/admin/brands', icon: Tag },
   { label: 'Custom Teamwear', href: '/admin/teamwear', icon: Shirt },
   { label: 'Fabrics', href: '/admin/fabrics', icon: Gauge },
