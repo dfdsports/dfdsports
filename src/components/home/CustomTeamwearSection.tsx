@@ -36,84 +36,100 @@ interface CustomTeamwearSectionProps {
 
 export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
   return (
-    <section className="bg-white py-10 sm:py-14">
-      <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-10 lg:px-8">
-        {/* Left: text */}
-        <div>
-          <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#B8893A]">
-            Custom team jerseys
-          </p>
-          <h2 className="mb-3.5 text-2xl font-black uppercase leading-tight tracking-tight text-[#111] sm:text-4xl lg:text-5xl">
-            Made for <span className="text-[#D4A24C]">your team</span>
-          </h2>
-          <p className="hidden sm:block mb-6 max-w-sm text-sm leading-relaxed text-[#444] sm:mb-7 sm:text-base sm:text-[#2a2a2a]">
-            High quality, unique designs. Perfect fit for schools, clubs, academies and
-            tournaments.
-          </p>
-          <Link
-            href="/custom-jerseys"
-            className="inline-flex w-full items-center justify-center rounded-xl bg-[#D4A24C] px-6 py-3.5 text-sm font-bold text-[#1a1a1a] shadow-md transition-colors hover:bg-[#C4923C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a1a1a] sm:w-auto sm:rounded-lg sm:py-3 sm:font-semibold"
-          >
-            Customise Your Teamwear
-          </Link>
-        </div>
-
-        {/* Right: jerseys + feature icons */}
-        <div className="mt-2 sm:mt-0">
-          <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end lg:justify-center lg:gap-4">
-            {/* Main jersey: front + back */}
-            <div className="flex w-full max-w-[270px] shrink-0 items-end justify-center sm:max-w-xs lg:w-[52%] lg:max-w-none">
-              {MAIN_PAIR.map((img, i) => (
-                <div
-                  key={img.src}
-                  className={`relative flex aspect-[3/4] w-1/2 items-end justify-center ${i === 1 ? '-ml-3 sm:-ml-5' : ''}`}
-                >
-                  {/* Both images use the same height (h-full, width auto) */}
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    width={600}
-                    height={800}
-                    sizes="(min-width: 1024px) 20vw, 35vw"
-                    className="h-full w-auto max-w-none object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.25)]"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Other designs: placed below main jersey on mobile, side-by-side on desktop */}
-            <div className="flex w-full max-w-[220px] items-end justify-center gap-2 sm:max-w-xs lg:w-[48%] lg:max-w-none">
-              {OTHER_JERSEYS.map((img) => (
-                <div key={img.src} className="relative aspect-[3/4] flex-1">
-                  {/* scale-[1.15] makes these a little taller */}
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    sizes="(min-width: 1024px) 10vw, 20vw"
-                    className="origin-bottom scale-[1.15] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.2)]"
-                  />
-                </div>
-              ))}
-            </div>
+    <section className="bg-[#080A0F] py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FAF8F5] py-10 sm:py-16 px-6 sm:px-10 lg:px-12 shadow-2xl">
+          {/* Background Image */}
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src="https://res.cloudinary.com/v9xqdhgw/image/upload/v1791293795/Abstract_Cream_and_Gold_Brushstrokes.png"
+              alt="Abstract Cream and Gold Brushstrokes Background"
+              fill
+              priority
+              unoptimized
+              className="object-cover object-center"
+            />
           </div>
 
-          {/* Feature icons */}
-          <ul className="mt-7 grid grid-cols-3 gap-2.5 text-center sm:mt-6 sm:grid-cols-6 sm:gap-4">
-            {FEATURES.map(({ icon: Icon, label }) => (
-              <li
-                key={label}
-                className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-100 bg-[#FAFAFA] p-2.5 shadow-2xs sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none"
+          <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-10">
+            {/* Left: text */}
+            <div>
+              <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#B8893A]">
+                Custom team jerseys
+              </p>
+              <h2 className="mb-3.5 text-2xl font-black uppercase leading-tight tracking-tight text-[#111] sm:text-4xl lg:text-5xl">
+                Made for <span className="text-blue-700">your team</span>
+              </h2>
+              <p className="hidden sm:block mb-6 max-w-sm text-sm leading-relaxed text-[#444] sm:mb-7 sm:text-base sm:text-[#2a2a2a]">
+                High quality, unique designs. Perfect fit for schools, clubs, academies and
+                tournaments.
+              </p>
+              <Link
+                href="/custom-jerseys"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-[#D4A24C] px-6 py-3.5 text-sm font-bold text-[#1a1a1a] shadow-md transition-colors hover:bg-[#C4923C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a1a1a] sm:w-auto sm:rounded-lg sm:py-3 sm:font-semibold"
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#D4A24C]/12 text-[#B8893A] sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent sm:text-[#2a2a2a]">
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.75} />
+                Customise Your Teamwear
+              </Link>
+            </div>
+
+            {/* Right: jerseys + feature icons */}
+            <div className="mt-2 sm:mt-0">
+              <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end lg:justify-center lg:gap-4">
+                {/* Main jersey: front + back */}
+                <div className="flex w-full max-w-[270px] shrink-0 items-end justify-center sm:max-w-xs lg:w-[52%] lg:max-w-none">
+                  {MAIN_PAIR.map((img, i) => (
+                    <div
+                      key={img.src}
+                      className={`relative flex aspect-[3/4] w-1/2 items-end justify-center ${i === 1 ? '-ml-3 sm:-ml-5' : ''}`}
+                    >
+                      {/* Both images use the same height (h-full, width auto) */}
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        width={600}
+                        height={800}
+                        sizes="(min-width: 1024px) 20vw, 35vw"
+                        className="h-full w-auto max-w-none object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.25)]"
+                      />
+                    </div>
+                  ))}
                 </div>
-                <span className="text-[11px] font-semibold leading-tight text-[#2a2a2a] sm:font-medium">
-                  {label}
-                </span>
-              </li>
-            ))}
-          </ul>
+
+                {/* Other designs: placed below main jersey on mobile, side-by-side on desktop */}
+                <div className="flex w-full max-w-[220px] items-end justify-center gap-2 sm:max-w-xs lg:w-[48%] lg:max-w-none">
+                  {OTHER_JERSEYS.map((img) => (
+                    <div key={img.src} className="relative aspect-[3/4] flex-1">
+                      {/* scale-[1.15] makes these a little taller */}
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        sizes="(min-width: 1024px) 10vw, 20vw"
+                        className="origin-bottom scale-[1.15] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.2)]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Feature icons */}
+              <ul className="mt-7 grid grid-cols-3 gap-2.5 text-center sm:mt-6 sm:grid-cols-6 sm:gap-4">
+                {FEATURES.map(({ icon: Icon, label }) => (
+                  <li
+                    key={label}
+                    className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-100 bg-[#FAFAFA] p-2.5 shadow-2xs sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none"
+                  >
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#D4A24C]/12 text-[#B8893A] sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent sm:text-[#2a2a2a]">
+                      <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.75} />
+                    </div>
+                    <span className="text-[11px] font-semibold leading-tight text-[#2a2a2a] sm:font-medium">
+                      {label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

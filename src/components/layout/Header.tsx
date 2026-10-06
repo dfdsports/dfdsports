@@ -377,7 +377,7 @@ export function Header({ company }: HeaderProps) {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search Catalog"
-                className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-amber-500/40 text-gray-300 hover:text-white transition-all text-xs group shadow-inner"
+                className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] hover:border-amber-500/40 text-gray-300 hover:text-white transition-all text-xs group shadow-inner"
                 title="Search Products"
               >
                 <Search className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
