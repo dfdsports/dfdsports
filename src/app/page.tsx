@@ -23,7 +23,8 @@ import { WhyChooseUsSection } from '@/components/home/WhyChooseUsSection';
 import { HighlightsSection } from '@/components/home/HighlightsSection';
 import { FinalCTASection } from '@/components/home/FinalCTASection';
 
-export const revalidate = 60; // ISR cache revalidation every 60s for high performance
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function HomePage() {
   // Fetch all live dynamic content concurrently on the server
@@ -42,8 +43,8 @@ export default async function HomePage() {
     getCompanySettings(),
     getActiveHeroSlides(),
     getActiveCategories(),
-    getFeaturedProducts(5),
-    getActiveProducts({ limit: 10 }),
+    getFeaturedProducts(12),
+    getActiveProducts({ limit: 12 }),
     getActiveTeamwear(),
     getActiveFabrics(),
     getActiveBrands(),
@@ -63,6 +64,9 @@ export default async function HomePage() {
         {/* 1. Hero Section */}
         <HeroSection slides={heroSlides} company={company} />
 
+           {/* 7. Brands We Supply (Dynamically shown if brands exist) */}
+        <BrandsSection brands={brands} />
+
         {/* 2. Sports Categories ("Shop the Game") */}
         <CategoriesSection categories={categories} />
 
@@ -80,8 +84,7 @@ export default async function HomePage() {
         {/* 6. Fabric Collection (Dynamically shown if fabrics exist) */}
         <FabricCollectionSection fabrics={fabrics} />
 
-        {/* 7. Brands We Supply (Dynamically shown if brands exist) */}
-        <BrandsSection brands={brands} />
+     
 
         {/* 8. Why DFD Sports (Trust propositions) */}
         <WhyChooseUsSection items={whyChooseUs} />

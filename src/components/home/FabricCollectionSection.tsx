@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Fabric } from '@/types/database';
 import { ChevronLeft, ChevronRight, Layers } from 'lucide-react';
@@ -10,73 +10,78 @@ interface FabricCollectionSectionProps {
 }
 
 export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProps) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const PAGE_SIZE = 8; // 4 in top row + 4 in bottom row
+
   const activeFabrics = (fabrics || []).filter((f) => f.is_active);
 
-  // If no fabric data exists: do not show fake cards, cleanly hide section
+  // If no fabric data exists: cleanly hide section
   if (activeFabrics.length === 0) {
     return null;
   }
 
-  /** Slide by exactly one card (card width + gap) */
-  const slide = (direction: 1 | -1) => {
-    const scroller = scrollerRef.current;
-    const firstCard = scroller?.firstElementChild as HTMLElement | null;
-    if (!scroller || !firstCard) return;
-    scroller.scrollBy({ left: direction * (firstCard.offsetWidth + 16), behavior: 'smooth' });
+  const totalPages = Math.ceil(activeFabrics.length / PAGE_SIZE);
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
   };
 
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
+  };
+
+  // Up to 8 cards for the current page: 4 in first row, up to 4 more at the bottom
+  const visibleFabrics = activeFabrics.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE
+  );
+
   return (
-    <section id="fabrics" className="bg-[#080A0F] py-10 sm:py-14">
+    <section id="fabrics" className="bg-[#080A0F] py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Top row: eyebrow + heading + description left, tagline + arrows right */}
-        <div className="mb-6 flex items-end justify-between gap-8">
+        {/* Top Header Row matching Featured Products text size & color */}
+        <div className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#F5A623]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F5A623] mb-2 sm:mb-2.5">
               Premium fabric collection
             </p>
-            {/* ADDED: heading + small description */}
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Fabrics built for performance
-            </h2>
-            <p className="mt-1.5 max-w-xl text-sm text-gray-400">
+            <h1 className="text-2xl sm:text-4xl font-semibold text-white uppercase font-black">
+              Fabrics built for <span className="text-[#F5A623]">performance</span>
+            </h1>
+            <p className="hidden sm:block mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
               Breathable, durable and moisture-wicking fabrics for comfort on the field.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <p className="hidden text-xs text-white sm:block">
-              High-Performance Fabrics for Every Game
-            </p>
-            <button
-              type="button"
-              onClick={() => slide(-1)}
-              aria-label="Previous fabrics"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => slide(1)}
-              aria-label="Next fabrics"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+          {/* Right Header: Tagline and Next/Previous navigation buttons (hidden on mobile) */}
+          <div className="hidden sm:flex items-center gap-4 shrink-0">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={totalPages <= 1}
+                aria-label="Previous fabrics"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white transition-all hover:bg-white/10 hover:border-amber-500/50 hover:text-[#F5A623] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={totalPages <= 1}
+                aria-label="Next fabrics"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white transition-all hover:bg-white/10 hover:border-amber-500/50 hover:text-[#F5A623] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Slider: 5 cards visible on desktop */}
-        <div
-          ref={scrollerRef}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {activeFabrics.map((fabric) => (
-            <div
-              key={fabric.id}
-              className="group shrink-0 basis-[78%] snap-start sm:basis-[calc(50%-8px)] lg:basis-[calc(23%-12px)]"
-            >
+        {/* 2 columns on mobile, 4 columns on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-5 gap-y-6 sm:gap-y-8">
+          {visibleFabrics.map((fabric) => (
+            <div key={fabric.id} className="group">
               {/* Fabric image with the name overlapping its bottom edge */}
               <div className="relative">
                 <div className="relative aspect-[18/7] w-full overflow-hidden rounded-xl bg-white/5">
@@ -85,7 +90,7 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
                       src={fabric.image_url}
                       alt={fabric.name}
                       fill
-                      sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 78vw"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
                     />
                   ) : (
@@ -95,13 +100,13 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
                   )}
                 </div>
 
-                <h3 className="absolute bottom-0 left-3 translate-y-1/3 text-base font-extrabold uppercase leading-none text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-lg">
+                <h3 className="absolute bottom-0 left-2.5 sm:left-3 translate-y-1/3 text-xs sm:text-base font-extrabold uppercase leading-none text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-lg">
                   {fabric.name}
                 </h3>
               </div>
 
               {fabric.short_description && (
-                <p className="mt-4 line-clamp-1 pl-3 text-xs text-white/90">
+                <p className="mt-3 sm:mt-4 line-clamp-1 pl-2.5 sm:pl-3 text-[11px] sm:text-xs text-white/90">
                   {fabric.short_description}
                 </p>
               )}

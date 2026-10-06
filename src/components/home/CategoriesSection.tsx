@@ -144,14 +144,12 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                         <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />
                       )}
 
-                      {/* Fade: bottom fade on mobile, left-to-right fade on desktop */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent sm:bg-gradient-to-r sm:from-black/50 sm:via-black/10 sm:to-transparent" />
+                      {/* Fade: rich bottom-up fade for legibility with bottom-left content */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
-                      {/* Content — left bottom on mobile, vertically centered on desktop */}
-                      <div className="relative flex h-full min-h-[160px] sm:min-h-[210px] flex-col justify-end sm:justify-center p-3 sm:p-7 text-left items-start">
-                        <span className="mb-0.5 sm:mb-1 text-xs sm:text-sm font-medium tabular-nums text-[#F5A623]">
-                          {String(itemNumber).padStart(2, '0')}
-                        </span>
+                      {/* Content — placed at bottom left */}
+                      <div className="relative flex h-full min-h-[160px] sm:min-h-[210px] flex-col justify-end p-4 sm:p-6 lg:p-7 text-left items-start">
+                     
 
                         <h3 className="text-base sm:text-2xl lg:text-3xl font-extrabold uppercase tracking-wide text-white">
                           {category.name}
@@ -163,9 +161,8 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                           </p>
                         )}
 
-                        <span className="mt-2 sm:mt-4 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-semibold text-[#F5A623]">
+                        <span className="mt-2 sm:mt-3 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-semibold text-[#F5A623]">
                           Explore
-                          <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
                         </span>
                       </div>
                     </Link>

@@ -38,9 +38,8 @@ function FooterAccordion({
           {title}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
-            open ? 'rotate-180' : ''
-          }`}
+          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''
+            }`}
         />
       </button>
 
@@ -51,9 +50,8 @@ function FooterAccordion({
 
       {/* Content: always visible on md+, collapsible on mobile */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${
-          open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
-        }`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
+          }`}
       >
         {children}
       </div>
@@ -107,7 +105,7 @@ export function Footer({ company }: FooterProps) {
   ];
 
   return (
-    <footer className="bg-[#06080C] text-gray-400 text-sm mt-24">
+    <footer className="bg-[#06080C] text-gray-400 text-sm ">
       {/* ── Upper Footer ──────────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
