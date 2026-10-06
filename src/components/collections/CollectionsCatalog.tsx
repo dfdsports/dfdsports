@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Product, Category, Brand, CompanySettings } from '@/types/database';
 import { FilterSidebar } from './FilterSidebar';
+import { ProductCard } from '@/components/ui/ProductCard';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import {
   getProductPriceBounds,
@@ -320,7 +321,7 @@ export function CollectionsCatalog({
     <div className="w-full pb-28 md:pb-0">
       {/* ================= Header Title Section ================= */}
       <div className="mb-6">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl !font-bold font-black uppercase tracking-tight text-white">
           Collections
         </h1>
       </div>
@@ -606,86 +607,14 @@ export function CollectionsCatalog({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {filteredProducts.map((product) => {
-                return (
-                  <div
-                    key={product.id}
-                    className="group rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl border border-white/5"
-                  >
-                    {/* Product Image */}
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-3 sm:p-6 overflow-hidden block"
-                    >
-                      {product.image_url ? (
-                        <Image
-                          src={product.image_url}
-                          alt={product.name}
-                          fill
-                          sizes="(min-width: 1024px) 33vw, 50vw"
-                          className="object-contain p-2 sm:p-4 group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-gray-600">
-                          <Tag className="w-8 h-8 sm:w-10 sm:h-10 mb-1 sm:mb-2 text-gray-500" />
-                          <span className="text-[10px] sm:text-xs uppercase tracking-wider">Gear</span>
-                        </div>
-                      )}
-
-                      {product.brand?.name && (
-                        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/60 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold text-gray-300 uppercase tracking-wider">
-                          {product.brand.name}
-                        </div>
-                      )}
-                    </Link>
-
-                    {/* Details */}
-                    <div className="p-3 sm:p-6 flex flex-col flex-1 justify-between">
-                      <div>
-                        {product.category?.name && (
-                          <p className="text-[9px] sm:text-[11px] font-semibold text-[#F5A623] uppercase tracking-wider mb-0.5 sm:mb-1 truncate">
-                            {product.category.name}
-                          </p>
-                        )}
-                        <Link href={`/products/${product.slug}`}>
-                          <h3 className="text-xs sm:text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-2">
-                            {product.name}
-                          </h3>
-                        </Link>
-                        {product.short_description && (
-                          <p className="hidden sm:block text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
-                            {product.short_description}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Actions */}
-                      <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-4 border-t border-white/5 flex flex-col gap-1.5 sm:gap-2">
-                        <WhatsAppButton
-                          phoneNumber={company?.whatsapp_number}
-                          type="product"
-                          productName={product.name}
-                          variant="whatsapp"
-                          size="sm"
-                          className="w-full justify-center text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3"
-                        >
-                          <span className="sm:hidden">Enquire</span>
-                          <span className="hidden sm:inline">Enquire on WhatsApp</span>
-                        </WhatsAppButton>
-
-                        <Link
-                          href={`/products/${product.slug}`}
-                          className="inline-flex items-center justify-center text-[10px] sm:text-xs font-semibold text-gray-400 hover:text-white py-0.5 sm:py-1 transition-colors"
-                        >
-                          <span>Specifications</span>
-                          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5 sm:gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  company={company}
+                />
+              ))}
             </div>
           )}
         </div>

@@ -124,7 +124,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </p>
             )}
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            <h1 className="text-3xl sm:text-4xl  font-black uppercase tracking-tight text-white mb-4">
               {product.name}
             </h1>
 

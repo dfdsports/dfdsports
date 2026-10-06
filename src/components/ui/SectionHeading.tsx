@@ -51,14 +51,14 @@ export function SectionHeading({
       <div className={cn(centered && 'flex flex-col items-center')}>
         
 
-        <h2 className="text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl uppercase">
+        <h2 className="text-2xl sm:text-3xl leading-[1.1] tracking-tight text-white sm:text-4xl uppercase">
           {renderedTitle}
         </h2>
 
         {subtitle && (
           <p
             className={cn(
-              'mt-4 max-w-xl text-xs md:text-sm m-0 leading-relaxed text-gray-400',
+              'hidden sm:block mt-4 max-w-xl text-xs md:text-sm m-0 leading-relaxed text-gray-400',
               centered && 'mx-auto'
             )}
           >
