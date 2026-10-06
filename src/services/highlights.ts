@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { Highlight } from '@/types/database';
 
 export async function getActiveHighlights(): Promise<Highlight[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('highlights')
       .select('*')

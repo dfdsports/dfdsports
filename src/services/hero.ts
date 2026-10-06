@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { HeroSlide } from '@/types/database';
 
 export async function getActiveHeroSlides(): Promise<HeroSlide[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('hero_slides')
       .select('*')

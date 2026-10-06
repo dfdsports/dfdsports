@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { WhyChooseUs } from '@/types/database';
 
 export async function getActiveWhyChooseUs(): Promise<WhyChooseUs[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('why_choose_us')
       .select('*')

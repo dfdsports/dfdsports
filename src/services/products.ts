@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { Product } from '@/types/database';
 
 export async function getFeaturedProducts(limit = 8): Promise<Product[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('products')
       .select('*, category:categories(id, name, slug), brand:brands(id, name, slug, logo_url)')
@@ -27,11 +28,14 @@ export async function getFeaturedProducts(limit = 8): Promise<Product[]> {
 export async function getActiveProducts(params?: {
   categoryId?: string;
   categorySlug?: string;
+  categorySlugs?: string[];
   brandId?: string;
+  brandSlug?: string;
+  brandSlugs?: string[];
   limit?: number;
 }): Promise<Product[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     let query = supabase
       .from('products')
       .select('*, category:categories(id, name, slug), brand:brands(id, name, slug, logo_url)')
@@ -60,7 +64,19 @@ export async function getActiveProducts(params?: {
     let products = (data || []) as Product[];
 
     if (params?.categorySlug) {
-      products = products.filter(p => p.category?.slug === params.categorySlug);
+      products = products.filter((p) => p.category?.slug === params.categorySlug);
+    }
+
+    if (params?.categorySlugs && params.categorySlugs.length > 0) {
+      products = products.filter((p) => p.category?.slug && params.categorySlugs?.includes(p.category.slug));
+    }
+
+    if (params?.brandSlug) {
+      products = products.filter((p) => p.brand?.slug === params.brandSlug);
+    }
+
+    if (params?.brandSlugs && params.brandSlugs.length > 0) {
+      products = products.filter((p) => p.brand?.slug && params.brandSlugs?.includes(p.brand.slug));
     }
 
     return products;
@@ -72,7 +88,7 @@ export async function getActiveProducts(params?: {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('products')
       .select('*, category:categories(id, name, slug), brand:brands(id, name, slug, logo_url)')

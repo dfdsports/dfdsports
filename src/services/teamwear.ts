@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { Teamwear } from '@/types/database';
 
 export async function getActiveTeamwear(): Promise<Teamwear[]> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('teamwear')
       .select('*')
@@ -44,7 +45,7 @@ export async function getAllTeamwear(): Promise<Teamwear[]> {
 
 export async function getTeamwearBySlug(slug: string): Promise<Teamwear | null> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('teamwear')
       .select('*')
