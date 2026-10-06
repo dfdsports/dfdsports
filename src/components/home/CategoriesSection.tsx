@@ -76,7 +76,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#080A0F] py-20">
+    <section className="relative overflow-hidden bg-black py-10 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Explore"
@@ -85,7 +85,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           subtitle="Quality equipment for every sport"
           align="between"
           action={
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
               <button
                 type="button"
                 onClick={handlePrev}
@@ -121,7 +121,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
             {pages.map((pageCategories, pageIndex) => (
               <div
                 key={pageIndex}
-                className="grid w-full shrink-0 grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid w-full shrink-0 grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3"
               >
                 {pageCategories.map((category, index) => {
                   const itemNumber = pageIndex * ITEMS_PER_PAGE + index + 1;
@@ -129,7 +129,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                     <Link
                       key={category.id}
                       href={`/collections/${category.slug}`}
-                      className="group relative min-h-[210px] w-full overflow-hidden rounded-2xl bg-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
+                      className="group relative min-h-[160px] sm:min-h-[210px] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5A623]"
                     >
                       {/* Photo, pushed right and darkened */}
                       {category.image_url ? (
@@ -137,35 +137,35 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                           src={category.image_url}
                           alt=""
                           fill
-                          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                          sizes="(min-width:1024px) 33vw, 50vw"
                           className="object-cover object-right transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
                         />
                       ) : (
                         <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />
                       )}
 
-                      {/* Lighter fade: only darkens the text side, photo stays clear */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
+                      {/* Fade: bottom fade on mobile, left-to-right fade on desktop */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent sm:bg-gradient-to-r sm:from-black/50 sm:via-black/10 sm:to-transparent" />
 
-                      {/* Content */}
-                      <div className="relative flex h-full min-h-[210px] flex-col justify-center p-6 sm:p-7">
-                        <span className="mb-1 text-sm font-medium tabular-nums text-[#F5A623]">
+                      {/* Content — left bottom on mobile, vertically centered on desktop */}
+                      <div className="relative flex h-full min-h-[160px] sm:min-h-[210px] flex-col justify-end sm:justify-center p-3 sm:p-7 text-left items-start">
+                        <span className="mb-0.5 sm:mb-1 text-xs sm:text-sm font-medium tabular-nums text-[#F5A623]">
                           {String(itemNumber).padStart(2, '0')}
                         </span>
 
-                        <h3 className="text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl">
+                        <h3 className="text-base sm:text-2xl lg:text-3xl font-extrabold uppercase tracking-wide text-white">
                           {category.name}
                         </h3>
 
                         {category.short_description && (
-                          <p className="mt-1 line-clamp-2 max-w-[16rem] text-sm text-gray-400">
+                          <p className="mt-1 hidden line-clamp-2 max-w-[16rem] text-sm text-gray-400 sm:block">
                             {category.short_description}
                           </p>
                         )}
 
-                        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#F5A623]">
+                        <span className="mt-2 sm:mt-4 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-semibold text-[#F5A623]">
                           Explore
-                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                          <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
                         </span>
                       </div>
                     </Link>
