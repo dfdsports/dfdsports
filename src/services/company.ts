@@ -1,9 +1,9 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/public';
 import { CompanySettings } from '@/types/database';
 
 export async function getCompanySettings(): Promise<CompanySettings | null> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const { data, error } = await supabase
       .from('company_settings')
       .select('*')
