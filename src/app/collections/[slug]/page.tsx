@@ -99,63 +99,65 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             actionHref={`https://wa.me/${company?.whatsapp_number || ''}?text=${encodeURIComponent(`Hi DFD Sports, I am looking for ${category.name} equipment.`)}`}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="group rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
+                className="group rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl border border-white/5"
               >
                 <Link
                   href={`/products/${product.slug}`}
-                  className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-6 overflow-hidden block"
+                  className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-3 sm:p-6 overflow-hidden block"
                 >
                   {product.image_url ? (
                     <Image
                       src={product.image_url}
                       alt={product.name}
                       fill
-                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      className="object-contain p-2 sm:p-4 group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-gray-600">
-                      <Tag className="w-10 h-10 mb-2 text-gray-500" />
-                      <span className="text-xs uppercase tracking-wider">Product Gear</span>
+                      <Tag className="w-8 h-8 sm:w-10 sm:h-10 mb-1 sm:mb-2 text-gray-500" />
+                      <span className="text-[10px] sm:text-xs uppercase tracking-wider">Gear</span>
                     </div>
                   )}
                 </Link>
 
-                <div className="p-6 flex flex-col flex-1 justify-between">
+                <div className="p-3 sm:p-6 flex flex-col flex-1 justify-between">
                   <div>
                     <Link href={`/products/${product.slug}`}>
-                      <h3 className="text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-1">
+                      <h3 className="text-xs sm:text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-2">
                         {product.name}
                       </h3>
                     </Link>
                     {product.short_description && (
-                      <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                      <p className="hidden sm:block text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                         {product.short_description}
                       </p>
                     )}
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-2">
+                  <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-4 border-t border-white/5 flex flex-col gap-1.5 sm:gap-2">
                     <WhatsAppButton
                       phoneNumber={company?.whatsapp_number}
                       type="product"
                       productName={product.name}
                       variant="whatsapp"
                       size="sm"
-                      className="w-full justify-center"
+                      className="w-full justify-center text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3"
                     >
-                      Enquire on WhatsApp
+                      <span className="sm:hidden">Enquire</span>
+                      <span className="hidden sm:inline">Enquire on WhatsApp</span>
                     </WhatsAppButton>
 
                     <Link
                       href={`/products/${product.slug}`}
-                      className="inline-flex items-center justify-center text-xs font-semibold text-gray-400 hover:text-white py-1 transition-colors"
+                      className="inline-flex items-center justify-center text-[10px] sm:text-xs font-semibold text-gray-400 hover:text-white py-0.5 sm:py-1 transition-colors"
                     >
                       <span>Specifications</span>
-                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1" />
                     </Link>
                   </div>
                 </div>
