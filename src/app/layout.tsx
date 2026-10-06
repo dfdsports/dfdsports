@@ -64,8 +64,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${outfit.variable} ${jakarta.variable} dark scroll-smooth`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#080A0F] text-[#F3F4F6] font-sans antialiased selection:bg-[#F5A623] selection:text-[#080A0F]">
+      <body
+        className="min-h-screen bg-[#080A0F] text-[#F3F4F6] font-sans antialiased selection:bg-[#F5A623] selection:text-[#080A0F]"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
