@@ -62,7 +62,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
   const go = (i: number) => setCurrent((i + slides.length) % slides.length);
 
   return (
-    <section className="relative h-screen h-[100dvh] min-h-[100dvh] w-full overflow-hidden bg-[#0A0C12]">
+    <section className="relative h-[85vh] h-[85dvh] min-h-[520px] lg:h-screen lg:h-[100dvh] lg:min-h-[100dvh] w-full overflow-hidden bg-[#0A0C12]">
       <style>{`@keyframes heroProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){.hero-progress{animation:none!important;transform:scaleX(1)!important}}`}</style>
 
@@ -113,20 +113,20 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
       ))}
 
       {/* Overlays: desktop only */}
-      <div className="absolute inset-0 hidden bg-gradient-to-r from-[#0A0C12] from-30% via-[#0A0C12]/70 via-45% to-transparent to-65% lg:block" />
-      <div className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0C12]/90 to-transparent lg:block" />
+      {/* <div className="absolute inset-0 hidden bg-gradient-to-r from-[#0A0C12] from-30% via-[#0A0C12]/70 via-45% to-transparent to-65% lg:block" />
+      <div className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0C12]/90 to-transparent lg:block" /> */}
 
       {/* Content — bottom on mobile, vertically centered on desktop */}
-      <div className="relative z-10 flex h-full items-end pb-16 sm:pb-20 lg:items-center lg:pb-0">
+      <div className="relative z-10 flex h-full items-end pb-10 sm:pb-20 lg:items-center lg:pb-0">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="max-w-xl text-left">
             {active.eyebrow && (
-              <p className="mb-3 sm:mb-5 flex items-center gap-3 text-xs sm:text-sm font-medium text-[#F5A623]">
+              <p className="mb-2.5 sm:mb-5 flex items-center gap-3 text-xs sm:text-sm font-medium text-[#F5A623]">
                 {active.eyebrow}
               </p>
             )}
 
-            <h1 className="mb-4 sm:mb-5 text-[2.25rem] font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            <h1 className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold leading-[1.05] tracking-tight text-white">
               {renderHeading(active.heading, active.highlight_text)}
             </h1>
 
@@ -136,11 +136,11 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               </p>
             )}
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               {active.primary_cta_text && active.primary_cta_link && (
                 <Link
                   href={active.primary_cta_link}
-                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-6 py-3.5 text-sm font-bold text-[#0A0C12] transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-base"
+                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-[#0A0C12] transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {active.primary_cta_text}
                 </Link>
@@ -155,7 +155,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                       type="custom_jersey"
                       variant="whatsapp"
                       size="lg"
-                      className="!h-[48px] !w-[48px] !p-0 !rounded-lg !gap-0"
+                      className="!h-[46px] !w-[46px] sm:!h-[48px] sm:!w-[48px] !p-0 !rounded-lg !gap-0"
                       aria-label={active.secondary_cta_text}
                     >
                       <span className="sr-only">{active.secondary_cta_text}</span>

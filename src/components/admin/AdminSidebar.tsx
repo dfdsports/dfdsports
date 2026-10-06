@@ -20,7 +20,6 @@ import {
   X,
   ChevronRight,
   ShieldCheck,
-  Star,
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -57,7 +56,6 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Products', href: '/admin/products', icon: Package },
       { label: 'Categories', href: '/admin/categories', icon: Layers },
-      { label: 'Featured Products', href: '/admin/featured', icon: Star },
       { label: 'Brands', href: '/admin/brands', icon: Tag },
     ],
   },

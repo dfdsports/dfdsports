@@ -2,7 +2,7 @@ import React from 'react';
 import { getCompanySettings } from '@/services/company';
 import { getActiveHeroSlides } from '@/services/hero';
 import { getActiveCategories } from '@/services/categories';
-import { getFeaturedProducts } from '@/services/products';
+import { getFeaturedProducts, getActiveProducts } from '@/services/products';
 import { getFeaturedSettings } from '@/services/featuredSettings';
 import { getActiveTeamwear } from '@/services/teamwear';
 import { getActiveFabrics } from '@/services/fabrics';
@@ -15,6 +15,7 @@ import { Footer } from '@/components/layout/Footer';
 import { HeroSection } from '@/components/home/HeroSection';
 import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { FeaturedProductsSection } from '@/components/home/FeaturedProductsSection';
+import { AllProductsSection } from '@/components/home/AllProductsSection';
 import { CustomTeamwearSection } from '@/components/home/CustomTeamwearSection';
 import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
 import { BrandsSection } from '@/components/home/BrandsSection';
@@ -31,6 +32,7 @@ export default async function HomePage() {
     heroSlides,
     categories,
     featuredProducts,
+    allProducts,
     teamwear,
     fabrics,
     brands,
@@ -41,6 +43,7 @@ export default async function HomePage() {
     getActiveHeroSlides(),
     getActiveCategories(),
     getFeaturedProducts(5),
+    getActiveProducts({ limit: 10 }),
     getActiveTeamwear(),
     getActiveFabrics(),
     getActiveBrands(),
@@ -63,25 +66,30 @@ export default async function HomePage() {
         {/* 2. Sports Categories ("Shop the Game") */}
         <CategoriesSection categories={categories} />
 
-        {/* 3. Featured Products Showcase */}
+        {/* 3. Featured Products Showcase (Untouched, original design) */}
         <FeaturedProductsSection products={featuredProducts} company={company} settings={featuredSettings} />
+
+    
 
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
         <CustomTeamwearSection teamwear={teamwear} company={company} />
 
-        {/* 5. Fabric Collection (Dynamically shown if fabrics exist) */}
+            {/* 5. All Products Showcase (New product cards: 10 items, 5 per row, View All button) */}
+        <AllProductsSection products={allProducts} company={company} />
+
+        {/* 6. Fabric Collection (Dynamically shown if fabrics exist) */}
         <FabricCollectionSection fabrics={fabrics} />
 
-        {/* 6. Brands We Supply (Dynamically shown if brands exist) */}
+        {/* 7. Brands We Supply (Dynamically shown if brands exist) */}
         <BrandsSection brands={brands} />
 
-        {/* 7. Why DFD Sports (Trust propositions) */}
+        {/* 8. Why DFD Sports (Trust propositions) */}
         <WhyChooseUsSection items={whyChooseUs} />
 
-        {/* 8. Business Highlights (Confirmed stats only, hidden if empty) */}
+        {/* 9. Business Highlights (Confirmed stats only, hidden if empty) */}
         <HighlightsSection highlights={highlights} />
 
-        {/* 9. Final CTA */}
+        {/* 10. Final CTA */}
         <FinalCTASection company={company} />
       </main>
 
