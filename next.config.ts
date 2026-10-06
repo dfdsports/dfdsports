@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Redirect any stale /admin/dashboard bookmark → admin root
+      {
+        source: '/admin/dashboard',
+        destination: '/admin',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
