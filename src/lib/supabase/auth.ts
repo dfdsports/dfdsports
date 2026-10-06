@@ -13,7 +13,10 @@ export async function getAdminUser() {
       return null;
     }
     return user;
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE' || err?.message?.includes('Dynamic server usage')) {
+      throw err;
+    }
     console.warn('Auth check error:', err);
     return null;
   }
