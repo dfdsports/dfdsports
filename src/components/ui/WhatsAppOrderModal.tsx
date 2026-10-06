@@ -168,15 +168,15 @@ export function WhatsAppOrderModal({
       {open && (
         <div
           ref={overlayRef}
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           onClick={(e) => { if (e.target === overlayRef.current) closeModal(); }}
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-          <div className="relative z-10 w-full max-w-md bg-[#0D1119] rounded-3xl shadow-2xl border border-white/10 overflow-hidden">
+          <div className="relative z-10 w-full max-w-md bg-[#0D1119] rounded-3xl shadow-2xl border border-white/10 overflow-hidden max-h-[90vh] flex flex-col">
 
             {/* Header */}
-            <div className="bg-gradient-to-br from-[#0d2b1a] to-[#0D1119] px-6 pt-6 pb-5 border-b border-white/5">
+            <div className="bg-gradient-to-br from-[#0d2b1a] to-[#0D1119] px-6 pt-6 pb-5 border-b border-white/5 shrink-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/30 flex items-center justify-center shrink-0">
@@ -186,7 +186,7 @@ export function WhatsAppOrderModal({
                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#25D366]">
                       WhatsApp Order
                     </p>
-                    <h2 className="text-sm font-black text-white leading-snug line-clamp-1 mt-0.5">
+                    <h2 className="text-sm font-bold text-white leading-snug line-clamp-1 mt-0.5">
                       {productName}
                     </h2>
                     {productCategory && (
@@ -196,7 +196,7 @@ export function WhatsAppOrderModal({
                 </div>
                 <button
                   onClick={closeModal}
-                  className="ml-3 shrink-0 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                  className="ml-3 shrink-0 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
                   aria-label="Close"
                 >
                   <X className="w-4 h-4" />
@@ -205,7 +205,7 @@ export function WhatsAppOrderModal({
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4 overflow-y-auto flex-1 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {done ? (
                 <div className="flex flex-col items-center gap-3 py-6 text-center">
                   <CheckCircle2 className="w-12 h-12 text-[#25D366]" />

@@ -1,7 +1,6 @@
 import React from 'react';
 import { getAdminUser } from '@/lib/supabase/auth';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
-import '../../app/globals.css';
 
 export const metadata = {
   title: 'DFD Sports Admin CMS',

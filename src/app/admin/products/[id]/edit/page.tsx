@@ -25,8 +25,8 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black uppercase tracking-tight text-white">Edit Product</h1>
-        <p className="text-sm text-gray-400 mt-1">Update product details, images, and specifications.</p>
+        <h1 className="text-2xl font-bold uppercase tracking-tight text-black">Edit Product</h1>
+        <p className="text-sm text-slate-600 mt-1">Update product details, images, and specifications.</p>
       </div>
       <ProductForm mode="edit" initialData={product} categories={categories} brands={brands} />
     </div>

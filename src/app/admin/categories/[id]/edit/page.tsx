@@ -19,8 +19,8 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-black uppercase tracking-tight text-white">Edit Category</h1>
-        <p className="text-sm text-gray-400 mt-1">Update category details and visibility.</p>
+        <h1 className="text-2xl font-bold uppercase tracking-tight text-black">Edit Category</h1>
+        <p className="text-sm text-slate-600 mt-1">Update category details and visibility.</p>
       </div>
       <CategoryForm mode="edit" initialData={category} />
     </div>

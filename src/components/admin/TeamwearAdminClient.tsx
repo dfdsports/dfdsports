@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Teamwear } from '@/types/database';
 import { Plus, Edit2, Trash2, Save, X, Upload, CheckCircle2, Shirt, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AdminModal } from '@/components/admin/AdminModal';
 
 interface TeamwearAdminClientProps {
   items: Teamwear[];
@@ -250,19 +251,19 @@ export function TeamwearAdminClient({ items }: TeamwearAdminClientProps) {
   };
 
   const inputCls =
-    'w-full px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-200 transition-all shadow-xs';
-  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2';
+    'w-full px-4 py-3 rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-300 transition-all shadow-xs font-medium';
+  const labelCls = 'block text-xs font-semibold uppercase tracking-wider text-black mb-2';
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Custom Teamwear & Jersey Templates</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Manage 360 front/back mockups, color palettes, and customization options.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Custom Teamwear & Jersey Templates</h1>
+          <p className="text-sm text-slate-600 mt-0.5">Manage 360 front/back mockups, color palettes, and customization options.</p>
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Jersey Model
         </button>
@@ -270,17 +271,19 @@ export function TeamwearAdminClient({ items }: TeamwearAdminClientProps) {
 
       {error && <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-xs">{error}</div>}
 
-      {showForm && (
-        <form onSubmit={handleSave} className="rounded-2xl bg-white border-2 border-amber-400/80 shadow-md p-6 space-y-6">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
-              {editing ? 'Edit Teamwear Model' : 'Create Jersey Template'}
-            </h3>
-            <button type="button" onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-700">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
+      {/* Create/Edit Modal */}
+      <AdminModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        title={editing ? 'Edit teamwear model' : 'Create teamwear model'}
+        subtitle={
+          editing
+            ? `Customize jersey specs and options for ${editing.title}`
+            : 'Add a new customizable team jersey template'
+        }
+        maxWidth="4xl"
+      >
+        <form onSubmit={handleSave} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>
@@ -564,7 +567,7 @@ export function TeamwearAdminClient({ items }: TeamwearAdminClientProps) {
                   onChange={handleChange}
                   className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500"
                 />
-                <span className="text-sm font-bold text-slate-800">
+                <span className="text-sm font-bold text-black">
                   Active & Live on Teamwear Builder
                 </span>
               </label>
@@ -575,16 +578,21 @@ export function TeamwearAdminClient({ items }: TeamwearAdminClientProps) {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-colors"
+              className="px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || uploadingFront || uploadingBack}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
-              {isPending ? 'Saving...' : savedSuccess ? (
+              {isPending ? (
+                <>
+                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : savedSuccess ? (
                 <>
                   <CheckCircle2 className="w-4 h-4 text-emerald-950" /> Saved!
                 </>
@@ -596,7 +604,8 @@ export function TeamwearAdminClient({ items }: TeamwearAdminClientProps) {
             </button>
           </div>
         </form>
-      )}
+      </AdminModal>
+
 
       {/* Teamwear List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

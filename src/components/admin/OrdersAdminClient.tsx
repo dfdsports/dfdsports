@@ -79,11 +79,11 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
             <ShoppingBag className="w-7 h-7 text-amber-600" />
             WhatsApp Orders
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             {orders.length} total customer orders • {counts.new} pending actions
           </p>
         </div>
@@ -114,8 +114,8 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
             className={cn(
               'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border shadow-xs',
               filterStatus === s
-                ? 'bg-amber-500 text-slate-950 border-amber-500 font-extrabold shadow-sm'
-                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-slate-200'
+                ? 'bg-amber-500 text-black border-amber-500 font-bold shadow-sm'
+                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-50 border-slate-200'
             )}
           >
             {s === 'all' ? 'All Orders' : STATUS_CONFIG[s].label} ({s === 'all' ? counts.all : counts[s]})
@@ -164,12 +164,12 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="font-bold text-slate-900 text-sm truncate">{order.name}</span>
+                      <span className="font-bold text-black text-sm truncate">{order.name}</span>
                       <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border', cfg.color)}>
                         {cfg.label}
                       </span>
                       {order.status === 'new' && (
-                        <span className="text-[10px] bg-amber-500/20 text-amber-900 border border-amber-400/40 px-2 py-0.5 rounded-full font-extrabold animate-pulse">
+                        <span className="text-[10px] bg-amber-500/20 text-amber-900 border border-amber-400/40 px-2 py-0.5 rounded-full font-bold animate-pulse">
                           ACTION NEEDED
                         </span>
                       )}
@@ -245,8 +245,8 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
                           className={cn(
                             'px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs',
                             order.status === s
-                              ? cn(STATUS_CONFIG[s].color, 'cursor-default ring-1 ring-black/5 font-extrabold')
-                              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-slate-200'
+                              ? cn(STATUS_CONFIG[s].color, 'cursor-default ring-1 ring-black/5 font-bold')
+                              : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
                           )}
                         >
                           {STATUS_CONFIG[s].label}
@@ -265,7 +265,7 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
                         </a>
                         <button
                           onClick={() => handleDelete(order.id)}
-                          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
+                          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer"
                           title="Delete order record"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -298,9 +298,9 @@ function InfoRow({
     <div className={span ? 'sm:col-span-2' : ''}>
       <div className="flex items-center gap-1.5 mb-1">
         {icon}
-        <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-black">{label}</p>
       </div>
-      <p className="text-sm font-semibold text-slate-800 pl-5 leading-relaxed">{children}</p>
+      <p className="text-sm font-semibold text-black pl-5 leading-relaxed">{children}</p>
     </div>
   );
 }

@@ -97,17 +97,17 @@ export default async function AdminDashboardPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">
             Dashboard Overview
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             Welcome to DFD Sports administration. Monitor orders, update catalogue, and track leads.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/admin/orders"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs shadow-sm transition-all cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>Orders ({orders.length})</span>
@@ -147,12 +147,12 @@ export default async function AdminDashboardPage() {
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${stat.iconBg} font-bold`}>
                 <stat.icon className="w-5 h-5" />
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
             </div>
             <div>
-              <p className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</p>
-              <p className="text-sm font-bold text-slate-700 mt-1">{stat.label}</p>
-              <p className={`text-xs mt-0.5 font-medium ${stat.highlight ? 'text-amber-600 font-bold' : 'text-slate-400'}`}>
+              <p className="text-3xl font-bold text-black tracking-tight">{stat.value}</p>
+              <p className="text-sm font-bold text-black mt-1">{stat.label}</p>
+              <p className={`text-xs mt-0.5 font-medium ${stat.highlight ? 'text-amber-600 font-bold' : 'text-slate-500'}`}>
                 {stat.sub}
               </p>
             </div>
@@ -162,7 +162,7 @@ export default async function AdminDashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3.5">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3.5">
           Quick Actions & Management
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
@@ -175,7 +175,7 @@ export default async function AdminDashboardPage() {
               <div className={`w-11 h-11 rounded-xl ${action.color} flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm`}>
                 <action.icon className="w-5 h-5" />
               </div>
-              <span className="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">
+              <span className="text-xs font-bold text-slate-800 group-hover:text-black transition-colors">
                 {action.label}
               </span>
             </Link>
@@ -193,7 +193,7 @@ export default async function AdminDashboardPage() {
                 <ShoppingBag className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-slate-900">Recent WhatsApp Orders</h2>
+                <h2 className="text-sm font-bold text-black">Recent WhatsApp Orders</h2>
                 <p className="text-xs text-slate-500">{orders.length} total orders recorded</p>
               </div>
             </div>
@@ -215,7 +215,7 @@ export default async function AdminDashboardPage() {
                 <div key={ord.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-slate-900 truncate">{ord.name}</p>
+                      <p className="text-sm font-bold text-black truncate">{ord.name}</p>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                         ord.status === 'new'
                           ? 'bg-amber-100 text-amber-800'
@@ -258,7 +258,7 @@ export default async function AdminDashboardPage() {
                 <Mail className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-slate-900">Recent Customer Enquiries</h2>
+                <h2 className="text-sm font-bold text-black">Recent Customer Enquiries</h2>
                 <p className="text-xs text-slate-500">{enquiries.length} total inquiries received</p>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default async function AdminDashboardPage() {
                 <div key={enq.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-slate-900 truncate">{enq.name}</p>
+                      <p className="text-sm font-bold text-black truncate">{enq.name}</p>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                         enq.status === 'new'
                           ? 'bg-amber-100 text-amber-800'

@@ -46,6 +46,15 @@
   background: #2b3548;
 }
 
+/* Hide scrollbar utility */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
 /* Smooth glass and dark depth utilities */
 .bg-sports-gradient {
   background: radial-gradient(circle at 75% 20%, rgba(245, 166, 35, 0.08) 0%, rgba(8, 10, 15, 0) 60%),

@@ -140,11 +140,11 @@ export function FeaturedAdminClient({ initialSettings, products }: FeaturedAdmin
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
             <Sparkles className="w-7 h-7 text-amber-600" />
             Featured Products
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             Up to 5 products showcase on homepage. Select custom card accents and save.
           </p>
         </div>
@@ -186,7 +186,7 @@ export function FeaturedAdminClient({ initialSettings, products }: FeaturedAdmin
               value={selectedProductIdToAdd}
               onChange={(e) => setSelectedProductIdToAdd(e.target.value)}
               disabled={isLimitReached || updatingId !== null}
-              className="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 shadow-xs"
+              className="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs text-black font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 shadow-xs"
             >
               <option value="" disabled hidden>
                 {isLimitReached ? '5/5 Slots Filled' : '— Select a product to feature —'}
@@ -199,7 +199,7 @@ export function FeaturedAdminClient({ initialSettings, products }: FeaturedAdmin
               type="button"
               onClick={handleAdd}
               disabled={!selectedProductIdToAdd || isLimitReached || updatingId !== null}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               Add
@@ -316,7 +316,7 @@ export function FeaturedAdminClient({ initialSettings, products }: FeaturedAdmin
               type="button"
               onClick={handleSaveAll}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm uppercase tracking-wider transition-all active:scale-95 disabled:opacity-60 shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm uppercase tracking-wider transition-all active:scale-95 disabled:opacity-60 shadow-sm cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving…' : 'Save Colors'}
