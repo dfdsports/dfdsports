@@ -65,95 +65,113 @@ export function ProductsList({ products }: ProductsListProps) {
   };
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">Products</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{products.length} products total</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Products Catalog</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{products.length} total products in database</p>
         </div>
         <Link
           href="/admin/products/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F5A623] hover:bg-[#E09612] text-[#080A0F] font-bold text-sm transition-all active:scale-95"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Product</span>
+          <span>Add New Product</span>
         </Link>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-950/40 border border-red-700/40 flex items-center gap-3 text-red-300 text-sm">
-          <AlertCircle className="w-4 h-4" /> {error}
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-800 text-sm shadow-xs">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" /> {error}
         </div>
       )}
 
       {products.length === 0 ? (
-        <div className="rounded-2xl bg-[#0E121B] border border-white/5 p-12 text-center">
-          <Tag className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-white mb-2">No Products Yet</h3>
-          <p className="text-sm text-gray-400 mb-6">Add your first product to get started.</p>
-          <Link href="/admin/products/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F5A623] text-[#080A0F] font-bold text-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+          <Tag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-slate-800 mb-2">No Products Yet</h3>
+          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
+          <Link href="/admin/products/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm">
             <Plus className="w-4 h-4" /> Add First Product
           </Link>
         </div>
       ) : (
-        <div className="rounded-2xl bg-[#0E121B] border border-white/5 overflow-hidden">
+        <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Product</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Category</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 hidden md:table-cell">Brand</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Featured</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
-                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
+                <tr className="border-b border-slate-200 bg-slate-50/80">
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Product</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden lg:table-cell">Category</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 hidden md:table-cell">Brand</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Featured</th>
+                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-100">
                 {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={product.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-[#141924] shrink-0">
+                        <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                           {product.image_url ? (
                             <Image src={product.image_url} alt={product.name} fill className="object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <Tag className="w-4 h-4 text-gray-600" />
+                              <Tag className="w-4 h-4 text-slate-400" />
                             </div>
                           )}
                         </div>
                         <div>
-                          <p className="font-semibold text-white line-clamp-1">{product.name}</p>
-                          <code className="text-[11px] text-gray-500">{product.slug}</code>
+                          <p className="font-bold text-slate-900 line-clamp-1">{product.name}</p>
+                          <code className="text-[11px] text-slate-400">{product.slug}</code>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 hidden lg:table-cell text-gray-400 text-xs">{product.category?.name || '—'}</td>
-                    <td className="px-5 py-4 hidden md:table-cell text-gray-400 text-xs">{product.brand?.name || '—'}</td>
+                    <td className="px-5 py-4 hidden lg:table-cell text-slate-600 font-medium text-xs">{product.category?.name || '—'}</td>
+                    <td className="px-5 py-4 hidden md:table-cell text-slate-600 font-medium text-xs">{product.brand?.name || '—'}</td>
                     <td className="px-5 py-4">
-                      <button onClick={() => handleToggle(product, 'is_featured')} title={product.is_featured ? 'Remove from featured' : 'Mark as featured'}>
+                      <button
+                        onClick={() => handleToggle(product, 'is_featured')}
+                        title={product.is_featured ? 'Remove from featured' : 'Mark as featured'}
+                        className="p-1 rounded-lg hover:bg-slate-100 transition-colors"
+                      >
                         {product.is_featured
-                          ? <Star className="w-4 h-4 text-[#F5A623] fill-[#F5A623]" />
-                          : <StarOff className="w-4 h-4 text-gray-600" />}
+                          ? <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                          : <StarOff className="w-4 h-4 text-slate-300 hover:text-slate-500" />}
                       </button>
                     </td>
                     <td className="px-5 py-4">
-                      <span className={cn('px-2.5 py-1 rounded-lg text-[11px] font-bold',
-                        product.is_active ? 'bg-emerald-900/30 text-emerald-300' : 'bg-white/5 text-gray-500'
+                      <span className={cn('px-2.5 py-1 rounded-lg text-[11px] font-bold border',
+                        product.is_active
+                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                          : 'bg-slate-100 text-slate-500 border-slate-200'
                       )}>
                         {product.is_active ? 'Active' : 'Hidden'}
                       </span>
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-1 justify-end">
-                        <button onClick={() => handleToggle(product, 'is_active')} className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Toggle visibility">
+                        <button
+                          onClick={() => handleToggle(product, 'is_active')}
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                          title="Toggle visibility"
+                        >
                           {product.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
-                        <Link href={`/admin/products/${product.id}/edit`} className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                        <Link
+                          href={`/admin/products/${product.id}/edit`}
+                          className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                        >
                           <Edit2 className="w-4 h-4" />
                         </Link>
-                        <button onClick={() => handleDelete(product)} disabled={deletingId === product.id} className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-950/20 transition-colors disabled:opacity-50" title="Delete product and media">
+                        <button
+                          onClick={() => handleDelete(product)}
+                          disabled={deletingId === product.id}
+                          className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50"
+                          title="Delete product and media"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

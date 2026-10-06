@@ -72,28 +72,28 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
   };
 
   const inputCls =
-    'w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm border border-white/5';
+    'w-full px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm border border-slate-200 transition-all shadow-xs';
 
-  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2';
+  const labelCls = 'block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2';
 
   return (
-    <form onSubmit={handleSave} className="space-y-8">
+    <form onSubmit={handleSave} className="space-y-8 max-w-4xl">
       {saveStatus === 'success' && (
-        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-700/40 flex items-center gap-3 text-emerald-300 text-sm">
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-emerald-800 text-sm shadow-xs">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
           <span>Company details saved successfully!</span>
         </div>
       )}
       {saveStatus === 'error' && (
-        <div className="p-4 rounded-xl bg-red-950/40 border border-red-700/40 flex items-center gap-3 text-red-300 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0" />
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-800 text-sm shadow-xs">
+          <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Basic Info */}
-      <section className="rounded-2xl bg-[#0E121B] border border-white/5 p-6 space-y-5">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-white">Brand Identity</h3>
+      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">Brand Identity</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={labelCls}>Company Short Name</label>
@@ -119,17 +119,17 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Contact Details */}
-      <section className="rounded-2xl bg-[#0E121B] border border-white/5 p-6 space-y-5">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-white">Contact Information</h3>
+      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">Contact Information</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={labelCls}>Phone Number</label>
             <input name="phone" value={form.phone} onChange={handleChange} className={inputCls} placeholder="+91 99999 99999" />
           </div>
           <div>
-            <label className={labelCls}>WhatsApp Number <span className="text-[#F5A623]">*</span></label>
+            <label className={labelCls}>WhatsApp Number <span className="text-amber-600">*</span></label>
             <input name="whatsapp_number" value={form.whatsapp_number} onChange={handleChange} className={inputCls} placeholder="919999999999 (without + sign, with country code)" />
-            <p className="text-[11px] text-gray-500 mt-1">Format: 91XXXXXXXXXX (no +, no spaces). This number is used for all WhatsApp CTAs.</p>
+            <p className="text-[11px] text-slate-400 mt-1">Format: 91XXXXXXXXXX (no +, no spaces). This number receives all WhatsApp orders & leads.</p>
           </div>
           <div>
             <label className={labelCls}>Email Address</label>
@@ -151,8 +151,8 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Social Media */}
-      <section className="rounded-2xl bg-[#0E121B] border border-white/5 p-6 space-y-5">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-white">Social Media Links</h3>
+      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+        <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 pb-2 border-b border-slate-100">Social Media Links</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={labelCls}>Instagram URL</label>
@@ -174,11 +174,11 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Save Button */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 pt-2">
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#F5A623] hover:bg-[#E09612] text-[#080A0F] font-bold text-sm transition-all active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           <span>{isPending ? 'Saving...' : 'Save Company Details'}</span>

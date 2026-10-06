@@ -6,7 +6,7 @@ import { getProductBySlug, getActiveProducts } from '@/services/products';
 import { getCompanySettings } from '@/services/company';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
+import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
 import {
   ArrowLeft,
   CheckCircle,
@@ -170,29 +170,26 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </div>
             )}
 
-            {/* Prominent WhatsApp Quotation Block */}
             <div className="rounded-2xl bg-gradient-to-r from-[#141924] to-[#0F131C] p-6 shadow-xl mb-8">
               <p className="text-xs uppercase tracking-[0.2em] font-bold text-[#F5A623] mb-1">
-                FAST WHATSAPP QUOTATION
+                WHATSAPP ORDER
               </p>
               <h3 className="text-base font-bold text-white mb-2">
-                Order or Enquire for Institutional / Bulk Supply
+                Order via WhatsApp – Fast &amp; Easy
               </h3>
               <p className="text-xs text-gray-400 leading-relaxed mb-5">
-                We supply schools, sports academies, clubs and tournaments pan-India. Click below to
-                receive instant product specs, volume pricing, and delivery timeline.
+                Fill in your details and we&apos;ll process your order instantly. We supply schools, academies, clubs and tournaments pan-India.
               </p>
 
-              <WhatsAppButton
-                phoneNumber={company?.whatsapp_number}
-                type="product"
+              <WhatsAppOrderModal
+                whatsappNumber={company?.whatsapp_number}
                 productName={product.name}
-                variant="whatsapp"
+                productCategory={product.category?.name}
+                productSizes={product.sizes}
+                label="Order on WhatsApp"
                 size="lg"
-                className="w-full justify-center text-center py-4"
-              >
-                Enquire on WhatsApp
-              </WhatsAppButton>
+                className="w-full"
+              />
             </div>
 
             {/* Supply Guarantee Pills */}
@@ -279,16 +276,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                       </h4>
                     </Link>
                     <div className="mt-4 pt-3 border-t border-white/5">
-                      <WhatsAppButton
-                        phoneNumber={company?.whatsapp_number}
-                        type="product"
+                      <WhatsAppOrderModal
+                        whatsappNumber={company?.whatsapp_number}
                         productName={rel.name}
-                        variant="whatsapp"
+                        productCategory={rel.category?.name}
+                        productSizes={rel.sizes}
+                        label="Order"
                         size="sm"
-                        className="w-full justify-center"
-                      >
-                        Enquire
-                      </WhatsAppButton>
+                        className="w-full"
+                      />
                     </div>
                   </div>
                 </div>
