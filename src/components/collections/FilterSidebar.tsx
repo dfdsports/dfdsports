@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Category, Brand } from '@/types/database';
-import { PriceRangeSlider } from './PriceRangeSlider';
 import { Check, Filter, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -46,7 +45,6 @@ export function FilterSidebar({
   // Collapsible section states for smooth accordion if needed
   const [categoriesOpen, setCategoriesOpen] = useState(true);
   const [brandsOpen, setBrandsOpen] = useState(true);
-  const [priceOpen, setPriceOpen] = useState(true);
 
   // Search filter inside categories if many
   const [categorySearch, setCategorySearch] = useState('');
@@ -256,18 +254,6 @@ export function FilterSidebar({
             )}
           </div>
         )}
-
-        {/* ================= PRICE RANGE FILTER ================= */}
-        <div className="pt-5">
-          <PriceRangeSlider
-            min={priceBounds.min}
-            max={priceBounds.max}
-            minValue={priceRange[0]}
-            maxValue={priceRange[1]}
-            step={priceBounds.max - priceBounds.min > 5000 ? 100 : 50}
-            onChange={onPriceChange}
-          />
-        </div>
       </div>
 
       {/* Clear Filters CTA Button in Sidebar */}

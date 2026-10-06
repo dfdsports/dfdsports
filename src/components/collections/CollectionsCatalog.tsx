@@ -20,6 +20,13 @@ import {
   X,
   RotateCcw,
   ArrowUpDown,
+  Search,
+  Check,
+  ChevronDown,
+  Flame,
+  ArrowDownAZ,
+  ArrowUpZA,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -99,6 +106,48 @@ export function CollectionsCatalog({
   const [searchQuery, setSearchQuery] = useState<string>(parseSearchQuery);
   const [sortBy, setSortBy] = useState<string>(parseSortBy);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [mobileSortOpen, setMobileSortOpen] = useState(false);
+  const [desktopSortOpen, setDesktopSortOpen] = useState(false);
+
+  const desktopSortRef = useRef<HTMLDivElement>(null);
+
+  const sortOptions = [
+    {
+      value: 'featured',
+      label: 'Featured',
+      subtitle: 'DFD Sports recommendations',
+      icon: Flame,
+    },
+    {
+      value: 'newest',
+      label: 'Newest Arrivals',
+      subtitle: 'Latest gear in stock',
+      icon: Sparkles,
+    },
+    {
+      value: 'name-asc',
+      label: 'Name: A to Z',
+      subtitle: 'Alphabetical ascending order',
+      icon: ArrowDownAZ,
+    },
+    {
+      value: 'name-desc',
+      label: 'Name: Z to A',
+      subtitle: 'Alphabetical descending order',
+      icon: ArrowUpZA,
+    },
+  ];
+
+  // Close desktop sort dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (desktopSortRef.current && !desktopSortRef.current.contains(e.target as Node)) {
+        setDesktopSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Sync state with URL when back/forward occurs
   useEffect(() => {
@@ -109,9 +158,9 @@ export function CollectionsCatalog({
     setSortBy(parseSortBy());
   }, [searchParams, parseCategories, parseBrands, parseMinPrice, parseMaxPrice, parseSearchQuery, parseSortBy]);
 
-  // Lock body scroll for mobile drawer
+  // Lock body scroll for mobile drawers
   useEffect(() => {
-    if (mobileDrawerOpen) {
+    if (mobileDrawerOpen || mobileSortOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -119,7 +168,7 @@ export function CollectionsCatalog({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileDrawerOpen]);
+  }, [mobileDrawerOpen, mobileSortOpen]);
 
   // Debounced URL updates
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -193,6 +242,11 @@ export function CollectionsCatalog({
     updateUrlParams(selectedCategories, selectedBrands, priceRange, searchQuery, newSort);
   };
 
+  const handleSearchChange = (newQuery: string) => {
+    setSearchQuery(newQuery);
+    updateUrlParams(selectedCategories, selectedBrands, priceRange, newQuery, sortBy);
+  };
+
   const handleClearAll = () => {
     setSelectedCategories([]);
     setSelectedBrands([]);
@@ -262,61 +316,58 @@ export function CollectionsCatalog({
     return filterAndSortProducts(initialProducts, filterState, priceBounds);
   }, [initialProducts, selectedCategories, selectedBrands, isPriceFiltered, priceRange, searchQuery, sortBy, priceBounds]);
 
-  const singleSelectedCategory =
-    selectedCategories.length === 1
-      ? categories.find((c) => c.slug === selectedCategories[0])
-      : null;
-
   return (
-    <div className="w-full">
+    <div className="w-full pb-28 md:pb-0">
       {/* ================= Header Title Section ================= */}
-      <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.25em] font-semibold text-[#F5A623] mb-2">
-          CATALOG & GEAR
-        </p>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
-          {singleSelectedCategory
-            ? `${singleSelectedCategory.name} COLLECTION`
-            : selectedCategories.length > 1
-            ? 'FILTERED SPORTS COLLECTIONS'
-            : 'ALL SPORTS COLLECTIONS'}
+      <div className="mb-6">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white">
+          Collections
         </h1>
-        <p className="text-sm text-gray-400 mt-2 max-w-2xl leading-relaxed">
-          Browse genuine sports equipment, team jerseys and training accessories. Enquire directly on
-          WhatsApp for live availability and quotations.
-        </p>
       </div>
 
-      {/* ================= Mobile/Tablet Filter Trigger Bar (< md) ================= */}
-      <div className="md:hidden flex flex-wrap items-center justify-between gap-3 mb-6 p-4 rounded-2xl bg-[#0E121B] border border-white/10 shadow-lg">
-        <button
-          type="button"
-          onClick={() => setMobileDrawerOpen(true)}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95"
-        >
-          <SlidersHorizontal className="w-4 h-4 text-[#F5A623]" />
-          <span>Filters</span>
-          {activeFilterCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-[#F5A623] text-[#080A0F] text-[10px] font-black">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-
-        <div className="relative flex-1">
-          <select
-            value={sortBy}
-            onChange={(e) => handleSortChange(e.target.value)}
-            className="w-full appearance-none px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-wider text-white focus:outline-none focus:border-[#F5A623] pr-8"
+      {/* ================= Mobile Floating Bottom Filter & Sort Capsule (< md) ================= */}
+      <div className="md:hidden fixed bottom-6 inset-x-0 z-40 flex justify-center pointer-events-none px-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="pointer-events-auto flex items-center gap-1 p-1.5 rounded-full bg-[#0C101A]/95 backdrop-blur-2xl border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.9)] max-w-xs w-full">
+          {/* Mobile Filter Pill Button */}
+          <button
+            type="button"
+            onClick={() => setMobileDrawerOpen(true)}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer shadow-sm',
+              activeFilterCount > 0
+                ? 'bg-[#F5A623] text-[#080A0F] shadow-lg shadow-[#F5A623]/30'
+                : 'bg-white/10 hover:bg-white/15 text-white'
+            )}
           >
-            <option value="featured" className="bg-[#0B0E14] text-white">Sort: Featured</option>
-            <option value="price-low" className="bg-[#0B0E14] text-white">Price: Low to High</option>
-            <option value="price-high" className="bg-[#0B0E14] text-white">Price: High to Low</option>
-            <option value="name-asc" className="bg-[#0B0E14] text-white">Name: A to Z</option>
-            <option value="name-desc" className="bg-[#0B0E14] text-white">Name: Z to A</option>
-            <option value="newest" className="bg-[#0B0E14] text-white">Newest Arrivals</option>
-          </select>
-          <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <SlidersHorizontal className={cn('w-3.5 h-3.5', activeFilterCount > 0 ? 'text-[#080A0F]' : 'text-[#F5A623]')} />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-[#080A0F] text-[#F5A623] text-[10px] font-black">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+
+          {/* Vertical Separator */}
+          <div className="h-4 w-px bg-white/15 shrink-0" />
+
+          {/* Mobile Sort Pill Button */}
+          <button
+            type="button"
+            onClick={() => setMobileSortOpen(true)}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all active:scale-95 cursor-pointer truncate',
+              sortBy !== 'featured'
+                ? 'bg-amber-500/20 text-[#F5A623] border border-amber-500/40'
+                : 'bg-white/10 hover:bg-white/15 text-white'
+            )}
+          >
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
+            <span className="truncate">
+              {sortOptions.find((o) => o.value === sortBy)?.label || 'Sort'}
+            </span>
+            <ChevronDown className="w-3 h-3 text-gray-400 shrink-0" />
+          </button>
         </div>
       </div>
 
@@ -344,9 +395,9 @@ export function CollectionsCatalog({
         {/* ================= Products Area ================= */}
         <div className="flex-1 min-w-0 w-full">
           {/* Top Bar above Product Grid */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-white/10">
-            {/* Dynamic Product Count */}
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6 border-b border-white/10">
+            {/* Left: Product Count */}
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-base font-black uppercase tracking-wider text-white">
                 {filteredProducts.length}{' '}
                 {filteredProducts.length === 1 ? 'Product' : 'Products'}
@@ -358,26 +409,115 @@ export function CollectionsCatalog({
               )}
             </div>
 
-            {/* Desktop Sort Dropdown */}
-            <div className="hidden md:flex items-center gap-2.5">
-              <label htmlFor="desktop-sort" className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Sort by:
-              </label>
-              <div className="relative">
-                <select
-                  id="desktop-sort"
-                  value={sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
-                  className="appearance-none px-4 py-2 rounded-xl bg-[#0E121B] border border-white/10 text-xs font-bold text-white focus:outline-none focus:border-[#F5A623] pr-8 cursor-pointer hover:border-white/20 transition-colors"
-                >
-                  <option value="featured" className="bg-[#0B0E14] text-white">Featured</option>
-                  <option value="price-low" className="bg-[#0B0E14] text-white">Price: Low to High</option>
-                  <option value="price-high" className="bg-[#0B0E14] text-white">Price: High to Low</option>
-                  <option value="name-asc" className="bg-[#0B0E14] text-white">Name: A to Z</option>
-                  <option value="name-desc" className="bg-[#0B0E14] text-white">Name: Z to A</option>
-                  <option value="newest" className="bg-[#0B0E14] text-white">Newest Arrivals</option>
-                </select>
-                <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            {/* Right: Modern Search Input + Sort Dropdown */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+              {/* Inline Search Bar */}
+              <div className="relative flex-1 sm:w-64">
+                <Search className="w-4 h-4 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Filter catalog products..."
+                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0E121B] border border-white/10 text-xs font-medium text-white placeholder:text-gray-500 focus:outline-none focus:border-amber-400 transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={handleClearSearch}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-white cursor-pointer"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Desktop Custom Sort Dropdown */}
+              <div className="hidden md:flex items-center gap-2 shrink-0">
+                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  Sort:
+                </span>
+                <div className="relative" ref={desktopSortRef}>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopSortOpen(!desktopSortOpen)}
+                    className={cn(
+                      'flex items-center gap-2.5 px-3.5 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer shadow-inner',
+                      desktopSortOpen
+                        ? 'bg-[#141925] border-amber-400 text-amber-300'
+                        : sortBy !== 'featured'
+                        ? 'bg-[#141925] border-amber-500/40 text-white'
+                        : 'bg-[#0E121B] hover:bg-white/10 border-white/10 hover:border-amber-500/40 text-white'
+                    )}
+                  >
+                    {(() => {
+                      const currentOpt = sortOptions.find((o) => o.value === sortBy) || sortOptions[0];
+                      const Icon = currentOpt.icon;
+                      return (
+                        <>
+                          <Icon className="w-3.5 h-3.5 text-[#F5A623]" />
+                          <span>{currentOpt.label}</span>
+                        </>
+                      );
+                    })()}
+                    <ChevronDown
+                      className={cn(
+                        'w-3.5 h-3.5 text-gray-400 transition-transform duration-200',
+                        desktopSortOpen && 'rotate-180 text-[#F5A623]'
+                      )}
+                    />
+                  </button>
+
+                  {desktopSortOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-72 bg-[#0C101A]/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-white/5 mb-1 flex items-center justify-between">
+                        <span>Sort Products By</span>
+                        <ArrowUpDown className="w-3 h-3 text-amber-400" />
+                      </div>
+                      {sortOptions.map((opt) => {
+                        const Icon = opt.icon;
+                        const isSelected = sortBy === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              handleSortChange(opt.value);
+                              setDesktopSortOpen(false);
+                            }}
+                            className={cn(
+                              'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left group',
+                              isSelected
+                                ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] font-bold border border-amber-500/30'
+                                : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
+                            )}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div
+                                className={cn(
+                                  'w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors',
+                                  isSelected
+                                    ? 'bg-amber-500/20 text-[#F5A623]'
+                                    : 'bg-white/5 text-gray-400 group-hover:text-white group-hover:bg-white/10'
+                                )}
+                              >
+                                <Icon className="w-3.5 h-3.5" />
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <span className="font-semibold leading-tight truncate">{opt.label}</span>
+                                <span className="text-[10px] text-gray-400 group-hover:text-gray-300 font-normal leading-tight truncate">
+                                  {opt.subtitle}
+                                </span>
+                              </div>
+                            </div>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -421,20 +561,6 @@ export function CollectionsCatalog({
                 );
               })}
 
-              {/* Price Range */}
-              {isPriceFiltered && (
-                <button
-                  type="button"
-                  onClick={handleResetPrice}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20 transition-all group cursor-pointer"
-                >
-                  <span>
-                    ₹{priceRange[0].toLocaleString('en-IN')} — ₹{priceRange[1].toLocaleString('en-IN')}
-                  </span>
-                  <X className="w-3 h-3 text-emerald-300 group-hover:scale-125 transition-transform" />
-                </button>
-              )}
-
               {/* Search Query */}
               {isSearchFiltered && (
                 <button
@@ -468,7 +594,7 @@ export function CollectionsCatalog({
                 No products found
               </h3>
               <p className="text-sm text-gray-400 max-w-md mb-6 leading-relaxed">
-                No products match your selected filter criteria. Try adjusting your categories, brands, or price range.
+                No products match your selected filter criteria. Try adjusting your categories, brands, or search terms.
               </p>
               <button
                 type="button"
@@ -480,86 +606,80 @@ export function CollectionsCatalog({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {filteredProducts.map((product) => {
-                const productPrice = extractProductPrice(product);
-
                 return (
                   <div
                     key={product.id}
-                    className="group rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl border border-white/5"
+                    className="group rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl border border-white/5"
                   >
                     {/* Product Image */}
                     <Link
                       href={`/products/${product.slug}`}
-                      className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-6 overflow-hidden block"
+                      className="relative aspect-square w-full bg-[#0E121B] flex items-center justify-center p-3 sm:p-6 overflow-hidden block"
                     >
                       {product.image_url ? (
                         <Image
                           src={product.image_url}
                           alt={product.name}
                           fill
-                          className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                          sizes="(min-width: 1024px) 33vw, 50vw"
+                          className="object-contain p-2 sm:p-4 group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center text-gray-600">
-                          <Tag className="w-10 h-10 mb-2 text-gray-500" />
-                          <span className="text-xs uppercase tracking-wider">Product Gear</span>
+                          <Tag className="w-8 h-8 sm:w-10 sm:h-10 mb-1 sm:mb-2 text-gray-500" />
+                          <span className="text-[10px] sm:text-xs uppercase tracking-wider">Gear</span>
                         </div>
                       )}
 
                       {product.brand?.name && (
-                        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/60 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold text-gray-300 uppercase tracking-wider">
                           {product.brand.name}
-                        </div>
-                      )}
-
-                      {productPrice != null && (
-                        <div className="absolute top-4 right-4 bg-[#F5A623] text-[#080A0F] px-2.5 py-1 rounded-md text-xs font-black tracking-tight shadow-md">
-                          ₹{productPrice.toLocaleString('en-IN')}
                         </div>
                       )}
                     </Link>
 
                     {/* Details */}
-                    <div className="p-6 flex flex-col flex-1 justify-between">
+                    <div className="p-3 sm:p-6 flex flex-col flex-1 justify-between">
                       <div>
                         {product.category?.name && (
-                          <p className="text-[11px] font-semibold text-[#F5A623] uppercase tracking-wider mb-1">
+                          <p className="text-[9px] sm:text-[11px] font-semibold text-[#F5A623] uppercase tracking-wider mb-0.5 sm:mb-1 truncate">
                             {product.category.name}
                           </p>
                         )}
                         <Link href={`/products/${product.slug}`}>
-                          <h3 className="text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-1">
+                          <h3 className="text-xs sm:text-base font-bold text-white group-hover:text-[#F5A623] transition-colors line-clamp-2">
                             {product.name}
                           </h3>
                         </Link>
                         {product.short_description && (
-                          <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                          <p className="hidden sm:block text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                             {product.short_description}
                           </p>
                         )}
                       </div>
 
                       {/* Actions */}
-                      <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-2">
+                      <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-4 border-t border-white/5 flex flex-col gap-1.5 sm:gap-2">
                         <WhatsAppButton
                           phoneNumber={company?.whatsapp_number}
                           type="product"
                           productName={product.name}
                           variant="whatsapp"
                           size="sm"
-                          className="w-full justify-center"
+                          className="w-full justify-center text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3"
                         >
-                          Enquire on WhatsApp
+                          <span className="sm:hidden">Enquire</span>
+                          <span className="hidden sm:inline">Enquire on WhatsApp</span>
                         </WhatsAppButton>
 
                         <Link
                           href={`/products/${product.slug}`}
-                          className="inline-flex items-center justify-center text-xs font-semibold text-gray-400 hover:text-white py-1 transition-colors"
+                          className="inline-flex items-center justify-center text-[10px] sm:text-xs font-semibold text-gray-400 hover:text-white py-0.5 sm:py-1 transition-colors"
                         >
-                          <span>View Specifications</span>
-                          <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                          <span>Specifications</span>
+                          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1" />
                         </Link>
                       </div>
                     </div>
@@ -571,7 +691,7 @@ export function CollectionsCatalog({
         </div>
       </div>
 
-      {/* ================= Mobile Filter Drawer (Modal Sheet: < md) ================= */}
+      {/* ================= Mobile Filter Drawer (Bottom Sheet: 75% Height, Top 25% Empty) ================= */}
       <div
         className={cn(
           'fixed inset-0 z-[100] transition-[opacity,visibility] duration-300 md:hidden',
@@ -579,21 +699,26 @@ export function CollectionsCatalog({
         )}
         aria-hidden={!mobileDrawerOpen}
       >
-        {/* Backdrop blur overlay */}
+        {/* Backdrop blur overlay (clicking top 25% closes the sheet) */}
         <div
           onClick={() => setMobileDrawerOpen(false)}
           className="absolute inset-0 bg-[#080A0F]/80 backdrop-blur-md transition-opacity"
         />
 
-        {/* Sliding Panel from Left */}
+        {/* Sliding Bottom Sheet (Bottom to Up, 75% Height) */}
         <div
           className={cn(
-            'absolute inset-y-0 left-0 w-full max-w-sm bg-[#0B0E14] border-r border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
-            mobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+            'absolute bottom-0 inset-x-0 h-[75vh] max-h-[75vh] bg-[#0B0E14] border-t border-white/10 rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out',
+            mobileDrawerOpen ? 'translate-y-0' : 'translate-y-full'
           )}
         >
+          {/* Top Handle Drag Pill */}
+          <div className="pt-3 pb-1 flex justify-center shrink-0 cursor-pointer" onClick={() => setMobileDrawerOpen(false)}>
+            <div className="w-12 h-1.5 bg-white/25 rounded-full" />
+          </div>
+
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-[#0D111A]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0D111A]/80 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[#F5A623]/10 text-[#F5A623]">
                 <SlidersHorizontal className="w-5 h-5" />
@@ -616,7 +741,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="flex-1 overflow-y-auto px-6 py-4 overscroll-contain">
             <FilterSidebar
               categories={categories}
               brands={brands}
@@ -637,7 +762,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Sticky Footer with CTA */}
-          <div className="p-5 border-t border-white/10 bg-[#0D111A] flex items-center gap-3">
+          <div className="p-4 sm:p-5 border-t border-white/10 bg-[#0D111A] flex items-center gap-3 shrink-0">
             {activeFilterCount > 0 && (
               <button
                 type="button"
@@ -654,6 +779,102 @@ export function CollectionsCatalog({
             >
               <span>Show {filteredProducts.length} Products</span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= Mobile Sort Drawer (Bottom Sheet) ================= */}
+      <div
+        className={cn(
+          'fixed inset-0 z-[100] transition-[opacity,visibility] duration-300 md:hidden',
+          mobileSortOpen ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'
+        )}
+        aria-hidden={!mobileSortOpen}
+      >
+        {/* Backdrop blur overlay */}
+        <div
+          onClick={() => setMobileSortOpen(false)}
+          className="absolute inset-0 bg-[#080A0F]/80 backdrop-blur-md transition-opacity"
+        />
+
+        {/* Sliding Bottom Sheet */}
+        <div
+          className={cn(
+            'absolute bottom-0 inset-x-0 bg-[#0B0E14] border-t border-white/15 rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out pb-8',
+            mobileSortOpen ? 'translate-y-0' : 'translate-y-full'
+          )}
+        >
+          {/* Top Handle Drag Pill */}
+          <div
+            className="pt-3 pb-1 flex justify-center shrink-0 cursor-pointer"
+            onClick={() => setMobileSortOpen(false)}
+          >
+            <div className="w-12 h-1.5 bg-white/25 rounded-full" />
+          </div>
+
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0D111A]/80 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-[#F5A623]/10 text-[#F5A623]">
+                <ArrowUpDown className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-white tracking-wide">Sort Products</h2>
+                <p className="text-xs text-gray-400">Choose display ordering</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMobileSortOpen(false)}
+              className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Close sort menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Sort Options List */}
+          <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+            {sortOptions.map((opt) => {
+              const Icon = opt.icon;
+              const isSelected = sortBy === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => {
+                    handleSortChange(opt.value);
+                    setMobileSortOpen(false);
+                  }}
+                  className={cn(
+                    'w-full flex items-center justify-between p-3.5 rounded-2xl transition-all active:scale-98 cursor-pointer text-left',
+                    isSelected
+                      ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/10 border border-amber-500/40 text-[#F5A623]'
+                      : 'bg-white/5 border border-white/5 text-gray-200 hover:bg-white/10'
+                  )}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={cn(
+                        'w-10 h-10 rounded-xl flex items-center justify-center shrink-0',
+                        isSelected ? 'bg-amber-500/20 text-[#F5A623]' : 'bg-white/10 text-gray-400'
+                      )}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-bold text-sm leading-tight text-white">{opt.label}</span>
+                      <span className="text-xs text-gray-400 mt-0.5 leading-tight">{opt.subtitle}</span>
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <div className="w-6 h-6 rounded-full bg-[#F5A623] flex items-center justify-center shrink-0">
+                      <Check className="w-3.5 h-3.5 text-[#080A0F] stroke-[3]" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

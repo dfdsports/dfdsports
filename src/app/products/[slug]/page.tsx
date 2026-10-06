@@ -252,30 +252,36 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-8">
               Related Equipment & Gear
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {relatedProducts.map((rel) => (
                 <div
                   key={rel.id}
-                  className="rounded-3xl overflow-hidden bg-[#0E121B] flex flex-col justify-between shadow-lg hover:-translate-y-1 transition-all"
+                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0E121B] flex flex-col justify-between shadow-lg hover:-translate-y-1 transition-all border border-white/5"
                 >
                   <Link
                     href={`/products/${rel.slug}`}
-                    className="relative aspect-square w-full bg-[#121622] p-4 flex items-center justify-center"
+                    className="relative aspect-square w-full bg-[#121622] p-2 sm:p-4 flex items-center justify-center"
                   >
                     {rel.image_url ? (
-                      <Image src={rel.image_url} alt={rel.name} fill className="object-contain p-4" />
+                      <Image
+                        src={rel.image_url}
+                        alt={rel.name}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, 50vw"
+                        className="object-contain p-2 sm:p-4"
+                      />
                     ) : (
                       <Tag className="w-8 h-8 text-gray-600" />
                     )}
                   </Link>
 
-                  <div className="p-5 flex flex-col justify-between flex-1">
+                  <div className="p-3 sm:p-5 flex flex-col justify-between flex-1">
                     <Link href={`/products/${rel.slug}`}>
-                      <h4 className="text-sm font-bold text-white hover:text-[#F5A623] transition-colors line-clamp-1">
+                      <h4 className="text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors line-clamp-2">
                         {rel.name}
                       </h4>
                     </Link>
-                    <div className="mt-4 pt-3 border-t border-white/5">
+                    <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/5">
                       <WhatsAppOrderModal
                         whatsappNumber={company?.whatsapp_number}
                         productName={rel.name}
@@ -283,7 +289,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                         productSizes={rel.sizes}
                         label="Order"
                         size="sm"
-                        className="w-full"
+                        className="w-full text-xs"
                       />
                     </div>
                   </div>
