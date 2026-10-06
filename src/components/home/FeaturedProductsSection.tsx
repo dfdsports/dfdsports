@@ -56,7 +56,7 @@ export function FeaturedProductsSection({
             align="left"
             className="!mb-0 !pb-0 [&_*]:!mb-0 [&_*]:!pb-0"
           />
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+          <p className="hidden sm:block mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
             {description}
           </p>
         </div>
@@ -70,7 +70,7 @@ export function FeaturedProductsSection({
               className="group block focus-visible:outline-none"
             >
               <div
-                className="relative aspect-[4/5] overflow-hidden rounded-2xl transition-shadow duration-300 group-hover:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-[#F5A623]"
+                className="relative aspect-[4/5] overflow-hidden rounded-sm transition-shadow duration-300 !bg-white group-hover:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-[#F5A623]"
                 style={{ backgroundColor: getCardBg(p.id) }}
               >
                 {p.image_url ? (

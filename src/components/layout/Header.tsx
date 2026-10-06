@@ -100,20 +100,45 @@ export function Header({ company }: HeaderProps) {
   const brandName = company?.company_name || 'DFD SPORTS';
   const fullName = company?.full_name || 'DESTINATION FOR DREAMS';
 
-  // Load from localStorage on mount (no mock data)
+  // Load from localStorage on mount & listen to real-time events from ProductCards
   useEffect(() => {
-    try {
-      const storedCart = localStorage.getItem('dfd_cart');
-      if (storedCart) {
-        setCartItems(JSON.parse(storedCart));
+    const syncStorage = () => {
+      try {
+        const storedCart = localStorage.getItem('dfd_cart');
+        if (storedCart) {
+          setCartItems(JSON.parse(storedCart));
+        } else {
+          setCartItems([]);
+        }
+        const storedWishlist = localStorage.getItem('dfd_wishlist');
+        if (storedWishlist) {
+          setWishlistItems(JSON.parse(storedWishlist));
+        } else {
+          setWishlistItems([]);
+        }
+      } catch {
+        // Ignore JSON parse errors
       }
-      const storedWishlist = localStorage.getItem('dfd_wishlist');
-      if (storedWishlist) {
-        setWishlistItems(JSON.parse(storedWishlist));
-      }
-    } catch {
-      // Ignore JSON parse errors
-    }
+    };
+
+    syncStorage();
+
+    const handleOpenCart = () => setCartOpen(true);
+    const handleOpenWishlist = () => setWishlistOpen(true);
+
+    window.addEventListener('dfd_cart_updated', syncStorage);
+    window.addEventListener('dfd_wishlist_updated', syncStorage);
+    window.addEventListener('dfd_open_cart', handleOpenCart);
+    window.addEventListener('dfd_open_wishlist', handleOpenWishlist);
+    window.addEventListener('storage', syncStorage);
+
+    return () => {
+      window.removeEventListener('dfd_cart_updated', syncStorage);
+      window.removeEventListener('dfd_wishlist_updated', syncStorage);
+      window.removeEventListener('dfd_open_cart', handleOpenCart);
+      window.removeEventListener('dfd_open_wishlist', handleOpenWishlist);
+      window.removeEventListener('storage', syncStorage);
+    };
   }, []);
 
   // Sync to localStorage
@@ -305,7 +330,7 @@ export function Header({ company }: HeaderProps) {
           'sticky top-0 z-50 w-full transition-all duration-300',
           pathname === '/' && '-mb-20',
           isScrolled || mobileMenuOpen
-            ? 'bg-[#080A0F]/85 shadow-lg shadow-black/40'
+            ? 'bg-black shadow-lg shadow-black/40'
             : 'bg-transparent '
         )}
       >
