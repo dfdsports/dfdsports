@@ -22,6 +22,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
 
 interface HeaderProps {
   company?: CompanySettings | null;
@@ -63,6 +64,7 @@ export function Header({ company }: HeaderProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
@@ -338,14 +340,14 @@ export function Header({ company }: HeaderProps) {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
-                <div className="relative w-25 h-25">
-                  <Image
-                    src="/logo.png"
-                    alt={brandName}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
+              <div className="relative w-25 h-25">
+                <Image
+                  src="/logo.png"
+                  alt={brandName}
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </Link>
 
             {/* Desktop Navigation Links */}
@@ -744,14 +746,17 @@ export function Header({ company }: HeaderProps) {
                 </div>
               </div>
 
-              <Link
-                href="/collections"
-                onClick={() => setCartOpen(false)}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#1E3A8A] via-[#2563EB] to-[#F5A623] hover:opacity-95 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-blue-900/30 transition-all hover:scale-[1.02]"
+              <button
+                type="button"
+                onClick={() => {
+                  setCartOpen(false);
+                  setCheckoutModalOpen(true);
+                }}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#1E3A8A] via-[#2563EB] to-[#F5A623] hover:opacity-95 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-blue-900/30 transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <span>Proceed To Checkout</span>
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -1036,6 +1041,38 @@ export function Header({ company }: HeaderProps) {
           )}
         </div>
       </div>
+
+      {/* ===================== CART CHECKOUT / ENQUIRY MODAL ===================== */}
+      <WhatsAppOrderModal
+        isOpen={checkoutModalOpen}
+        onClose={() => setCheckoutModalOpen(false)}
+        hideTrigger
+        whatsappNumber={company?.whatsapp_number}
+        productName={
+          cartItems.length === 1
+            ? cartItems[0].name
+            : cartItems.length > 1
+            ? `${cartItems[0].name} + ${cartItems.length - 1} more`
+            : 'Cart Order'
+        }
+        productCategory={
+          cartSubtotal > 0
+            ? `Total: ₹${cartSubtotal.toLocaleString('en-IN')} • ${totalCartCount} items`
+            : `${totalCartCount} items`
+        }
+        initialQuantity={String(totalCartCount || 1)}
+        showQuantity={false}
+        cartItems={cartItems}
+        cartSubtotal={cartSubtotal}
+        onSuccess={() => {
+          try {
+            localStorage.removeItem('dfd_cart');
+            window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
+          } catch {
+            // Ignore
+          }
+        }}
+      />
     </>
   );
 }

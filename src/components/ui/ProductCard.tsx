@@ -128,7 +128,7 @@ export function ProductCard({
       )}
     >
       {/* Top Image Section */}
-      <div className="relative aspect-square w-full bg-slate-50 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+      <div className="relative aspect-square w-full bg-slate-50 flex items-center justify-center overflow-hidden">
         {/* Brand Tag (Top Left) */}
         {product.brand?.name && (
           <span className="absolute top-2.5 left-2.5 z-10 px-2 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-xs text-[9px] sm:text-[10px] font-bold text-white uppercase tracking-wider shadow-xs">
@@ -170,7 +170,7 @@ export function ProductCard({
               fill
               priority={priority}
               sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-              className="object-contain p-2 sm:p-3 transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">

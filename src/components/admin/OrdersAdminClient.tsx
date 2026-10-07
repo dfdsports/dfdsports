@@ -29,11 +29,11 @@ const STATUS_CONFIG: Record<
   string,
   { label: string; color: string; dot: string }
 > = {
-  new:       { label: 'New',       color: 'bg-amber-100 text-amber-900 border-amber-300',       dot: 'bg-amber-500' },
-  confirmed: { label: 'Confirmed', color: 'bg-blue-100 text-blue-900 border-blue-300',          dot: 'bg-blue-500' },
-  shipped:   { label: 'Shipped',   color: 'bg-purple-100 text-purple-900 border-purple-300',    dot: 'bg-purple-500' },
+  new: { label: 'New', color: 'bg-amber-100 text-amber-900 border-amber-300', dot: 'bg-amber-500' },
+  confirmed: { label: 'Confirmed', color: 'bg-blue-100 text-blue-900 border-blue-300', dot: 'bg-blue-500' },
+  shipped: { label: 'Shipped', color: 'bg-purple-100 text-purple-900 border-purple-300', dot: 'bg-purple-500' },
   delivered: { label: 'Delivered', color: 'bg-emerald-100 text-emerald-900 border-emerald-300', dot: 'bg-emerald-500' },
-  cancelled: { label: 'Cancelled', color: 'bg-rose-100 text-rose-900 border-rose-300',          dot: 'bg-rose-500' },
+  cancelled: { label: 'Cancelled', color: 'bg-rose-100 text-rose-900 border-rose-300', dot: 'bg-rose-500' },
 };
 
 const ALL_STATUSES = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'] as const;
