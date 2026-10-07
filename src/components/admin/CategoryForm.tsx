@@ -152,9 +152,9 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         </div>
       )}
 
-      <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Category Details</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Category Name <span className="text-amber-600">*</span></label>
             <input name="name" value={form.name} onChange={handleNameChange} className={inputCls} placeholder="e.g. Football" required />
@@ -182,12 +182,12 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
           <textarea name="short_description" value={form.short_description} onChange={handleChange} rows={2} className={inputCls} placeholder="e.g. Match & Training Equipment" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Display Order</label>
             <input type="number" name="display_order" value={form.display_order} onChange={handleChange} className={inputCls} min={0} />
           </div>
-          <div className="sm:col-span-2 flex items-end pb-2">
+          <div className="sm:col-span-2 flex items-center sm:items-end pb-1 sm:pb-2">
             <label className="flex items-center gap-3 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -203,7 +203,7 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
       </div>
 
       {/* Image Upload */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-4 shadow-sm">
+      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Category Image</h3>
 
         {form.image_url ? (
@@ -223,7 +223,7 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="w-full max-w-sm aspect-video rounded-xl bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 flex flex-col items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shadow-xs"
+            className="w-full max-w-sm aspect-video rounded-xl bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 flex flex-col items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shadow-xs p-4 text-center"
           >
             {uploading ? (
               <div className="w-6 h-6 rounded-full border-2 border-amber-300 border-t-amber-600 animate-spin" />
@@ -252,7 +252,7 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
       </div>
 
       {/* SEO */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">SEO Metadata</h3>
         <div>
           <label className={labelCls}>SEO Title</label>
@@ -264,11 +264,18 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pt-2">
+      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+        <button
+          type="button"
+          onClick={() => (onCancel ? onCancel() : router.back())}
+          className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={isPending || uploading}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           {isPending ? (
             <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
@@ -276,13 +283,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
             <Save className="w-4 h-4" />
           )}
           <span>{isPending ? 'Saving...' : mode === 'create' ? 'Create Category' : 'Save Changes'}</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => (onCancel ? onCancel() : router.back())}
-          className="px-5 py-3 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
-        >
-          Cancel
         </button>
       </div>
     </form>

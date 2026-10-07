@@ -10,6 +10,7 @@ import { Plus, Edit2, Trash2, Eye, EyeOff, Save, X, Upload, GripVertical, ImageI
 import { cn } from '@/lib/utils';
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 
 interface HeroAdminClientProps {
   slides: HeroSlide[];
@@ -35,6 +36,8 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<HeroSlide | null>(null);
+  const [slideToDelete, setSlideToDelete] = useState<HeroSlide | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [form, setForm] = useState(emptySlide);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -125,8 +128,11 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
     });
   };
 
-  const handleDelete = async (slide: HeroSlide) => {
-    if (!confirm('Delete this hero slide?')) return;
+  const confirmDelete = async () => {
+    if (!slideToDelete) return;
+    const slide = slideToDelete;
+    setIsDeleting(true);
+    setError('');
     try {
       if (slide.image_url) {
         await deleteImageFromCloudinary(slide.image_url);
@@ -135,10 +141,14 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
         await deleteImageFromCloudinary(slide.mobile_image_url);
       }
       const supabase = createClient();
-      await supabase.from('hero_slides').delete().eq('id', slide.id);
-      router.refresh();
+      const { error: deleteError } = await supabase.from('hero_slides').delete().eq('id', slide.id);
+      if (deleteError) throw deleteError;
+      setSlideToDelete(null);
     } catch (err: any) {
       setError(err?.message || 'Delete failed');
+    } finally {
+      setIsDeleting(false);
+      router.refresh();
     }
   };
 
@@ -160,7 +170,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Hero Slide
         </button>
@@ -180,8 +190,8 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
         }
         maxWidth="3xl"
       >
-        <form onSubmit={handleSave} className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <form onSubmit={handleSave} className="space-y-4 sm:space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <div>
               <label className={labelCls}>Eyebrow Text</label>
               <input name="eyebrow" value={form.eyebrow} onChange={handleChange} className={inputCls} placeholder="DESTINATION FOR DREAMS" />
@@ -202,7 +212,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             <textarea name="description" value={form.description} onChange={handleChange} rows={2} className={inputCls} placeholder="Custom jerseys and premium sports equipment..." />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <div>
               <label className={labelCls}>Primary CTA Text</label>
               <input name="primary_cta_text" value={form.primary_cta_text} onChange={handleChange} className={inputCls} placeholder="Explore Collections" />
@@ -214,12 +224,12 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
           </div>
 
           {/* Image Uploads: Desktop + Mobile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
             <div>
               <label className={labelCls}>Desktop Background Image</label>
-              <div className="flex items-center gap-4 mb-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
                 {form.image_url && (
-                  <div className="relative w-32 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
+                  <div className="relative w-32 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs shrink-0">
                     <Image src={form.image_url} alt="Desktop Preview" fill className="object-cover" />
                     <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
                       <X className="w-3.5 h-3.5" />
@@ -230,7 +240,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                   type="button"
                   onClick={() => fileRef.current?.click()}
                   disabled={uploading}
-                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 text-amber-600" /> {uploading ? 'Uploading...' : 'Upload Desktop'}
                 </button>
@@ -241,9 +251,9 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
 
             <div>
               <label className={labelCls}>Mobile Banner Image (Optional)</label>
-              <div className="flex items-center gap-4 mb-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
                 {form.mobile_image_url && (
-                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs shrink-0">
                     <Image src={form.mobile_image_url} alt="Mobile Preview" fill className="object-cover" />
                     <button type="button" onClick={() => setForm((p) => ({ ...p, mobile_image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
                       <X className="w-3.5 h-3.5" />
@@ -254,7 +264,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                   type="button"
                   onClick={() => mobileFileRef.current?.click()}
                   disabled={uploadingMobile}
-                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 text-amber-600" /> {uploadingMobile ? 'Uploading...' : 'Upload Mobile'}
                 </button>
@@ -264,12 +274,12 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
             <div>
               <label className={labelCls}>Display Order</label>
               <input type="number" name="display_order" value={form.display_order} onChange={handleChange} className={inputCls} min={0} />
             </div>
-            <div className="flex items-end pb-2">
+            <div className="sm:col-span-2 flex items-center sm:items-end pb-1 sm:pb-2">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input type="checkbox" name="is_active" checked={form.is_active} onChange={handleChange} className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
                 <span className="text-sm font-bold text-black">Active Slide</span>
@@ -277,11 +287,18 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               disabled={isPending || uploading || uploadingMobile}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -295,32 +312,24 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                 </>
               )}
             </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
           </div>
         </form>
       </AdminModal>
 
-
       {slides.length === 0 && !showForm ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
           <ImageIcon className="w-14 h-14 text-slate-300 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-slate-800 mb-2">No Hero Slides Yet</h3>
           <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Create your first hero slide to appear at the top of the homepage.</p>
-          <button onClick={openCreate} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm">
+          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm w-full sm:w-auto cursor-pointer">
             <Plus className="w-4 h-4" /> Create First Slide
           </button>
         </div>
       ) : (
         <div className="space-y-3">
           {slides.map((slide) => (
-            <div key={slide.id} className={cn('rounded-2xl bg-white border shadow-sm flex items-start gap-4 p-5 hover:shadow-md transition-shadow', slide.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
-              <div className="relative w-28 h-18 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+            <div key={slide.id} className={cn('rounded-2xl bg-white border shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 p-4 sm:p-5 hover:shadow-md transition-shadow', slide.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
+              <div className="relative w-full sm:w-28 h-36 sm:h-18 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                 {slide.image_url ? (
                   <Image src={slide.image_url} alt={slide.heading} fill className="object-cover" />
                 ) : slide.mobile_image_url ? (
@@ -329,11 +338,11 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                   <div className="w-full h-full flex items-center justify-center"><ImageIcon className="w-5 h-5 text-slate-400" /></div>
                 )}
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 w-full">
                 <p className="text-xs text-amber-600 font-bold uppercase tracking-wider mb-0.5">{slide.eyebrow}</p>
                 <p className="font-bold text-slate-900 line-clamp-1">{slide.heading}</p>
                 {slide.description && <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{slide.description}</p>}
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
                   <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border', slide.is_active ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-slate-100 text-slate-500 border-slate-200')}>
                     {slide.is_active ? 'Active' : 'Hidden'}
                   </span>
@@ -345,14 +354,14 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => handleToggle(slide)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+              <div className="flex items-center gap-1 shrink-0 self-end sm:self-center pt-2 sm:pt-0 border-t border-slate-100 sm:border-t-0 w-full sm:w-auto justify-end">
+                <button onClick={() => handleToggle(slide)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
                   {slide.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-                <button onClick={() => openEdit(slide)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <button onClick={() => openEdit(slide)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
                   <Edit2 className="w-4 h-4" />
                 </button>
-                <button onClick={() => handleDelete(slide)} className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                <button onClick={() => setSlideToDelete(slide)} className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" title="Delete slide">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -360,6 +369,23 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(slideToDelete)}
+        onClose={() => setSlideToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Hero Slide"
+        description={
+          slideToDelete
+            ? `Are you sure you want to delete the hero slide "${slideToDelete.heading || slideToDelete.eyebrow}"? Associated banner imagery will also be removed from Cloudinary.`
+            : 'Are you sure you want to delete this hero slide?'
+        }
+        confirmText="Delete Slide"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

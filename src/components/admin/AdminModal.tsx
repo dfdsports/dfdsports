@@ -122,7 +122,7 @@ export function AdminModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="admin-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-5 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
     >
       {/* Dark overlay backdrop */}
       <div
@@ -135,22 +135,22 @@ export function AdminModal({
       <div
         ref={modalRef}
         className={cn(
-          'relative z-10 w-full bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200',
+          'relative z-10 w-full bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[94vh] sm:max-h-[90vh] animate-in zoom-in-95 duration-200',
           MAX_WIDTH_CLASSES[maxWidth] || 'max-w-2xl',
           className
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/80 shrink-0">
-          <div className="min-w-0 pr-4">
+        <div className="flex items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-100 bg-slate-50/80 shrink-0">
+          <div className="min-w-0 pr-3">
             <h2
               id="admin-modal-title"
-              className="text-lg sm:text-xl font-bold text-black tracking-tight"
+              className="text-base sm:text-xl font-bold text-black tracking-tight line-clamp-1"
             >
               {title}
             </h2>
             {subtitle && (
-              <p className="text-xs text-slate-600 mt-0.5 font-medium truncate">
+              <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5 font-medium line-clamp-1 sm:truncate">
                 {subtitle}
               </p>
             )}
@@ -160,7 +160,7 @@ export function AdminModal({
             type="button"
             onClick={() => onCloseRef.current()}
             aria-label="Close modal"
-            className="p-2 rounded-xl text-slate-500 hover:text-black hover:bg-slate-200/60 transition-colors shrink-0 cursor-pointer"
+            className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center rounded-xl text-slate-500 hover:text-black hover:bg-slate-200/60 transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -169,7 +169,7 @@ export function AdminModal({
         {/* Scrollable Body */}
         <div
           data-modal-body="true"
-          className="p-6 overflow-y-auto flex-1 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          className="p-4 sm:p-6 overflow-y-auto flex-1 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {children}
         </div>

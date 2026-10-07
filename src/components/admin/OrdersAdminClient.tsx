@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatPhoneNumber } from '@/lib/whatsapp';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 
 interface OrdersAdminClientProps {
   orders: Order[];
@@ -42,6 +43,8 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [, startTransition] = useTransition();
 
   const handleStatusUpdate = async (id: string, status: string) => {
@@ -53,11 +56,19 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
     startTransition(() => router.refresh());
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Permanently delete this order record?')) return;
-    const supabase = createClient();
-    await supabase.from('orders').delete().eq('id', id);
-    startTransition(() => router.refresh());
+  const confirmDelete = async () => {
+    if (!orderToDelete) return;
+    setIsDeleting(true);
+    try {
+      const supabase = createClient();
+      await supabase.from('orders').delete().eq('id', orderToDelete.id);
+      setOrderToDelete(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+      startTransition(() => router.refresh());
+    }
   };
 
   const filtered =
@@ -156,14 +167,14 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
               >
                 {/* Row Header */}
                 <div
-                  className="flex items-center gap-4 px-5 py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+                  className="flex items-center gap-3 sm:gap-4 px-4 py-3.5 sm:px-5 sm:py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : order.id)}
                 >
                   {/* Status dot */}
                   <div className={cn('w-2.5 h-2.5 rounded-full shrink-0', cfg.dot)} />
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2.5 flex-wrap">
+                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
                       <span className="font-bold text-black text-sm truncate">{order.name}</span>
                       <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border', cfg.color)}>
                         {cfg.label}
@@ -183,7 +194,7 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
                     </p>
                   </div>
 
-                  <div className="shrink-0 flex items-center gap-3">
+                  <div className="shrink-0 flex items-center gap-2 sm:gap-3">
                     <span className="text-xs text-slate-400 font-mono hidden sm:block">
                       {new Date(order.created_at).toLocaleDateString('en-IN', {
                         day: '2-digit',
@@ -199,9 +210,9 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t border-slate-100 bg-slate-50/60 pt-5 space-y-5">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 border-t border-slate-100 bg-slate-50/60 pt-4 sm:pt-5 space-y-4 sm:space-y-5">
                     {/* Info Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
                       <InfoRow icon={<Package className="w-4 h-4 text-amber-600" />} label="Product Name">
                         {order.product_name}
                       </InfoRow>
@@ -232,40 +243,42 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
                       </InfoRow>
                     </div>
 
-                    {/* Status Actions + Delete */}
-                    <div className="flex flex-wrap items-center gap-2 pt-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">
-                        Update Status:
-                      </span>
-                      {ALL_STATUSES.map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => handleStatusUpdate(order.id, s)}
-                          disabled={order.status === s}
-                          className={cn(
-                            'px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs',
-                            order.status === s
-                              ? cn(STATUS_CONFIG[s].color, 'cursor-default ring-1 ring-black/5 font-bold')
-                              : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
-                          )}
-                        >
-                          {STATUS_CONFIG[s].label}
-                        </button>
-                      ))}
+                    {/* Status Actions + Reply */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1 w-full sm:w-auto">
+                          Update Status:
+                        </span>
+                        {ALL_STATUSES.map((s) => (
+                          <button
+                            key={s}
+                            onClick={() => handleStatusUpdate(order.id, s)}
+                            disabled={order.status === s}
+                            className={cn(
+                              'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs cursor-pointer',
+                              order.status === s
+                                ? cn(STATUS_CONFIG[s].color, 'cursor-default ring-1 ring-black/5 font-bold')
+                                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
+                            )}
+                          >
+                            {STATUS_CONFIG[s].label}
+                          </button>
+                        ))}
+                      </div>
 
-                      <div className="ml-auto flex items-center gap-2">
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-t-0">
                         <a
                           href={waReplyUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
                         >
                           <MessageCircle className="w-4 h-4" />
-                          Reply on WhatsApp
+                          <span>Reply on WhatsApp</span>
                         </a>
                         <button
-                          onClick={() => handleDelete(order.id)}
-                          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer"
+                          onClick={() => setOrderToDelete(order)}
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer shrink-0"
                           title="Delete order record"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -279,6 +292,23 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
           })}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(orderToDelete)}
+        onClose={() => setOrderToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Order Record"
+        description={
+          orderToDelete
+            ? `Are you sure you want to permanently delete the order for "${orderToDelete.name}" (${orderToDelete.product_name})? This action cannot be undone.`
+            : 'Are you sure you want to permanently delete this order record?'
+        }
+        confirmText="Delete Order"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
