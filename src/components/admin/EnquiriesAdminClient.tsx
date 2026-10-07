@@ -7,6 +7,7 @@ import { Enquiry } from '@/types/database';
 import { Mail, MessageCircle, Trash2, ChevronDown, ChevronUp, Phone, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 
 interface EnquiriesAdminClientProps {
   enquiries: Enquiry[];
@@ -23,6 +24,8 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [enquiryToDelete, setEnquiryToDelete] = useState<Enquiry | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [, startTransition] = useTransition();
 
   const handleStatusUpdate = async (id: string, status: string) => {
@@ -31,11 +34,19 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
     startTransition(() => router.refresh());
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this enquiry permanently?')) return;
-    const supabase = createClient();
-    await supabase.from('enquiries').delete().eq('id', id);
-    startTransition(() => router.refresh());
+  const confirmDelete = async () => {
+    if (!enquiryToDelete) return;
+    setIsDeleting(true);
+    try {
+      const supabase = createClient();
+      await supabase.from('enquiries').delete().eq('id', enquiryToDelete.id);
+      setEnquiryToDelete(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+      startTransition(() => router.refresh());
+    }
   };
 
   const filtered = filterStatus === 'all' ? enquiries : enquiries.filter((e) => e.status === filterStatus);
@@ -112,11 +123,11 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
               >
                 {/* Row Header */}
                 <div
-                  className="flex items-center gap-4 px-5 py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+                  className="flex items-center gap-3 sm:gap-4 px-4 py-3.5 sm:px-5 sm:py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : enq.id)}
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                       <span className="font-bold text-slate-900 text-sm">{enq.name}</span>
                       <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border uppercase', STATUS_COLORS[enq.status] || 'bg-slate-100 text-slate-700 border-slate-200')}>
                         {enq.status}
@@ -137,8 +148,8 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t border-slate-100 bg-slate-50/60 pt-5 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 border-t border-slate-100 bg-slate-50/60 pt-4 sm:pt-5 space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
                       {enq.email && (
                         <div>
                           <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Email Address</p>
@@ -178,39 +189,41 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-wrap items-center gap-2 pt-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-black mr-1">
-                        Mark status:
-                      </span>
-                      {(['new', 'contacted', 'completed', 'archived'] as const).map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => handleStatusUpdate(enq.id, s)}
-                          disabled={enq.status === s}
-                          className={cn(
-                            'px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs',
-                            enq.status === s
-                              ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-bold')
-                              : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
-                          )}
-                        >
-                          Mark {s}
-                        </button>
-                      ))}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wider text-black mr-1 w-full sm:w-auto">
+                          Mark status:
+                        </span>
+                        {(['new', 'contacted', 'completed', 'archived'] as const).map((s) => (
+                          <button
+                            key={s}
+                            onClick={() => handleStatusUpdate(enq.id, s)}
+                            disabled={enq.status === s}
+                            className={cn(
+                              'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs cursor-pointer',
+                              enq.status === s
+                                ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-bold')
+                                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
+                            )}
+                          >
+                            Mark {s}
+                          </button>
+                        ))}
+                      </div>
 
-                      <div className="ml-auto flex items-center gap-2">
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-t-0">
                         <a
                           href={waUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Reply on WhatsApp</span>
                         </a>
                         <button
-                          onClick={() => handleDelete(enq.id)}
-                          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
+                          onClick={() => setEnquiryToDelete(enq)}
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer shrink-0"
                           title="Delete enquiry"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -224,6 +237,23 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
           })}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(enquiryToDelete)}
+        onClose={() => setEnquiryToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Enquiry"
+        description={
+          enquiryToDelete
+            ? `Are you sure you want to permanently delete the enquiry from "${enquiryToDelete.name}" (${enquiryToDelete.phone || enquiryToDelete.email || 'customer'})? This action cannot be undone.`
+            : 'Are you sure you want to delete this enquiry?'
+        }
+        confirmText="Delete Enquiry"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

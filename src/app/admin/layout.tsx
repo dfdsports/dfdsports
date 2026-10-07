@@ -17,11 +17,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex antialiased">
+    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased w-full">
       <AdminSidebar userEmail={user.email} />
 
-      <div className="flex-1 flex flex-col min-h-screen overflow-auto bg-slate-50/60">
-        <main className="flex-1 p-5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+      <div className="lg:pl-64 flex flex-col min-h-screen w-full min-w-0">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto min-w-0">
           {children}
         </main>
       </div>

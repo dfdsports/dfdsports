@@ -7,6 +7,7 @@ import { WhyChooseUs } from '@/types/database';
 import { Plus, Edit2, Trash2, Save, X, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 
 interface WhyChooseUsAdminClientProps {
   items: WhyChooseUs[];
@@ -24,6 +25,8 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<WhyChooseUs | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<WhyChooseUs | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [form, setForm] = useState(emptyItem);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -84,11 +87,21 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
     });
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this feature?')) return;
-    const supabase = createClient();
-    await supabase.from('why_choose_us').delete().eq('id', id);
-    router.refresh();
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    setIsDeleting(true);
+    setError('');
+    try {
+      const supabase = createClient();
+      const { error: deleteErr } = await supabase.from('why_choose_us').delete().eq('id', itemToDelete.id);
+      if (deleteErr) throw deleteErr;
+      setItemToDelete(null);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to delete feature');
+    } finally {
+      setIsDeleting(false);
+      router.refresh();
+    }
   };
 
   const handleToggle = async (item: WhyChooseUs) => {
@@ -110,7 +123,7 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Item
         </button>
@@ -157,7 +170,7 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Icon Name</label>
               <select
@@ -201,18 +214,18 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
             </label>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -233,26 +246,25 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
         </form>
       </AdminModal>
 
-
       {/* Items List */}
       <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden shadow-sm">
         {items.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-sm">
+          <div className="p-10 sm:p-12 text-center text-slate-400 text-sm">
             No features added yet. Click &quot;Add Item&quot; to highlight your advantages.
           </div>
         ) : (
           items.map((item) => (
             <div
               key={item.id}
-              className="p-5 flex items-start justify-between gap-4 hover:bg-slate-50/70 transition-colors"
+              className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 hover:bg-slate-50/70 transition-colors"
             >
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-3.5 min-w-0 flex-1">
                 <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-5 h-5 text-amber-700" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <h4 className="text-base font-bold text-slate-900">{item.title}</h4>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                    <h4 className="text-base font-bold text-slate-900 truncate">{item.title}</h4>
                     <span
                       className={cn(
                         'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border',
@@ -271,23 +283,23 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center pt-2 sm:pt-0 border-t border-slate-100 sm:border-t-0 w-full sm:w-auto justify-end">
                 <button
                   onClick={() => handleToggle(item)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   {item.is_active ? 'Hide' : 'Show'}
                 </button>
                 <button
                   onClick={() => openEdit(item)}
-                  className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors"
+                  className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
                   title="Edit item"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => handleDelete(item.id)}
-                  className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  onClick={() => setItemToDelete(item)}
+                  className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                   title="Delete item"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -297,6 +309,23 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
           ))
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(itemToDelete)}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Feature Item"
+        description={
+          itemToDelete
+            ? `Are you sure you want to delete "${itemToDelete.title}" from the "Why Choose Us" section?`
+            : 'Are you sure you want to delete this item?'
+        }
+        confirmText="Delete Item"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

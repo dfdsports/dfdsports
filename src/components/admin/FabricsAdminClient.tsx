@@ -8,6 +8,8 @@ import { Fabric } from '@/types/database';
 import { Plus, Edit2, Trash2, Save, X, Upload, CheckCircle2, Layers, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { deleteImageFromCloudinary } from '@/lib/media';
 
 interface FabricsAdminClientProps {
   fabrics: Fabric[];
@@ -28,6 +30,8 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Fabric | null>(null);
+  const [fabricToDelete, setFabricToDelete] = useState<Fabric | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [form, setForm] = useState(emptyFabric);
   const [isPending, startTransition] = useTransition();
   const [uploading, setUploading] = useState(false);
@@ -143,11 +147,24 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
     });
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this fabric option?')) return;
-    const supabase = createClient();
-    await supabase.from('fabrics').delete().eq('id', id);
-    router.refresh();
+  const confirmDelete = async () => {
+    if (!fabricToDelete) return;
+    setIsDeleting(true);
+    setError('');
+    try {
+      if (fabricToDelete.image_url) {
+        await deleteImageFromCloudinary(fabricToDelete.image_url);
+      }
+      const supabase = createClient();
+      const { error: deleteErr } = await supabase.from('fabrics').delete().eq('id', fabricToDelete.id);
+      if (deleteErr) throw deleteErr;
+      setFabricToDelete(null);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to delete fabric');
+    } finally {
+      setIsDeleting(false);
+      router.refresh();
+    }
   };
 
   const handleToggle = async (fabric: Fabric) => {
@@ -169,7 +186,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Fabric
         </button>
@@ -189,7 +206,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
         }
         maxWidth="3xl"
       >
-        <form onSubmit={handleSave} className="space-y-5">
+        <form onSubmit={handleSave} className="space-y-4 sm:space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>
@@ -244,7 +261,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
 
             <div className="md:col-span-2 space-y-3">
               <label className={labelCls}>Fabric Swatch Image</label>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 {form.image_url ? (
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0 shadow-xs">
                     <Image
@@ -266,7 +283,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
                     <Layers className="w-6 h-6" />
                   </div>
                 )}
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 w-full">
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -274,17 +291,17 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
                     accept="image/*"
                     className="hidden"
                   />
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <button
                       type="button"
                       disabled={uploading}
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-bold cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-bold cursor-pointer w-full sm:w-auto"
                     >
                       <Upload className="w-3.5 h-3.5 text-amber-600" />
                       {uploading ? 'Uploading...' : 'Upload Image'}
                     </button>
-                    <span className="text-xs text-slate-400">or enter direct image URL below</span>
+                    <span className="text-[11px] text-slate-400">or enter direct image URL below</span>
                   </div>
                   <input
                     name="image_url"
@@ -308,7 +325,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
               />
             </div>
 
-            <div className="flex items-end pb-2">
+            <div className="flex items-center sm:items-end pb-1 sm:pb-2">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -325,18 +342,18 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || uploading}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -357,20 +374,19 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
         </form>
       </AdminModal>
 
-
       {/* Fabrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
         {fabrics.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-400 text-sm rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <div className="col-span-2 p-10 sm:p-12 text-center text-slate-400 text-sm rounded-2xl bg-white border border-slate-200 shadow-sm">
             No fabrics added yet. Click &quot;Add Fabric&quot; to configure swatches.
           </div>
         ) : (
           fabrics.map((fabric) => (
             <div
               key={fabric.id}
-              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex gap-4 hover:shadow-md transition-shadow"
+              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3.5 sm:gap-4 hover:shadow-md transition-shadow"
             >
-              <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-xs">
+              <div className="relative w-full sm:w-24 h-36 sm:h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-xs">
                 {fabric.image_url ? (
                   <Image
                     src={fabric.image_url}
@@ -413,19 +429,21 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleToggle(fabric)}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                      className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
                     >
                       {fabric.is_active ? 'Hide' : 'Show'}
                     </button>
                     <button
                       onClick={() => openEdit(fabric)}
-                      className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
+                      title="Edit fabric"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(fabric.id)}
-                      className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      onClick={() => setFabricToDelete(fabric)}
+                      className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      title="Delete fabric"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -436,6 +454,23 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
           ))
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(fabricToDelete)}
+        onClose={() => setFabricToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Fabric Option"
+        description={
+          fabricToDelete
+            ? `Are you sure you want to permanently delete "${fabricToDelete.name}"? Any uploaded fabric texture or swatch image will also be removed.`
+            : 'Are you sure you want to delete this fabric option?'
+        }
+        confirmText="Delete Fabric"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

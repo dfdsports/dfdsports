@@ -92,9 +92,9 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       )}
 
       {/* Basic Info */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Brand Identity</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Company Short Name</label>
             <input name="company_name" value={form.company_name} onChange={handleChange} className={inputCls} placeholder="DFD SPORTS" required />
@@ -119,9 +119,9 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Contact Details */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Contact Information</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Phone Number</label>
             <input name="phone" value={form.phone} onChange={handleChange} className={inputCls} placeholder="+91 99999 99999" />
@@ -151,9 +151,9 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Social Media */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Social Media Links</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Instagram URL</label>
             <input name="instagram_url" value={form.instagram_url} onChange={handleChange} className={inputCls} placeholder="https://instagram.com/dfdsports" />
@@ -178,7 +178,7 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{isPending ? 'Saving...' : 'Save Company Details'}</span>

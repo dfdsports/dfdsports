@@ -10,6 +10,7 @@ import { Plus, Edit2, Trash2, Eye, EyeOff, ImageIcon, AlertCircle } from 'lucide
 import { cn } from '@/lib/utils';
 import { deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 import { CategoryForm } from '@/components/admin/CategoryForm';
 
 interface CategoriesListProps {
@@ -19,6 +20,7 @@ interface CategoriesListProps {
 export function CategoriesList({ categories }: CategoriesListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
   const [error, setError] = useState('');
   const [modalState, setModalState] = useState<{
     open: boolean;
@@ -39,8 +41,9 @@ export function CategoriesList({ categories }: CategoriesListProps) {
     router.refresh();
   };
 
-  const handleDelete = async (cat: Category) => {
-    if (!confirm(`Are you sure you want to delete "${cat.name}"? All associated Cloudinary images will also be removed.`)) return;
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
+    const cat = categoryToDelete;
     setDeletingId(cat.id);
     setError('');
 
@@ -51,6 +54,7 @@ export function CategoriesList({ categories }: CategoriesListProps) {
       const supabase = createClient();
       const { error: deleteError } = await supabase.from('categories').delete().eq('id', cat.id);
       if (deleteError) throw deleteError;
+      setCategoryToDelete(null);
     } catch (err: any) {
       setError(err?.message || 'Delete failed');
     } finally {
@@ -69,7 +73,7 @@ export function CategoriesList({ categories }: CategoriesListProps) {
         <button
           type="button"
           onClick={() => setModalState({ open: true, mode: 'create', category: null })}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Category</span>
@@ -84,29 +88,29 @@ export function CategoriesList({ categories }: CategoriesListProps) {
       )}
 
       {categories.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
           <ImageIcon className="w-14 h-14 text-slate-300 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Categories Yet</h3>
           <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add sports categories to organize your product catalog.</p>
           <button
             type="button"
             onClick={() => setModalState({ open: true, mode: 'create', category: null })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" /> Create First Category
           </button>
         </div>
       ) : (
         <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-sm min-w-[500px]">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Category</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Slug</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden sm:table-cell">Order</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
-                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Category</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Slug</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black hidden sm:table-cell">Order</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
+                  <th className="text-right px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -163,7 +167,7 @@ export function CategoriesList({ categories }: CategoriesListProps) {
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(cat)}
+                          onClick={() => setCategoryToDelete(cat)}
                           disabled={deletingId === cat.id}
                           className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50 cursor-pointer"
                           title="Delete category and media"
@@ -203,7 +207,23 @@ export function CategoriesList({ categories }: CategoriesListProps) {
           onCancel={() => setModalState((prev) => ({ ...prev, open: false }))}
         />
       </AdminModal>
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(categoryToDelete)}
+        onClose={() => setCategoryToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        description={
+          categoryToDelete
+            ? `Are you sure you want to permanently delete "${categoryToDelete.name}"? Any linked products may need their category reassigned.`
+            : 'Are you sure you want to delete this category?'
+        }
+        confirmText="Delete Category"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={Boolean(deletingId)}
+      />
     </div>
   );
-
 }

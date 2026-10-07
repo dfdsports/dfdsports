@@ -62,7 +62,6 @@ const navSections: NavSection[] = [
   {
     title: 'Customization & Tech',
     items: [
-      { label: 'Custom Teamwear', href: '/admin/teamwear', icon: Shirt },
       { label: 'Fabrics & Tech', href: '/admin/fabrics', icon: Gauge },
       { label: 'Highlights', href: '/admin/highlights', icon: Gauge },
     ],
@@ -77,6 +76,8 @@ const navSections: NavSection[] = [
   },
 ];
 
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+
 interface AdminSidebarProps {
   userEmail?: string;
 }
@@ -85,7 +86,7 @@ interface SidebarContentProps {
   pathname: string;
   userEmail?: string;
   onItemClick?: () => void;
-  onLogout: () => void;
+  onLogoutRequest: () => void;
   loggingOut: boolean;
 }
 
@@ -93,7 +94,7 @@ function SidebarContent({
   pathname,
   userEmail,
   onItemClick,
-  onLogout,
+  onLogoutRequest,
   loggingOut,
 }: SidebarContentProps) {
   const isActive = (item: NavItem) => {
@@ -107,21 +108,16 @@ function SidebarContent({
     <div className="flex flex-col h-full bg-gradient-to-b from-[#0F172A] via-[#131E35] to-[#0A1020] text-white border-r border-slate-800 shadow-2xl">
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800/80">
-        <Link href="/admin" prefetch={true} className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-5 h-5 text-slate-950 font-bold" />
+        <Link href="/admin" prefetch={true} className="flex flex-col group">
+          <div className="flex items-center gap-2">
+            <span className="text-base font-extrabold uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
+              DFD Sports
+            </span>
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              PRO
+            </span>
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                DFD Sports
-              </span>
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                PRO
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-medium truncate">Admin Management</p>
-          </div>
+          <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">Admin Management</p>
         </Link>
       </div>
 
@@ -204,10 +200,11 @@ function SidebarContent({
             </p>
           </div>
           <button
-            onClick={onLogout}
+            type="button"
+            onClick={onLogoutRequest}
             disabled={loggingOut}
             title="Sign Out"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors shrink-0"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-400/10 transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -222,11 +219,13 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = async () => {
     setLoggingOut(true);
     const supabase = createClient();
     await supabase.auth.signOut();
+    setShowLogoutConfirm(false);
     router.push('/admin/login');
     router.refresh();
   };
@@ -234,22 +233,22 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 overflow-hidden z-30">
+      <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-30 overflow-hidden">
         <SidebarContent
           pathname={pathname}
           userEmail={userEmail}
-          onLogout={handleLogout}
+          onLogoutRequest={() => setShowLogoutConfirm(true)}
           loggingOut={loggingOut}
         />
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800 sticky top-0 z-50">
-        <Link href="/admin" prefetch={true} className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center">
-            <ShieldCheck className="w-4 h-4 text-slate-950 font-bold" />
-          </div>
-          <span className="text-sm font-bold uppercase text-white tracking-tight">DFD Admin</span>
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800 sticky top-0 z-40">
+        <Link href="/admin" prefetch={true} className="flex items-center gap-2">
+          <span className="text-base font-extrabold uppercase text-white tracking-tight">DFD Sports</span>
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            PRO
+          </span>
         </Link>
 
         <button
@@ -273,12 +272,29 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
               pathname={pathname}
               userEmail={userEmail}
               onItemClick={() => setMobileOpen(false)}
-              onLogout={handleLogout}
+              onLogoutRequest={() => {
+                setMobileOpen(false);
+                setShowLogoutConfirm(true);
+              }}
               loggingOut={loggingOut}
             />
           </aside>
         </div>
       )}
+
+      {/* Sign Out Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Sign Out of Admin Portal"
+        message="Are you sure you want to end your current session? You will need to log in again to access store management."
+        confirmText="Sign Out"
+        cancelText="Stay Logged In"
+        variant="warning"
+        icon="logout"
+        isLoading={loggingOut}
+      />
     </>
   );
 }

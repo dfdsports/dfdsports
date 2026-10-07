@@ -5,14 +5,12 @@ import { getAllCategories } from '@/services/categories';
 import { getAllProducts } from '@/services/products';
 import { getAllBrands } from '@/services/brands';
 import { getEnquiries } from '@/services/enquiries';
-import { getAllTeamwear } from '@/services/teamwear';
 import { getOrders } from '@/services/orders';
 import {
   Package,
   Layers,
   Tag,
   Mail,
-  Shirt,
   ShoppingBag,
   ArrowRight,
   TrendingUp,
@@ -25,13 +23,12 @@ import {
 export const revalidate = 0; // Always fresh for admin
 
 export default async function AdminDashboardPage() {
-  const [company, categories, products, brands, enquiries, teamwear, orders] = await Promise.all([
+  const [company, categories, products, brands, enquiries, orders] = await Promise.all([
     getCompanySettings(),
     getAllCategories(),
     getAllProducts(),
     getAllBrands(),
     getEnquiries(),
-    getAllTeamwear(),
     getOrders(),
   ]);
 
@@ -89,7 +86,6 @@ export default async function AdminDashboardPage() {
     { label: 'Add Category', href: '/admin/categories/new', icon: Layers, color: 'text-purple-600 bg-purple-50' },
     { label: 'Add Hero Slide', href: '/admin/hero/new', icon: TrendingUp, color: 'text-rose-600 bg-rose-50' },
     { label: 'Add Brand', href: '/admin/brands/new', icon: Tag, color: 'text-indigo-600 bg-indigo-50' },
-    { label: 'Add Teamwear', href: '/admin/teamwear/new', icon: Shirt, color: 'text-emerald-600 bg-emerald-50' },
   ];
 
   return (
@@ -136,23 +132,23 @@ export default async function AdminDashboardPage() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
         {stats.map((stat) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className={`group rounded-2xl p-6 bg-white border ${stat.border} shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 relative overflow-hidden`}
+            className={`group rounded-2xl p-5 sm:p-6 bg-white border ${stat.border} shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 relative overflow-hidden`}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${stat.iconBg} font-bold`}>
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
+              <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center ${stat.iconBg} font-bold shrink-0`}>
                 <stat.icon className="w-5 h-5" />
               </div>
               <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-black tracking-tight">{stat.value}</p>
-              <p className="text-sm font-bold text-black mt-1">{stat.label}</p>
-              <p className={`text-xs mt-0.5 font-medium ${stat.highlight ? 'text-amber-600 font-bold' : 'text-slate-500'}`}>
+              <p className="text-2xl sm:text-3xl font-bold text-black tracking-tight">{stat.value}</p>
+              <p className="text-xs sm:text-sm font-bold text-black mt-1">{stat.label}</p>
+              <p className={`text-[11px] sm:text-xs mt-0.5 font-medium ${stat.highlight ? 'text-amber-600 font-bold' : 'text-slate-500'}`}>
                 {stat.sub}
               </p>
             </div>
@@ -162,20 +158,20 @@ export default async function AdminDashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3.5">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
           Quick Actions & Management
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {quickActions.map((action) => (
             <Link
               key={action.label}
               href={action.href}
-              className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-center transition-all group shadow-sm hover:shadow hover:-translate-y-0.5"
+              className="flex flex-col items-center gap-2.5 p-3.5 sm:p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-center transition-all group shadow-sm hover:shadow hover:-translate-y-0.5"
             >
-              <div className={`w-11 h-11 rounded-xl ${action.color} flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm`}>
+              <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${action.color} flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm shrink-0`}>
                 <action.icon className="w-5 h-5" />
               </div>
-              <span className="text-xs font-bold text-slate-800 group-hover:text-black transition-colors">
+              <span className="text-xs font-bold text-slate-800 group-hover:text-black transition-colors leading-tight">
                 {action.label}
               </span>
             </Link>
@@ -184,22 +180,22 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Grid of Recent Orders and Recent Enquiries */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
         {/* Recent Orders Card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+          <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
                 <ShoppingBag className="w-4 h-4" />
               </div>
-              <div>
-                <h2 className="text-sm font-bold text-black">Recent WhatsApp Orders</h2>
-                <p className="text-xs text-slate-500">{orders.length} total orders recorded</p>
+              <div className="min-w-0">
+                <h2 className="text-sm font-bold text-black truncate">Recent WhatsApp Orders</h2>
+                <p className="text-[11px] text-slate-500 truncate">{orders.length} total orders recorded</p>
               </div>
             </div>
             <Link
               href="/admin/orders"
-              className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
+              className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1 shrink-0"
             >
               View All <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -212,9 +208,9 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               orders.slice(0, 5).map((ord) => (
-                <div key={ord.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
+                <div key={ord.id} className="p-3.5 sm:p-4 hover:bg-slate-50 transition-colors flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <p className="text-sm font-bold text-black truncate">{ord.name}</p>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                         ord.status === 'new'
@@ -232,8 +228,8 @@ export default async function AdminDashboardPage() {
                       {ord.product_name} • Qty: {ord.quantity || 1}
                     </p>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-xs font-mono text-slate-600 flex items-center gap-1 justify-end">
+                  <div className="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center shrink-0 pt-1 sm:pt-0 border-t border-slate-50 sm:border-t-0">
+                    <p className="text-xs font-mono text-slate-600 flex items-center gap-1">
                       <Phone className="w-3 h-3 text-slate-400" />
                       {ord.phone}
                     </p>
@@ -252,19 +248,19 @@ export default async function AdminDashboardPage() {
 
         {/* Recent Enquiries Card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+          <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
-              <div>
-                <h2 className="text-sm font-bold text-black">Recent Customer Enquiries</h2>
-                <p className="text-xs text-slate-500">{enquiries.length} total inquiries received</p>
+              <div className="min-w-0">
+                <h2 className="text-sm font-bold text-black truncate">Recent Customer Enquiries</h2>
+                <p className="text-[11px] text-slate-500 truncate">{enquiries.length} total inquiries received</p>
               </div>
             </div>
             <Link
               href="/admin/enquiries"
-              className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+              className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 shrink-0"
             >
               View All <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -277,9 +273,9 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               enquiries.slice(0, 5).map((enq) => (
-                <div key={enq.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
+                <div key={enq.id} className="p-3.5 sm:p-4 hover:bg-slate-50 transition-colors flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <p className="text-sm font-bold text-black truncate">{enq.name}</p>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                         enq.status === 'new'
@@ -295,7 +291,7 @@ export default async function AdminDashboardPage() {
                       {enq.enquiry_type.replace('_', ' ')}: {enq.message || 'No additional message'}
                     </p>
                   </div>
-                  <div className="text-right shrink-0">
+                  <div className="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center shrink-0 pt-1 sm:pt-0 border-t border-slate-50 sm:border-t-0">
                     <p className="text-xs font-mono text-slate-600">{enq.phone}</p>
                     <p className="text-[11px] text-slate-400 mt-0.5">
                       {new Date(enq.created_at).toLocaleDateString('en-IN', {

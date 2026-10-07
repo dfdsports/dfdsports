@@ -10,6 +10,7 @@ import { Plus, Edit2, Trash2, Eye, EyeOff, Star, StarOff, Tag, AlertCircle } fro
 import { cn } from '@/lib/utils';
 import { deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 import { ProductForm } from '@/components/admin/ProductForm';
 
 interface ProductsListProps {
@@ -21,6 +22,7 @@ interface ProductsListProps {
 export function ProductsList({ products, categories = [], brands = [] }: ProductsListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [error, setError] = useState('');
   const [modalState, setModalState] = useState<{
     open: boolean;
@@ -50,8 +52,9 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
     router.refresh();
   };
 
-  const handleDelete = async (product: Product) => {
-    if (!confirm(`Delete "${product.name}"? All associated Cloudinary images will also be removed.`)) return;
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+    const product = productToDelete;
     setDeletingId(product.id);
     setError('');
 
@@ -69,6 +72,7 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
       const supabase = createClient();
       const { error: deleteError } = await supabase.from('products').delete().eq('id', product.id);
       if (deleteError) throw deleteError;
+      setProductToDelete(null);
     } catch (err: any) {
       setError(err?.message || 'Failed to delete product');
     } finally {
@@ -87,7 +91,7 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
         <button
           type="button"
           onClick={() => setModalState({ open: true, mode: 'create', product: null })}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Product</span>
@@ -101,30 +105,30 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
       )}
 
       {products.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
           <Tag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Products Yet</h3>
           <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
           <button
             type="button"
             onClick={() => setModalState({ open: true, mode: 'create', product: null })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" /> Add First Product
           </button>
         </div>
       ) : (
         <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-sm min-w-[540px]">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Product</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden lg:table-cell">Category</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Brand</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Featured</th>
-                  <th className="text-left px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
-                  <th className="text-right px-5 py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Product</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black hidden lg:table-cell">Category</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black hidden md:table-cell">Brand</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Featured</th>
+                  <th className="text-left px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Status</th>
+                  <th className="text-right px-4 sm:px-5 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-wider text-black">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -187,7 +191,8 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(product)}
+                          type="button"
+                          onClick={() => setProductToDelete(product)}
                           disabled={deletingId === product.id}
                           className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-50 cursor-pointer"
                           title="Delete product and media"
@@ -246,7 +251,20 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
           onCancel={() => setModalState((prev) => ({ ...prev, open: false }))}
         />
       </AdminModal>
+
+      {/* Delete Product Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(productToDelete)}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={confirmDelete}
+        title={`Delete "${productToDelete?.name}"?`}
+        message="Are you sure you want to permanently delete this product? All associated Cloudinary images, gallery photos, and database specs will also be permanently removed."
+        confirmText="Delete Product"
+        cancelText="Cancel"
+        variant="danger"
+        icon="trash"
+        isLoading={Boolean(deletingId)}
+      />
     </div>
   );
-
 }
