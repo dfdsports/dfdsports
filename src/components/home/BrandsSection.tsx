@@ -69,9 +69,9 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
         </div>
 
         {/* Continuous right-to-left marquee without card background color */}
-        <div className="brands-marquee-container overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] py-6 sm:py-8">
+        <div className="brands-marquee-container overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] sm:[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] py-4 sm:py-8">
           <div
-            className="brands-marquee-track flex items-center gap-12 sm:gap-20"
+            className="brands-marquee-track flex items-center gap-3 sm:gap-20"
             style={{ '--marquee-dur': `${durationSec}s` } as React.CSSProperties}
           >
             {marqueeItems.map((brand, i) => {
@@ -81,18 +81,18 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
                   key={`${brand.id}-${i}`}
                   title={brand.name}
                   aria-hidden={isClone || undefined}
-                  className="group flex h-24 sm:h-32 w-48 sm:w-64 shrink-0 items-center justify-center bg-transparent transition-all duration-300"
+                  className="group flex h-12 sm:h-24 w-24 sm:w-52 shrink-0 items-center justify-center bg-transparent transition-all duration-300"
                 >
                   {brand.logo_url ? (
                     <Image
                       src={brand.logo_url}
                       alt={isClone ? '' : brand.name}
-                      width={240}
-                      height={100}
-                      className="max-h-20 sm:max-h-28 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                      width={200}
+                      height={80}
+                      className="max-h-8 sm:max-h-20 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <span className="text-center text-base sm:text-xl font-black uppercase tracking-wider text-white/80 group-hover:text-[#F5A623] transition-colors duration-300">
+                    <span className="text-center text-xs sm:text-lg font-black uppercase tracking-wider text-white/80 group-hover:text-[#F5A623] transition-colors duration-300">
                       {brand.name}
                     </span>
                   )}

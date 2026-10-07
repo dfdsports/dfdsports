@@ -38,7 +38,7 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
   return (
     <section className="bg-[#080A0F] py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FAF8F5] py-10 sm:py-16 px-6 sm:px-10 lg:px-12 shadow-2xl">
+        <div className="relative overflow-hidden rounded-sm sm:rounded-sm bg-[#FAF8F5] py-10 sm:py-16 px-6 sm:px-10 lg:px-12 shadow-2xl">
           {/* Background Image */}
           <div className="absolute inset-0 pointer-events-none">
             <Image
@@ -66,7 +66,7 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
               </p>
               <Link
                 href="/custom-jerseys"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-[#D4A24C] px-6 py-3.5 text-sm font-bold text-[#1a1a1a] shadow-md transition-colors hover:bg-[#C4923C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a1a1a] sm:w-auto sm:rounded-lg sm:py-3 sm:font-semibold"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-bold text-[#1a1a1a] shadow-md transition-colors hover:bg-[#C4923C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a1a1a] sm:w-auto sm:rounded-lg sm:py-3 sm:font-semibold"
               >
                 Customise Your Teamwear
               </Link>

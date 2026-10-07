@@ -45,35 +45,37 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         {/* Back Link */}
         <Link
           href="/collections"
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white mb-6 transition-colors"
+          className="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>All Sports Collections</span>
         </Link>
 
         {/* Category Hero Banner */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#141925] via-[#0E121B] to-[#0A0D14] p-8 sm:p-12 mb-12 shadow-2xl">
+        <div className="relative rounded-xl sm:rounded-sm overflow-hidden bg-[#0E121B] py-6 px-6 sm:py-8 sm:px-10 lg:px-12 mb-10 shadow-xl flex items-center min-h-[160px] sm:min-h-[180px]">
+          {/* Background image full of section right side */}
           {category.image_url && (
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 pointer-events-none">
+            <div className="absolute right-0 inset-y-0 w-full sm:w-1/2 md:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden">
               <Image
                 src={category.image_url}
                 alt={category.name}
                 fill
-                className="object-cover object-right"
+                priority
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0E121B] via-[#0E121B]/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0E121B] via-[#0E121B]/60 to-transparent" />
             </div>
           )}
 
-          <div className="relative z-10 max-w-xl">
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-2">
+          <div className="relative z-10 max-w-lg">
+            <p className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-1.5">
               SPORTS CATEGORY
             </p>
-            <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-[2rem] font-black uppercase tracking-tight text-white mb-3 sm:mb-4">
               {category.name}
             </h1>
             {category.short_description && (
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-6">
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-4 max-w-md line-clamp-2">
                 {category.short_description}
               </p>
             )}
@@ -84,6 +86,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               categoryName={category.name}
               variant="whatsapp"
               size="md"
+              className="!rounded-sm shadow-md"
             >
               Enquire About {category.name} Gear
             </WhatsAppButton>
@@ -98,6 +101,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             description="Our equipment catalog is updated regularly. Feel free to enquire directly on WhatsApp for special orders."
             actionText="Chat with DFD Sports on WhatsApp"
             actionHref={`https://wa.me/${company?.whatsapp_number || ''}?text=${encodeURIComponent(`Hi DFD Sports, I am looking for ${category.name} equipment.`)}`}
+            actionClassName="!rounded-sm"
           />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
