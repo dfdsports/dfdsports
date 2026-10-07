@@ -4,7 +4,6 @@ import { getActiveHeroSlides } from '@/services/hero';
 import { getActiveCategories } from '@/services/categories';
 import { getFeaturedProducts, getActiveProducts } from '@/services/products';
 import { getFeaturedSettings } from '@/services/featuredSettings';
-import { getActiveTeamwear } from '@/services/teamwear';
 import { getActiveFabrics } from '@/services/fabrics';
 import { getActiveBrands } from '@/services/brands';
 import { getActiveWhyChooseUs } from '@/services/whyChooseUs';
@@ -35,7 +34,6 @@ export default async function HomePage() {
     categories,
     featuredProducts,
     allProducts,
-    teamwear,
     fabrics,
     brands,
     whyChooseUs,
@@ -46,7 +44,6 @@ export default async function HomePage() {
     getActiveCategories(),
     getFeaturedProducts(12),
     getActiveProducts({ limit: 12 }),
-    getActiveTeamwear(),
     getActiveFabrics(),
     getActiveBrands(),
     getActiveWhyChooseUs(),
@@ -77,7 +74,7 @@ export default async function HomePage() {
 
 
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
-        <CustomTeamwearSection teamwear={teamwear} company={company} />
+        <CustomTeamwearSection company={company} />
 
         {/* 5. All Products Showcase (New product cards: 10 items, 5 per row, View All button) */}
         <AllProductsSection products={allProducts} company={company} />
