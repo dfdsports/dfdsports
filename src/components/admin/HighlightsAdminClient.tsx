@@ -7,6 +7,7 @@ import { Highlight } from '@/types/database';
 import { Plus, Edit2, Trash2, Save, X, TrendingUp, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 
 interface HighlightsAdminClientProps {
   highlights: Highlight[];
@@ -18,6 +19,8 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Highlight | null>(null);
+  const [highlightToDelete, setHighlightToDelete] = useState<Highlight | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [form, setForm] = useState(empty);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -51,11 +54,21 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
     });
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this business highlight?')) return;
-    const supabase = createClient();
-    await supabase.from('highlights').delete().eq('id', id);
-    router.refresh();
+  const confirmDelete = async () => {
+    if (!highlightToDelete) return;
+    setIsDeleting(true);
+    setError('');
+    try {
+      const supabase = createClient();
+      const { error: deleteError } = await supabase.from('highlights').delete().eq('id', highlightToDelete.id);
+      if (deleteError) throw deleteError;
+      setHighlightToDelete(null);
+    } catch (err: any) {
+      setError(err?.message || 'Delete failed');
+    } finally {
+      setIsDeleting(false);
+      router.refresh();
+    }
   };
 
   const handleToggle = async (h: Highlight) => {
@@ -76,7 +89,7 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Highlight Stat
         </button>
@@ -100,9 +113,9 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
         }
         maxWidth="2xl"
       >
-        <form onSubmit={handleSave} className="space-y-5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="col-span-2">
+        <form onSubmit={handleSave} className="space-y-4 sm:space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div className="sm:col-span-2">
               <label className={labelCls}>Stat Label <span className="text-amber-600">*</span></label>
               <input name="label" value={form.label} onChange={handleChange} className={inputCls} placeholder="e.g. Teams Served" required />
             </div>
@@ -119,11 +132,18 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
             <label className={labelCls}>Short Description (Optional)</label>
             <input name="description" value={form.description} onChange={handleChange} className={inputCls} placeholder="Across schools, clubs and academies" />
           </div>
-          <div className="flex items-center gap-4 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -137,49 +157,41 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
                 </>
               )}
             </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
           </div>
         </form>
       </AdminModal>
 
-
       {highlights.length === 0 && !showForm ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
           <TrendingUp className="w-14 h-14 text-slate-300 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Statistics Added Yet</h3>
           <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add verified figures such as jerseys delivered or teams outfitted.</p>
-          <button onClick={openCreate} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer">
+          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer w-full sm:w-auto">
             <Plus className="w-4 h-4" /> Add First Stat
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
           {highlights.map((h) => (
-            <div key={h.id} className={cn('rounded-2xl bg-white border shadow-sm p-5 flex items-center justify-between hover:shadow-md transition-shadow', h.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
-              <div>
-                <p className="text-3xl font-bold text-black">{h.value}<span className="text-amber-600">{h.suffix}</span></p>
-                <p className="text-sm font-bold text-black mt-0.5">{h.label}</p>
-                {h.description && <p className="text-xs text-slate-500 mt-0.5">{h.description}</p>}
+            <div key={h.id} className={cn('rounded-2xl bg-white border shadow-sm p-4 sm:p-5 flex items-center justify-between gap-3 hover:shadow-md transition-shadow', h.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
+              <div className="min-w-0 flex-1">
+                <p className="text-2xl sm:text-3xl font-bold text-black">{h.value}<span className="text-amber-600">{h.suffix}</span></p>
+                <p className="text-sm font-bold text-black mt-0.5 truncate">{h.label}</p>
+                {h.description && <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{h.description}</p>}
                 <span className={cn('text-[11px] font-bold mt-1.5 block', h.is_active ? 'text-emerald-700' : 'text-slate-400')}>{h.is_active ? '• Visible' : '• Hidden'}</span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => handleToggle(h)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                   title="Toggle visibility"
                 >
                   {h.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-                <button onClick={() => openEdit(h)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <button onClick={() => openEdit(h)} className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
                   <Edit2 className="w-4 h-4" />
                 </button>
-                <button onClick={() => handleDelete(h.id)} className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                <button onClick={() => setHighlightToDelete(h)} className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" title="Delete highlight">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -187,6 +199,23 @@ export function HighlightsAdminClient({ highlights }: HighlightsAdminClientProps
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(highlightToDelete)}
+        onClose={() => setHighlightToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Business Highlight"
+        description={
+          highlightToDelete
+            ? `Are you sure you want to permanently delete the stat metric "${highlightToDelete.label}" (${highlightToDelete.value}${highlightToDelete.suffix || ''})?`
+            : 'Are you sure you want to delete this highlight?'
+        }
+        confirmText="Delete Stat"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

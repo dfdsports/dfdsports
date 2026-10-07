@@ -45,7 +45,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
     : activeCategories.slice(0, INITIAL_COUNT);
 
   return (
-    <section className="relative overflow-hidden bg-black py-10 sm:py-20">
+    <section className="relative overflow-hidden bg-black py-10 sm:pt-0">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Explore"

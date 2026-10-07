@@ -23,7 +23,7 @@ export default async function ContactPage() {
           <p className="text-xs uppercase tracking-[0.3em] font-bold text-[#F5A623] mb-3">
             GET IN TOUCH WITH {brandName}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">
+          <h1 className="text-4xl sm:text-5xl font-semibold uppercase tracking-tight text-white mb-4">
             LET&apos;S TALK SPORTS.
           </h1>
           <p className="text-sm sm:text-base text-gray-400">
@@ -36,8 +36,8 @@ export default async function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Direct Contact Details from Supabase */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="p-8 rounded-3xl bg-[#0E121B] shadow-xl space-y-6">
-              <h3 className="text-lg font-black uppercase tracking-tight text-white mb-4">
+            <div className="p-0 sm:p-8 rounded-sm bg-transparent sm:bg-[#0E121B] shadow-none sm:shadow-xl space-y-6">
+              <h3 className="text-lg font-semibold uppercase tracking-tight text-white mb-4">
                 Direct Contact Channels
               </h3>
 

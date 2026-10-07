@@ -62,12 +62,12 @@ export function FilterSidebar({
     <aside
       className={cn(
         'w-full flex flex-col',
-        !isMobileDrawer && 'bg-[#0E121B] border border-white/5 rounded-3xl p-6 shadow-xl',
+        !isMobileDrawer && 'bg-[#0E121B] rounded-sm p-6 shadow-xl',
         className
       )}
     >
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between pb-5 border-b border-white/10">
+      <div className="flex items-center justify-between pb-5">
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 rounded-lg bg-[#F5A623]/10 text-[#F5A623]">
             <Filter className="w-4 h-4" />
@@ -92,7 +92,7 @@ export function FilterSidebar({
         )}
       </div>
 
-      <div className="divide-y divide-white/5 space-y-5">
+      <div className="space-y-5">
         {/* ================= CATEGORY FILTER ================= */}
         <div className="pt-5 first:pt-4">
           <button
@@ -119,7 +119,7 @@ export function FilterSidebar({
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 border border-white/5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#F5A623]"
+                  className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 text-xs text-white placeholder-gray-500 focus:outline-none"
                 />
               )}
 
@@ -200,7 +200,7 @@ export function FilterSidebar({
                     placeholder="Search brands..."
                     value={brandSearch}
                     onChange={(e) => setBrandSearch(e.target.value)}
-                    className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 border border-white/5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#F5A623]"
+                    className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 text-xs text-white placeholder-gray-500 focus:outline-none"
                   />
                 )}
 
@@ -258,11 +258,11 @@ export function FilterSidebar({
 
       {/* Clear Filters CTA Button in Sidebar */}
       {activeFilterCount > 0 && (
-        <div className="mt-6 pt-5 border-t border-white/5">
+        <div className="mt-6 pt-5">
           <button
             type="button"
             onClick={onClearAll}
-            className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/10 transition-colors"
+            className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Clear All Filters</span>

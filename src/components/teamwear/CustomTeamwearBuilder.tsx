@@ -103,25 +103,21 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
   };
 
   return (
-    <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-gradient-to-b from-[#121622] via-[#0D1017] to-[#080A0F] p-5 sm:p-8 lg:p-12 shadow-2xl backdrop-blur-xl">
-      {/* Background ambient lighting */}
-      <div className="pointer-events-none absolute -top-28 -right-28 h-80 w-80 rounded-full bg-[#F5A623]/10 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-28 -left-28 h-80 w-80 rounded-full bg-[#F5A623]/5 blur-[120px]" />
-
+    <section className="relative w-full">
       <div className="relative z-10">
-        {/* Section Header (No decorative icon as requested) */}
+        {/* Section Header */}
         <div className="max-w-3xl mb-8 sm:mb-10">
           <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#F5A623] mb-2 sm:mb-3">
             INTERACTIVE JERSEY BUILDER
           </p>
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white mb-3 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase tracking-tight text-white mb-2 sm:mb-3">
             Configure Your{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
               Team Kit & Quote
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-gray-300 leading-relaxed max-w-2xl">
-            Customize high-performance kits tailored to your squad's exact colors and branding. Select your sport,
+            Customize high-performance kits tailored to your squad&apos;s exact colors and branding. Select your sport,
             fabrics, and custom requirements to generate an instant quotation.
           </p>
         </div>
@@ -134,20 +130,17 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* 1. Sport Discipline Dropdown */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                    <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                      1
-                    </span>
+                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                     Select Sport Discipline
                   </label>
                   <div className="relative">
                     <select
                       value={sport}
                       onChange={(e) => setSport(e.target.value)}
-                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#090C12] border border-white/10 text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all cursor-pointer shadow-inner"
+                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer"
                     >
                       {sportsList.map((s) => (
-                        <option key={s} value={s} className="bg-[#090C12] text-white py-2">
+                        <option key={s} value={s} className="bg-[#0E121B] text-white py-2">
                           {s}
                         </option>
                       ))}
@@ -159,10 +152,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 {/* 2. Performance Fabric Dropdown */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                      <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                        2
-                      </span>
+                    <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                       Performance Fabric
                     </label>
                   </div>
@@ -170,26 +160,26 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                     <select
                       value={selectedFabric}
                       onChange={(e) => setSelectedFabric(e.target.value)}
-                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#090C12] border border-white/10 text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all cursor-pointer shadow-inner"
+                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer"
                     >
                       {fabrics && fabrics.length > 0 ? (
                         fabrics.map((f) => (
-                          <option key={f.id} value={f.name} className="bg-[#090C12] text-white py-2">
+                          <option key={f.id} value={f.name} className="bg-[#0E121B] text-white py-2">
                             {f.name}
                           </option>
                         ))
                       ) : (
                         <>
-                          <option value="Drynet" className="bg-[#090C12] text-white py-2">
+                          <option value="Drynet" className="bg-[#0E121B] text-white py-2">
                             Drynet
                           </option>
-                          <option value="Sublena" className="bg-[#090C12] text-white py-2">
+                          <option value="Sublena" className="bg-[#0E121B] text-white py-2">
                             Sublena
                           </option>
-                          <option value="Foxnet" className="bg-[#090C12] text-white py-2">
+                          <option value="Foxnet" className="bg-[#0E121B] text-white py-2">
                             Foxnet
                           </option>
-                          <option value="Jacaband" className="bg-[#090C12] text-white py-2">
+                          <option value="Jacaband" className="bg-[#0E121B] text-white py-2">
                             Jacaband
                           </option>
                         </>
@@ -204,37 +194,30 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* 3. Team Name */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                    <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                      3
-                    </span>
+                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                     Team / Academy / Org
                   </label>
                   <input
                     type="text"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
-                    placeholder="e.g. Thunder Strikers FC"
-                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-[#090C12] border border-white/10 text-white placeholder-gray-500 font-medium text-xs sm:text-sm focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all shadow-inner"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all"
                   />
                 </div>
 
                 {/* 4. Quantity Volume */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                    <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                      4
-                    </span>
+                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                     Estimated Order Volume
                   </label>
                   <div className="relative">
                     <select
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
-                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#090C12] border border-white/10 text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all cursor-pointer shadow-inner"
+                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer"
                     >
                       {quantityRanges.map((q) => (
-                        <option key={q.value} value={q.value} className="bg-[#090C12] text-white py-2">
+                        <option key={q.value} value={q.value} className="bg-[#0E121B] text-white py-2">
                           {q.label} ({q.badge})
                         </option>
                       ))}
@@ -246,10 +229,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
 
               {/* Row 3: Included Customization Elements */}
               <div className="space-y-2.5">
-                <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                  <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                    5
-                  </span>
+                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                   Included Customization Elements
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
@@ -260,10 +240,10 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                         type="button"
                         key={opt}
                         onClick={() => toggleOption(opt)}
-                        className={`group relative flex items-center justify-between p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs font-semibold text-left transition-all border cursor-pointer select-none ${
+                        className={`group relative flex items-center justify-between p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs font-semibold text-left transition-all cursor-pointer select-none ${
                           isChecked
-                            ? 'bg-[#F5A623]/15 text-white border-[#F5A623] shadow-md shadow-[#F5A623]/10'
-                            : 'bg-[#090C12] text-gray-400 border-white/10 hover:text-white hover:border-white/20'
+                            ? 'bg-[#F5A623]/15 text-white shadow-md shadow-[#F5A623]/10'
+                            : 'bg-[#0E121B] text-gray-400 hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <span className="line-clamp-2 pr-1">{opt}</span>
@@ -271,7 +251,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                           className={`shrink-0 w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all ${
                             isChecked
                               ? 'bg-[#F5A623] text-black'
-                              : 'border border-white/20 group-hover:border-white/40'
+                              : 'bg-white/10 group-hover:bg-white/20'
                           }`}
                         >
                           {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -284,35 +264,31 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
 
               {/* Row 4: Design Preferences & Color Specs */}
               <div className="space-y-2">
-                <label className="flex items-center text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                  <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded bg-[#F5A623]/15 text-[#F5A623] text-[10px] font-black mr-2">
-                    6
-                  </span>
+                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
                   Design Preferences & Color Specs (Optional)
                 </label>
                 <textarea
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Royal blue base with neon yellow sleeve cuffs, team emblem on chest, required by end of month..."
-                  className="w-full px-4 py-3 rounded-xl bg-[#090C12] border border-white/10 text-white placeholder-gray-500 font-medium text-xs sm:text-sm focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all shadow-inner"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all"
                 />
               </div>
             </div>
 
             {/* Right Column: Live Spec Summary & WhatsApp Submission (5 cols on desktop) */}
             <div className="lg:col-span-5 flex flex-col justify-between">
-              <div className="rounded-2xl border border-white/10 bg-[#090C12]/95 p-5 sm:p-7 space-y-5 shadow-xl">
+              <div className="rounded-2xl bg-[#0E121B] p-5 sm:p-7 space-y-5 shadow-xl">
                 <div>
                   <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#F5A623] mb-1">
                     SPECIFICATION SUMMARY
                   </p>
-                  <h3 className="text-lg sm:text-xl font-black uppercase text-white tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-black uppercase text-white tracking-tight font-semibold">
                     Custom Kit Overview
                   </h3>
                 </div>
 
-                <div className="space-y-3 border-t border-b border-white/10 py-4 text-xs sm:text-sm">
+                <div className="space-y-3 py-4 text-xs sm:text-sm">
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-400 font-medium">Sport:</span>
                     <span className="font-bold text-white uppercase text-right">{sport}</span>
@@ -340,7 +316,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                         selectedOptions.map((opt) => (
                           <span
                             key={opt}
-                            className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] sm:text-[11px] font-semibold text-gray-200"
+                            className="px-2 py-0.5 rounded-md bg-white/5 text-[10px] sm:text-[11px] font-semibold text-gray-200"
                           >
                             {opt}
                           </span>
@@ -352,36 +328,17 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                   </div>
                 </div>
 
-                {/* Service Highlights Grid */}
-                <div className="grid grid-cols-2 gap-2.5 text-left">
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <p className="text-[11px] sm:text-xs font-bold text-white uppercase">Free 3D Mockup</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">Visualized before production</p>
-                  </div>
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <p className="text-[11px] sm:text-xs font-bold text-white uppercase">Zero Fade Inks</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">High-definition sublimation</p>
-                  </div>
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <p className="text-[11px] sm:text-xs font-bold text-white uppercase">Quick Turnaround</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">Express dispatch available</p>
-                  </div>
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <p className="text-[11px] sm:text-xs font-bold text-white uppercase">Pan-India Delivery</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">Doorstep team delivery</p>
-                  </div>
-                </div>
 
                 {/* WhatsApp Action Button */}
                 <div className="pt-1">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3.5 sm:py-4 px-6 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-black font-black uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#25D366]/20 transition-all duration-200 active:scale-[0.98] cursor-pointer"
+                    className="w-full py-3.5 sm:py-4 px-6 rounded-md bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#25D366]/20 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold"
                   >
                     {isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}
                   </button>
-                  <p className="text-[10px] sm:text-[11px] text-center text-gray-400 mt-2.5">
+                  <p className="text-[10px] sm:text-[9px] text-center text-gray-400 mt-2.5">
                     Connect instantly with our master designer. No waiting, no paperwork.
                   </p>
                 </div>

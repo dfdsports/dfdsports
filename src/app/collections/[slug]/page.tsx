@@ -71,7 +71,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             <p className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-1.5">
               SPORTS CATEGORY
             </p>
-            <h1 className="text-2xl sm:text-3xl lg:text-[2rem] font-black uppercase tracking-tight text-white mb-3 sm:mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-[2rem] font-semibold uppercase tracking-tight text-white mb-3 sm:mb-4">
               {category.name}
             </h1>
             {category.short_description && (
@@ -85,10 +85,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               type="category"
               categoryName={category.name}
               variant="whatsapp"
-              size="md"
-              className="!rounded-sm shadow-md"
+              size="sm"
+              className="!rounded-sm shadow-md !text-xs sm:!text-sm !px-3.5 sm:!px-4 !py-2 w-fit max-w-max"
             >
-              Enquire About {category.name} Gear
+              <span className="sm:hidden">Enquire Now</span>
+              <span className="hidden sm:inline">Enquire About {category.name}</span>
             </WhatsAppButton>
           </div>
         </div>

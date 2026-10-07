@@ -149,8 +149,7 @@ export function WhatsAppOrderModal({
         const priceStr = item.price
           ? ` — ₹${(item.price * item.quantity).toLocaleString('en-IN')}`
           : '';
-        const sizeStr = item.size ? ` [Size: ${item.size}]` : '';
-        lines.push(`• ${item.name}${sizeStr} x ${item.quantity}${priceStr}`);
+        lines.push(`• ${item.name} x ${item.quantity}${priceStr}`);
       });
       if (cartSubtotal != null && cartSubtotal > 0) {
         lines.push(``);
@@ -263,13 +262,13 @@ export function WhatsAppOrderModal({
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-          <div className="relative z-10 w-full max-w-md bg-[#0D1119] rounded-3xl shadow-2xl border border-white/10 overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="relative z-10 w-full max-w-md bg-[#0D1119] rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
 
             {/* Header */}
-            <div className="bg-gradient-to-br from-[#0d2b1a] to-[#0D1119] px-6 pt-6 pb-5 border-b border-white/5 shrink-0">
+            <div className="bg-gradient-to-br from-[#0d2b1a] to-[#0D1119] px-6 pt-6 pb-5 shrink-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/30 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#25D366]/20 flex items-center justify-center shrink-0">
                     <MessageCircle className="w-5 h-5 text-[#25D366]" />
                   </div>
                   <div>
@@ -402,8 +401,8 @@ export function WhatsAppOrderModal({
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function inputCls(hasError: boolean) {
   return cn(
-    'w-full bg-white/5 border rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors',
-    hasError ? 'border-red-500/60 focus:border-red-400' : 'border-white/10 focus:border-[#25D366]'
+    'w-full bg-white/5 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors',
+    hasError ? 'ring-1 ring-red-500/60' : 'focus:ring-1 focus:ring-[#25D366]'
   );
 }
 

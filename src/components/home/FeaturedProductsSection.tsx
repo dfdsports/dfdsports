@@ -148,7 +148,7 @@ function FeaturedProductCard({
       </div>
 
       <Link href={`/products/${product.slug}`} className="block">
-        <h3 className="mt-3 line-clamp-2 text-center text-sm font-semibold text-white group-hover:text-amber-400 transition-colors sm:text-base">
+        <h3 className="mt-3 line-clamp-2 text-center text-sm font-semibold text-white group-hover:text-amber-400 transition-colors sm:text-base uppercase">
           {product.name}
         </h3>
       </Link>

@@ -39,25 +39,25 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080A0F] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#080A0F] text-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo Mark */}
-        <div className="text-center mb-10">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#F5A623] flex items-center justify-center shadow-xl mx-auto mb-4">
-            <ShieldCheck className="w-8 h-8 text-white" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#F5A623] flex items-center justify-center shadow-xl mx-auto mb-3 sm:mb-4">
+            <ShieldCheck className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
+          <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white">
             DFD SPORTS
           </h1>
-          <p className="text-xs font-medium text-gray-400 tracking-[0.2em] uppercase mt-1">
+          <p className="text-[11px] sm:text-xs font-medium text-gray-400 tracking-[0.2em] uppercase mt-1">
             Admin CMS Portal
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#0E121B] rounded-3xl p-8 shadow-2xl">
-          <h2 className="text-lg font-bold text-white mb-1">Sign In to Dashboard</h2>
-          <p className="text-xs text-gray-400 mb-8">
+        <div className="bg-[#0E121B] rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-800">
+          <h2 className="text-base sm:text-lg font-bold text-white mb-1">Sign In to Dashboard</h2>
+          <p className="text-xs text-gray-400 mb-6 sm:mb-8">
             Authorized personnel only. All actions are logged.
           </p>
 
