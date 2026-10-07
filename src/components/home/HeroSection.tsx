@@ -64,7 +64,18 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
   return (
     <section className="relative h-[85vh] h-[85dvh] min-h-[520px] lg:h-screen lg:h-[100dvh] lg:min-h-[100dvh] w-full overflow-hidden bg-[#0A0C12]">
       <style>{`@keyframes heroProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@media (prefers-reduced-motion:reduce){.hero-progress{animation:none!important;transform:scaleX(1)!important}}`}</style>
+@keyframes heroHeadingIn{
+  0%{opacity:0;transform:translateX(-50px)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.animate-hero-heading{
+  animation:heroHeadingIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change:transform, opacity;
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-progress{animation:none!important;transform:scaleX(1)!important}
+  .animate-hero-heading{animation:none!important}
+}`}</style>
 
       {/* Background images — pinned right so the products stay visible, text sits on the dark side */}
       {slides.map((slide, i) => (
@@ -127,7 +138,8 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
             )}
 
             <h1
-              className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-normal leading-[1.05] tracking-tight text-white font-rowan"
+              key={current}
+              className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-normal leading-[1.05] tracking-tight text-white font-rowan animate-hero-heading"
               style={{ fontFamily: "'_Rowan_Variable', 'Rowan', Georgia, serif" }}
             >
               {renderHeading(active.heading, active.highlight_text)}
@@ -139,11 +151,11 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               </p>
             )}
 
-            <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {active.primary_cta_text && active.primary_cta_link && (
                 <Link
                   href={active.primary_cta_link}
-                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-white transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-4 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-white transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white whitespace-nowrap shrink-0"
                 >
                   {active.primary_cta_text}
                 </Link>
@@ -152,7 +164,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               {active.secondary_cta_text && (
                 <>
                   {/* Mobile: WhatsApp icon button on right side */}
-                  <div className="lg:hidden">
+                  <div className="lg:hidden shrink-0">
                     <WhatsAppButton
                       phoneNumber={company?.whatsapp_number}
                       type="custom_jersey"
@@ -178,34 +190,51 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                   </div>
                 </>
               )}
+              {/* Mobile: Next and Previous slide buttons on the same line */}
+              {slides.length > 1 && (
+                <div className="flex sm:hidden items-center gap-1.5 ml-auto shrink-0">
+                  <button
+                    onClick={() => go(current - 1)}
+                    aria-label="Previous slide"
+                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => go(current + 1)}
+                    aria-label="Next slide"
+                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom strip: features + slide controls */}
-      <div className="absolute inset-x-0 bottom-0 z-20">
+      {/* Bottom strip: features + slide controls (Desktop) */}
+      <div className="hidden sm:block absolute inset-x-0 bottom-0 z-20">
         <div className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
-          
-            {slides.length > 1 && (
-              <div className="flex items-center justify-end gap-1.5">
-                <button
-                  onClick={() => go(current - 1)}
-                  aria-label="Previous slide"
-                  className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => go(current + 1)}
-                  aria-label="Next slide"
-                  className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-      
+          {slides.length > 1 && (
+            <div className="flex items-center justify-end gap-1.5">
+              <button
+                onClick={() => go(current - 1)}
+                aria-label="Previous slide"
+                className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => go(current + 1)}
+                aria-label="Next slide"
+                className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

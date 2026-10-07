@@ -146,7 +146,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
         {/* Left Column: Full-Section Image Showcase */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* Main Hero Image Taking Full Section Area */}
-          <div className="relative aspect-square w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A0D14] border border-white/10 shadow-2xl group flex items-center justify-center">
+          <div className="relative aspect-square w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A0D14] shadow-2xl group flex items-center justify-center">
             {activeImage ? (
               <Image
                 src={activeImage}
@@ -165,7 +165,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
             {/* Brand Badge */}
             {product.brand?.name && (
-              <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-200 uppercase tracking-widest border border-white/10 shadow-md">
+              <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-200 uppercase tracking-widest shadow-md">
                 {product.brand.name}
               </div>
             )}
@@ -177,10 +177,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
               title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
               aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
               className={cn(
-                'absolute top-4 right-4 sm:top-5 sm:right-5 z-20 w-10 h-10 rounded-full flex items-center justify-center shadow-lg border backdrop-blur-md transition-all duration-200 cursor-pointer active:scale-90',
+                'absolute top-4 right-4 sm:top-5 sm:right-5 z-20 w-10 h-10 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md transition-all duration-200 cursor-pointer active:scale-90',
                 isWishlisted
-                  ? 'bg-rose-500/20 border-rose-500 text-rose-500'
-                  : 'bg-black/60 border-white/15 text-gray-300 hover:text-rose-500 hover:border-rose-500/50'
+                  ? 'bg-rose-500/20 text-rose-500'
+                  : 'bg-black/60 text-gray-300 hover:text-rose-500'
               )}
             >
               <Heart className={cn('w-5 h-5', isWishlisted ? 'fill-rose-500 text-rose-500' : '')} />
@@ -198,10 +198,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                     key={i}
                     onClick={() => setActiveImage(img)}
                     className={cn(
-                      'relative w-20 h-20 rounded-xl overflow-hidden bg-[#0A0D14] p-1.5 shrink-0 border transition-all cursor-pointer',
+                      'relative w-20 h-20 rounded-xl overflow-hidden bg-[#0A0D14] p-1.5 shrink-0 transition-all cursor-pointer',
                       isActive
-                        ? 'border-[#F5A623] ring-2 ring-[#F5A623]/30 scale-95'
-                        : 'border-white/10 hover:border-white/30 opacity-70 hover:opacity-100'
+                        ? 'ring-2 ring-[#F5A623] scale-95'
+                        : 'opacity-70 hover:opacity-100'
                     )}
                   >
                     <Image
@@ -227,7 +227,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           )}
 
           {/* Product Title */}
-          <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white mb-3">
+          <h1 className="text-2xl sm:text-4xl font-semibold uppercase tracking-tight text-white mb-3">
             {product.name}
           </h1>
 
@@ -276,10 +276,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        'px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all border cursor-pointer',
+                        'px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer',
                         isSelected
-                          ? 'bg-[#F5A623] text-black border-[#F5A623] shadow-md shadow-[#F5A623]/20'
-                          : 'bg-white/5 text-gray-300 border-white/10 hover:border-white/25 hover:bg-white/10'
+                          ? 'bg-[#F5A623] text-black shadow-md shadow-[#F5A623]/20'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
                       )}
                     >
                       {size}
@@ -312,7 +312,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
             {/* ROW 1: Quantity Stepper + Add to Cart */}
             <div className="flex items-center gap-3">
               {/* Quantity Stepper */}
-              <div className="flex items-center justify-between border border-white/15 rounded-xl bg-white/[0.03] hover:border-white/25 transition-colors h-12 px-2 shrink-0">
+              <div className="flex items-center justify-between rounded-xl bg-white/[0.05] hover:bg-white/[0.08] transition-colors h-12 px-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(-1)}

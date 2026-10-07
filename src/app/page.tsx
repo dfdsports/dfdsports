@@ -21,6 +21,7 @@ import { BrandsSection } from '@/components/home/BrandsSection';
 import { WhyChooseUsSection } from '@/components/home/WhyChooseUsSection';
 import { HighlightsSection } from '@/components/home/HighlightsSection';
 import { FinalCTASection } from '@/components/home/FinalCTASection';
+import { FloatingWhatsAppButton } from '@/components/ui/FloatingWhatsAppButton';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -61,7 +62,7 @@ export default async function HomePage() {
         {/* 1. Hero Section */}
         <HeroSection slides={heroSlides} company={company} />
 
-           {/* 7. Brands We Supply (Dynamically shown if brands exist) */}
+        {/* 7. Brands We Supply (Dynamically shown if brands exist) */}
         <BrandsSection brands={brands} />
 
         {/* 2. Sports Categories ("Shop the Game") */}
@@ -70,18 +71,18 @@ export default async function HomePage() {
         {/* 3. Featured Products Showcase (Untouched, original design) */}
         <FeaturedProductsSection products={featuredProducts} company={company} settings={featuredSettings} />
 
-    
+
 
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
         <CustomTeamwearSection company={company} />
 
-            {/* 5. All Products Showcase (New product cards: 10 items, 5 per row, View All button) */}
+        {/* 5. All Products Showcase (New product cards: 10 items, 5 per row, View All button) */}
         <AllProductsSection products={allProducts} company={company} />
 
         {/* 6. Fabric Collection (Dynamically shown if fabrics exist) */}
         <FabricCollectionSection fabrics={fabrics} />
 
-     
+
 
         {/* 8. Why DFD Sports (Trust propositions) */}
         <WhyChooseUsSection items={whyChooseUs} />
@@ -95,6 +96,9 @@ export default async function HomePage() {
 
       {/* Dynamic Footer */}
       <Footer company={company} />
+
+      {/* Floating WhatsApp Action Button (Bottom Right) */}
+      <FloatingWhatsAppButton company={company} />
     </div>
   );
 }

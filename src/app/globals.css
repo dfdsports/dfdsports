@@ -25,6 +25,15 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-outfit), -apple-system, BlinkMacSystemFont, sans-serif;
   }
+
+  /* Prevent iOS Safari / mobile auto-zoom when inputs/selects/textareas are focused */
+  @media screen and (max-width: 768px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
 }
 
 /* Custom sports typography & scrollbar */
@@ -182,4 +191,27 @@
 .font-rowan {
   font-family: '_Rowan_Variable', 'Rowan', Georgia, 'Times New Roman', serif;
 }
+
+@keyframes heroHeadingIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-hero-heading {
+  animation: heroHeadingIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-heading {
+    animation: none !important;
+  }
+}
+
 

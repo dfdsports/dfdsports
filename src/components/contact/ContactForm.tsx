@@ -68,7 +68,7 @@ export function ContactForm({ company }: ContactFormProps) {
   });
 
   return (
-    <div className="rounded-3xl bg-[#0E121B] p-8 sm:p-10 shadow-2xl relative">
+    <div className="rounded-sm bg-transparent sm:bg-[#0E121B] p-0 sm:p-10 shadow-none sm:shadow-2xl relative">
       {submitted ? (
         <div className="text-center py-10">
           <div className="w-16 h-16 rounded-full bg-[#25D366]/20 text-[#25D366] flex items-center justify-center mx-auto mb-4">
@@ -92,7 +92,7 @@ export function ContactForm({ company }: ContactFormProps) {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
-          <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-1">
+          <h3 className="text-xl font-semibold uppercase tracking-tight text-white mb-1">
             Send an Institutional or Bulk Enquiry
           </h3>
           <p className="text-xs text-gray-400 mb-6">
@@ -117,8 +117,7 @@ export function ContactForm({ company }: ContactFormProps) {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Ramesh Kumar"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
               />
             </div>
 
@@ -131,8 +130,7 @@ export function ContactForm({ company }: ContactFormProps) {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +91 9876543210"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
               />
             </div>
           </div>
@@ -147,8 +145,7 @@ export function ContactForm({ company }: ContactFormProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@school.com"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
               />
             </div>
 
@@ -179,8 +176,7 @@ export function ContactForm({ company }: ContactFormProps) {
               type="text"
               value={requirement}
               onChange={(e) => setRequirement(e.target.value)}
-              placeholder="e.g. 50 Footballs + 25 Training cones or 30 Cricket jerseys"
-              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
             />
           </div>
 
@@ -193,8 +189,7 @@ export function ContactForm({ company }: ContactFormProps) {
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Provide delivery location, expected delivery date or custom requests..."
-              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
             />
           </div>
 
@@ -207,10 +202,6 @@ export function ContactForm({ company }: ContactFormProps) {
               <Send className="w-4 h-4" />
               <span>{loading ? 'Submitting...' : 'Submit Enquiry'}</span>
             </button>
-
-            <span className="text-xs text-gray-400">
-              No online payment. We discuss directly via phone or WhatsApp.
-            </span>
           </div>
         </form>
       )}

@@ -112,28 +112,15 @@ export function Footer({ company }: FooterProps) {
 
           {/* Brand Info — 2 cols on lg */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-5 group">
-              {company?.logo_url ? (
-                <div className="relative w-12 h-12">
-                  <Image
-                    src={company.logo_url}
-                    alt={brandName}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              ) : (
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#F5A623] flex items-center justify-center shadow-lg shadow-blue-900/30">
-                  <span className="font-black text-xl tracking-tighter text-white">DFD</span>
-                </div>
-              )}
-              <div className="flex flex-col">
-                <span className="text-xl font-black tracking-tight text-white uppercase leading-tight">
-                  {brandName}
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.2em] font-medium text-gray-400">
-                  {fullName}
-                </span>
+            <Link href="/" className="inline-block mb-5 group">
+              <div className="relative w-36 h-14 sm:w-44 sm:h-16">
+                <Image
+                  src={company?.logo_url || '/logo.png'}
+                  alt={brandName}
+                  fill
+                  sizes="(max-width: 640px) 144px, 176px"
+                  className="object-contain object-left group-hover:opacity-90 transition-opacity"
+                />
               </div>
             </Link>
 
