@@ -57,10 +57,9 @@ export function AllProductsSection({
         <div className="mt-10 sm:mt-14 flex justify-center">
           <Link
             href="/collections"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
             <span>View All</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

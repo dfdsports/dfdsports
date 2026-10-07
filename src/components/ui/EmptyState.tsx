@@ -10,6 +10,7 @@ interface EmptyStateProps {
   actionText?: string;
   actionHref?: string;
   className?: string;
+  actionClassName?: string;
 }
 
 export function EmptyState({
@@ -19,6 +20,7 @@ export function EmptyState({
   actionText,
   actionHref,
   className,
+  actionClassName,
 }: EmptyStateProps) {
   return (
     <div
@@ -39,7 +41,10 @@ export function EmptyState({
       {actionText && actionHref && (
         <Link
           href={actionHref}
-          className="mt-5 inline-flex items-center px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#080A0F] bg-[#F5A623] hover:bg-[#E09612] rounded-full transition-colors"
+          className={cn(
+            'mt-5 inline-flex items-center px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#080A0F] bg-[#F5A623] hover:bg-[#E09612] rounded-full transition-colors',
+            actionClassName
+          )}
         >
           {actionText}
         </Link>

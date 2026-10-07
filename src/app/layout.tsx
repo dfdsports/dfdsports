@@ -66,6 +66,12 @@ export default function RootLayout({
       className={`${outfit.variable} ${jakarta.variable} dark scroll-smooth`}
       suppressHydrationWarning
     >
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=rowan@400,500,600,700&display=swap"
+        />
+      </head>
       <body
         className="min-h-screen bg-[#080A0F] text-[#F3F4F6] font-sans antialiased selection:bg-[#F5A623] selection:text-[#080A0F]"
         suppressHydrationWarning

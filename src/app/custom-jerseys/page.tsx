@@ -6,8 +6,9 @@ import { getCompanySettings } from '@/services/company';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CustomTeamwearBuilder } from '@/components/teamwear/CustomTeamwearBuilder';
+import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
-import { Shirt, Sparkles, Layers, ShieldCheck, Palette, Zap } from 'lucide-react';
+import { Shirt } from 'lucide-react';
 
 export const revalidate = 60;
 
@@ -19,33 +20,37 @@ export default async function CustomJerseysPage() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#F5A623] selection:text-black">
       <Header company={company} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-20">
+      <main className="flex-1 w-full space-y-16 sm:space-y-20">
         {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.3em] font-bold text-[#F5A623] mb-3">
-            DESTINATION FOR DREAMS • CUSTOM TEAMWEAR
-          </p>
-          <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white mb-6">
-            TEAMWEAR <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
-              MADE FOR YOUR SQUAD.
-            </span>
-          </h1>
-          <p className="text-base text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            High definition sublimation printing, zero-fade ink technology, breathable athletic fabrics,
-            and complete customization for schools, colleges, clubs, and corporate teams.
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div className="text-center max-w-3xl mx-auto">
+            <p className="text-xs uppercase tracking-[0.3em] font-bold text-[#F5A623] mb-3">
+              DESTINATION FOR DREAMS • CUSTOM TEAMWEAR
+            </p>
+            <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white mb-6">
+              TEAMWEAR <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
+                MADE FOR YOUR SQUAD.
+              </span>
+            </h1>
+            <p className="text-base text-gray-300 leading-relaxed max-w-2xl mx-auto">
+              High definition sublimation printing, zero-fade ink technology, breathable athletic fabrics,
+              and complete customization for schools, colleges, clubs, and corporate teams.
+            </p>
+          </div>
         </div>
 
         {/* Interactive Jersey Builder */}
-        <CustomTeamwearBuilder company={company} fabrics={fabrics} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <CustomTeamwearBuilder company={company} fabrics={fabrics} />
+        </div>
 
         {/* Existing Designs Showcase (From Supabase) */}
         {teamwear.length > 0 && (
-          <div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-1">
                 PORTFOLIO
@@ -59,7 +64,7 @@ export default async function CustomJerseysPage() {
               {teamwear.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] p-6 shadow-xl flex flex-col justify-between"
+                  className="rounded-3xl overflow-hidden bg-gradient-to-b from-[#121622] to-[#0A0D14] border border-white/5 p-6 shadow-xl flex flex-col justify-between hover:border-white/15 transition-all duration-300"
                 >
                   <div className="relative aspect-square w-full bg-[#0E121B] rounded-2xl overflow-hidden mb-6 flex items-center justify-center p-4">
                     {item.front_image_url ? (
@@ -114,42 +119,8 @@ export default async function CustomJerseysPage() {
           </div>
         )}
 
-        {/* Fabric Technologies (From Supabase) */}
-        {fabrics.length > 0 && (
-          <div className="rounded-3xl bg-[#0E121B] p-8 sm:p-12 shadow-2xl">
-            <div className="max-w-2xl mb-8">
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-1">
-                ENGINEERED TEXTILES
-              </p>
-              <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white mb-2">
-                Performance Fabrics Available
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-400">
-                Choose the exact fabric weight and weave to match your sport and climate conditions.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {fabrics.map((f) => (
-                <div key={f.id} className="p-6 rounded-2xl bg-[#141924] flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-base font-black uppercase tracking-wider text-white text-[#F5A623] mb-1">
-                      {f.name}
-                    </h3>
-                    {f.short_description && (
-                      <p className="text-xs text-gray-300 mb-3">{f.short_description}</p>
-                    )}
-                  </div>
-                  {f.specifications && (
-                    <span className="text-[11px] font-mono text-gray-400 bg-white/5 px-2.5 py-1 rounded inline-block">
-                      {f.specifications}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Premium Fabric Collection (Exact component from Home Page) */}
+        <FabricCollectionSection fabrics={fabrics} />
       </main>
 
       <Footer company={company} />
