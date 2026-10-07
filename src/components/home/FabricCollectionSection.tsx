@@ -79,7 +79,7 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
         </div>
 
         {/* 2 columns on mobile, 4 columns on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-5 gap-y-6 sm:gap-y-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-3 sm:gap-x-5 gap-y-6 sm:gap-y-8">
           {visibleFabrics.map((fabric) => (
             <div key={fabric.id} className="group">
               {/* Fabric image with the name overlapping its bottom edge */}

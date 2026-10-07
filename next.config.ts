@@ -29,6 +29,12 @@ const nextConfig: NextConfig = {
         destination: '/admin',
         permanent: true,
       },
+      // Redirect /collection to /collections
+      {
+        source: '/collection',
+        destination: '/collections',
+        permanent: true,
+      },
     ];
   },
 };

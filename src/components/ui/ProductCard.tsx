@@ -123,7 +123,7 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        'group relative rounded-sm bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 flex flex-col justify-between overflow-hidden',
+        'group relative rounded-sm bg-white shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 flex flex-col justify-between overflow-hidden',
         className
       )}
     >
@@ -143,10 +143,10 @@ export function ProductCard({
           title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           className={cn(
-            'absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center shadow-xs border transition-all duration-200 cursor-pointer active:scale-90',
+            'absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-90',
             isWishlisted
-              ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100 scale-105'
-              : 'bg-white/95 border-slate-200 text-slate-400 hover:text-rose-500 hover:bg-white hover:scale-110'
+              ? 'text-rose-500 scale-105'
+              : 'text-slate-600 hover:text-rose-500 hover:scale-110 drop-shadow-sm'
           )}
         >
           <Heart
@@ -180,16 +180,36 @@ export function ProductCard({
           )}
         </Link>
 
+        {/* Mobile View: Round Add to Cart icon on image bottom right side */}
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          title={isAdded ? 'Added to cart' : 'Add to cart'}
+          aria-label={isAdded ? 'Added to cart' : 'Add to cart'}
+          className={cn(
+            'sm:hidden absolute bottom-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-all duration-200 cursor-pointer active:scale-90',
+            isAdded
+              ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+              : 'bg-amber-500 text-white hover:bg-amber-400 shadow-amber-500/20'
+          )}
+        >
+          {isAdded ? (
+            <Check className="w-4 h-4 text-white" />
+          ) : (
+            <ShoppingCart className="w-4 h-4 text-white" />
+          )}
+        </button>
+
         {/* Desktop Hover Action: Add to Cart button slides up smoothly */}
         <div className="hidden sm:block absolute inset-x-3 bottom-3 z-20 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
           <button
             type="button"
             onClick={handleAddToCart}
             className={cn(
-              'w-full py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg transition-all duration-200 cursor-pointer active:scale-95',
+              'w-full py-2.5 px-3 rounded-sm font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg transition-all duration-200 cursor-pointer active:scale-95',
               isAdded
                 ? 'bg-emerald-600 text-white'
-                : 'bg-slate-950 hover:bg-amber-500 text-white hover:text-slate-950'
+                : 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20'
             )}
           >
             {isAdded ? (
@@ -228,42 +248,16 @@ export function ProductCard({
           </Link>
         </div>
 
-        {/* Price & Mobile Add to Cart */}
-        <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-          <div>
-            {price !== null ? (
+        {/* Price */}
+        {price !== null && (
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+            <div>
               <span className="text-xs sm:text-sm font-black text-slate-900">
                 ₹{price.toLocaleString('en-IN')}
               </span>
-            ) : (
-              <span className="text-[11px] font-semibold text-slate-500">
-                Price on Inquiry
-              </span>
-            )}
+            </div>
           </div>
-
-          {/* Mobile-only visible quick Add to Cart button */}
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            className={cn(
-              'sm:hidden inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer active:scale-95',
-              isAdded
-                ? 'bg-emerald-600 text-white'
-                : 'bg-slate-950 text-white hover:bg-amber-500 hover:text-slate-950'
-            )}
-            aria-label="Add to cart"
-          >
-            {isAdded ? (
-              <Check className="w-3 h-3 text-white" />
-            ) : (
-              <>
-                <ShoppingCart className="w-3 h-3" />
-                <span>Add</span>
-              </>
-            )}
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

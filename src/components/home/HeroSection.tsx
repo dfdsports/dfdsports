@@ -126,7 +126,10 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               </p>
             )}
 
-            <h1 className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold leading-[1.05] tracking-tight text-white">
+            <h1
+              className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-normal leading-[1.05] tracking-tight text-white font-rowan"
+              style={{ fontFamily: "'_Rowan_Variable', 'Rowan', Georgia, serif" }}
+            >
               {renderHeading(active.heading, active.highlight_text)}
             </h1>
 
@@ -140,7 +143,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
               {active.primary_cta_text && active.primary_cta_link && (
                 <Link
                   href={active.primary_cta_link}
-                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-[#0A0C12] transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-white transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {active.primary_cta_text}
                 </Link>
@@ -185,45 +188,21 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
         <div className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
           
             {slides.length > 1 && (
-              <div className="flex items-center justify-between gap-5 lg:justify-end">
-                <div className="flex items-center gap-2">
-                  {slides.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => go(i)}
-                      aria-label={`Go to slide ${i + 1}`}
-                      className={cn(
-                        'relative h-1 overflow-hidden rounded-full bg-white/25 transition-all duration-300',
-                        i === current ? 'w-10' : 'w-4 hover:bg-white/40'
-                      )}
-                    >
-                      {i === current && (
-                        <span
-                          key={current}
-                          className="hero-progress absolute inset-0 origin-left bg-[#F5A623]"
-                          style={{ animation: `heroProgress ${SLIDE_MS}ms linear forwards` }}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => go(current - 1)}
-                    aria-label="Previous slide"
-                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => go(current + 1)}
-                    aria-label="Next slide"
-                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
+              <div className="flex items-center justify-end gap-1.5">
+                <button
+                  onClick={() => go(current - 1)}
+                  aria-label="Previous slide"
+                  className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => go(current + 1)}
+                  aria-label="Next slide"
+                  className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
               </div>
             )}
       

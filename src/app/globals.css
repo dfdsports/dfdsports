@@ -120,3 +120,66 @@
   transform: scale(1.2);
 }
 
+/* Rowan / _Rowan_Variable font for hero main heading only */
+@font-face {
+  font-family: '_Rowan_Variable';
+  src: url('https://cdn.fontshare.com/wf/EJ75J347NNXMVYYDNYGPENXJVMYRZQBR/7NEP2R36W6ZEC37IAGHA3ED4JCAVNQTN/6VXKNERFU5ZN2BGRRBKJM44S3OWVP6B3.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/EJ75J347NNXMVYYDNYGPENXJVMYRZQBR/7NEP2R36W6ZEC37IAGHA3ED4JCAVNQTN/6VXKNERFU5ZN2BGRRBKJM44S3OWVP6B3.woff') format('woff'),
+       url('https://cdn.fontshare.com/wf/EJ75J347NNXMVYYDNYGPENXJVMYRZQBR/7NEP2R36W6ZEC37IAGHA3ED4JCAVNQTN/6VXKNERFU5ZN2BGRRBKJM44S3OWVP6B3.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '_Rowan_Variable';
+  src: url('https://cdn.fontshare.com/wf/IHGIPFQF6M7ONMAM5BDKT2Y4MCSHH7A2/7PEOG3AFZRM7FACJFNF344IG446YSBQY/YYPZMCVKUFAQNYZ3XIAMCXDQHGYBIJ5V.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/IHGIPFQF6M7ONMAM5BDKT2Y4MCSHH7A2/7PEOG3AFZRM7FACJFNF344IG446YSBQY/YYPZMCVKUFAQNYZ3XIAMCXDQHGYBIJ5V.woff') format('woff'),
+       url('https://cdn.fontshare.com/wf/IHGIPFQF6M7ONMAM5BDKT2Y4MCSHH7A2/7PEOG3AFZRM7FACJFNF344IG446YSBQY/YYPZMCVKUFAQNYZ3XIAMCXDQHGYBIJ5V.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '_Rowan_Variable';
+  src: url('https://cdn.fontshare.com/wf/WIBYGROXA7RCS45VJ47FEJKR5JE4ZOWK/KUMYKUMHUNIL2S2IFFMHEX3KONHQHEE4/YD64V4X2IZGM5LZMCIXYWHDV2IRLIY3S.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/WIBYGROXA7RCS45VJ47FEJKR5JE4ZOWK/KUMYKUMHUNIL2S2IFFMHEX3KONHQHEE4/YD64V4X2IZGM5LZMCIXYWHDV2IRLIY3S.woff') format('woff'),
+       url('https://cdn.fontshare.com/wf/WIBYGROXA7RCS45VJ47FEJKR5JE4ZOWK/KUMYKUMHUNIL2S2IFFMHEX3KONHQHEE4/YD64V4X2IZGM5LZMCIXYWHDV2IRLIY3S.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '_Rowan_Variable';
+  src: url('https://cdn.fontshare.com/wf/6ZWAU4CIRD5SOLBZUWO23WQPDXOWMFF6/D22DM3OUQVHMQHGL4AC7V5EEHURH7FKH/IC5DDU5MQQOFLAAYBIKFK36YH6AHJS42.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/6ZWAU4CIRD5SOLBZUWO23WQPDXOWMFF6/D22DM3OUQVHMQHGL4AC7V5EEHURH7FKH/IC5DDU5MQQOFLAAYBIKFK36YH6AHJS42.woff') format('woff'),
+       url('https://cdn.fontshare.com/wf/6ZWAU4CIRD5SOLBZUWO23WQPDXOWMFF6/D22DM3OUQVHMQHGL4AC7V5EEHURH7FKH/IC5DDU5MQQOFLAAYBIKFK36YH6AHJS42.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rowan';
+  src: url('https://cdn.fontshare.com/wf/EJ75J347NNXMVYYDNYGPENXJVMYRZQBR/7NEP2R36W6ZEC37IAGHA3ED4JCAVNQTN/6VXKNERFU5ZN2BGRRBKJM44S3OWVP6B3.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/EJ75J347NNXMVYYDNYGPENXJVMYRZQBR/7NEP2R36W6ZEC37IAGHA3ED4JCAVNQTN/6VXKNERFU5ZN2BGRRBKJM44S3OWVP6B3.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rowan';
+  src: url('https://cdn.fontshare.com/wf/6ZWAU4CIRD5SOLBZUWO23WQPDXOWMFF6/D22DM3OUQVHMQHGL4AC7V5EEHURH7FKH/IC5DDU5MQQOFLAAYBIKFK36YH6AHJS42.woff2') format('woff2'),
+       url('https://cdn.fontshare.com/wf/6ZWAU4CIRD5SOLBZUWO23WQPDXOWMFF6/D22DM3OUQVHMQHGL4AC7V5EEHURH7FKH/IC5DDU5MQQOFLAAYBIKFK36YH6AHJS42.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+.font-rowan {
+  font-family: '_Rowan_Variable', 'Rowan', Georgia, 'Times New Roman', serif;
+}
+
