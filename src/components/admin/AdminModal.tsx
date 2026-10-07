@@ -36,8 +36,14 @@ export function AdminModal({
 }: AdminModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
 
-  // Focus trap & Escape key listener & Body scroll lock
+  // Keep onClose ref updated without re-triggering modal effect
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // Focus management & Escape key & Scroll lock
   useEffect(() => {
     if (!isOpen) return;
 
@@ -46,7 +52,7 @@ export function AdminModal({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -80,15 +86,22 @@ export function AdminModal({
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    // Focus first focusable element inside modal
+    // Focus first input inside the modal content body ONLY when modal opens
     const timer = setTimeout(() => {
       if (modalRef.current) {
-        const firstInput = modalRef.current.querySelector<HTMLElement>(
-          'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled])'
+        const activeEl = document.activeElement;
+        // Do not steal focus if an element inside modal is already focused
+        if (activeEl && modalRef.current.contains(activeEl) && activeEl !== modalRef.current) {
+          return;
+        }
+
+        const bodyContainer = modalRef.current.querySelector('[data-modal-body="true"]');
+        const firstInput = (bodyContainer || modalRef.current).querySelector<HTMLElement>(
+          'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled])'
         );
         firstInput?.focus();
       }
-    }, 50);
+    }, 60);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -100,7 +113,7 @@ export function AdminModal({
         previouslyFocusedElementRef.current.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -114,7 +127,7 @@ export function AdminModal({
       {/* Dark overlay backdrop */}
       <div
         className="fixed inset-0 bg-slate-950/75 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
-        onClick={onClose}
+        onClick={() => onCloseRef.current()}
         aria-hidden="true"
       />
 
@@ -145,16 +158,19 @@ export function AdminModal({
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => onCloseRef.current()}
             aria-label="Close modal"
-            className="p-2 rounded-xl text-slate-500 hover:text-black hover:bg-slate-200/60 transition-colors shrink-0"
+            className="p-2 rounded-xl text-slate-500 hover:text-black hover:bg-slate-200/60 transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Scrollable Body - Hide Y-axis scrollbar while allowing scrolling */}
-        <div className="p-6 overflow-y-auto flex-1 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {/* Scrollable Body */}
+        <div
+          data-modal-body="true"
+          className="p-6 overflow-y-auto flex-1 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
           {children}
         </div>
       </div>
