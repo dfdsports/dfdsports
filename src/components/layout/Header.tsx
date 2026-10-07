@@ -93,7 +93,6 @@ export function Header({ company }: HeaderProps) {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Collections', href: '/collections' },
-    { label: 'Equipment', href: '/collections?type=equipment' },
     { label: 'Custom Jerseys', href: '/custom-jerseys' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
