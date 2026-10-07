@@ -5,7 +5,17 @@ import { X, MessageCircle, User, Phone, MapPin, Loader2, Hash, CheckCircle2 } fr
 import { cn } from '@/lib/utils';
 import { formatPhoneNumber } from '@/lib/whatsapp';
 
-interface WhatsAppOrderModalProps {
+export interface CartItemSummary {
+  id: string;
+  name: string;
+  slug?: string;
+  price?: number;
+  quantity: number;
+  image?: string;
+  size?: string;
+}
+
+export interface WhatsAppOrderModalProps {
   whatsappNumber?: string | null;
   productName: string;
   productCategory?: string | null;
@@ -13,6 +23,15 @@ interface WhatsAppOrderModalProps {
   label?: string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  // Controlled modal props for reuse
+  isOpen?: boolean;
+  onClose?: () => void;
+  hideTrigger?: boolean;
+  cartItems?: CartItemSummary[];
+  cartSubtotal?: number;
+  initialQuantity?: string;
+  showQuantity?: boolean;
+  onSuccess?: () => void;
 }
 
 interface FormState {
@@ -32,14 +51,41 @@ export function WhatsAppOrderModal({
   label = 'Order on WhatsApp',
   size = 'lg',
   className,
+  isOpen,
+  onClose,
+  hideTrigger = false,
+  cartItems,
+  cartSubtotal,
+  initialQuantity,
+  showQuantity,
+  onSuccess,
 }: WhatsAppOrderModalProps) {
-  const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<FormState>({ name: '', phone: '', address: '', quantity: '1' });
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = isOpen !== undefined;
+  const open = isControlled ? isOpen : internalOpen;
+
+  const shouldShowQuantity =
+    showQuantity !== undefined
+      ? showQuantity
+      : !(cartItems && cartItems.length > 0);
+
+  const [form, setForm] = useState<FormState>({
+    name: '',
+    phone: '',
+    address: '',
+    quantity: initialQuantity || '1',
+  });
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open && initialQuantity) {
+      setForm((prev) => ({ ...prev, quantity: initialQuantity }));
+    }
+  }, [open, initialQuantity]);
 
   useEffect(() => {
     if (open) {
@@ -59,7 +105,11 @@ export function WhatsAppOrderModal({
 
   function closeModal() {
     if (submitting) return;
-    setOpen(false);
+    if (isControlled) {
+      onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
     setErrors({});
     setDone(false);
   }
@@ -88,35 +138,71 @@ export function WhatsAppOrderModal({
     setSubmitting(true);
 
     // ── Build WhatsApp message ──────────────────────────────────────────────
-    const lines = [
-      `🛒 *NEW ORDER — DFD SPORTS*`,
-      ``,
-      `📦 *Product Details*`,
-      `• Product: ${productName}`,
-    ];
-    if (productCategory) lines.push(`• Category: ${productCategory}`);
-    if (form.quantity) lines.push(`• Quantity: ${form.quantity}`);
-    if (productSizes && productSizes.length > 0)
-      lines.push(`• Available Sizes: ${productSizes.join(', ')}`);
-    lines.push(``);
-    lines.push(`👤 *Customer Details*`);
-    lines.push(`• Name: ${form.name.trim()}`);
-    lines.push(`• Phone: ${form.phone.trim()}`);
-    lines.push(`• Shipping Address: ${form.address.trim()}`);
-    lines.push(``);
-    lines.push(`Please confirm availability and share the order details. Thank you!`);
-    const waText = lines.join('\n');
+    let waText = '';
+    if (cartItems && cartItems.length > 0) {
+      const lines = [
+        `🛒 *NEW CART ORDER — DFD SPORTS*`,
+        ``,
+        `📦 *Order Details (${form.quantity.trim() || cartItems.length} items)*`,
+      ];
+      cartItems.forEach((item) => {
+        const priceStr = item.price
+          ? ` — ₹${(item.price * item.quantity).toLocaleString('en-IN')}`
+          : '';
+        const sizeStr = item.size ? ` [Size: ${item.size}]` : '';
+        lines.push(`• ${item.name}${sizeStr} x ${item.quantity}${priceStr}`);
+      });
+      if (cartSubtotal != null && cartSubtotal > 0) {
+        lines.push(``);
+        lines.push(`💰 *Total Amount:* ₹${cartSubtotal.toLocaleString('en-IN')}`);
+      }
+      lines.push(``);
+      lines.push(`👤 *Customer Details*`);
+      lines.push(`• Name: ${form.name.trim()}`);
+      lines.push(`• Phone: ${form.phone.trim()}`);
+      lines.push(`• Shipping Address: ${form.address.trim()}`);
+      lines.push(``);
+      lines.push(`Please confirm availability and share the order details. Thank you!`);
+      waText = lines.join('\n');
+    } else {
+      const lines = [
+        `🛒 *NEW ORDER — DFD SPORTS*`,
+        ``,
+        `📦 *Product Details*`,
+        `• Product: ${productName}`,
+      ];
+      if (productCategory) lines.push(`• Category: ${productCategory}`);
+      if (form.quantity) lines.push(`• Quantity: ${form.quantity}`);
+      if (productSizes && productSizes.length > 0)
+        lines.push(`• Available Sizes: ${productSizes.join(', ')}`);
+      lines.push(``);
+      lines.push(`👤 *Customer Details*`);
+      lines.push(`• Name: ${form.name.trim()}`);
+      lines.push(`• Phone: ${form.phone.trim()}`);
+      lines.push(`• Shipping Address: ${form.address.trim()}`);
+      lines.push(``);
+      lines.push(`Please confirm availability and share the order details. Thank you!`);
+      waText = lines.join('\n');
+    }
 
     // ── Save order to DB ────────────────────────────────────────────────────
     try {
+      const dbProductName =
+        cartItems && cartItems.length > 0
+          ? cartItems
+              .map((i) => `${i.name}${i.size ? ` [${i.size}]` : ''} (x${i.quantity})`)
+              .join(', ')
+              .slice(0, 500)
+          : productName;
+
       await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name.trim(),
           phone: form.phone.trim(),
-          product_name: productName,
-          category: productCategory ?? null,
+          product_name: dbProductName,
+          category: productCategory ?? (cartItems ? 'Cart Order' : null),
           quantity: form.quantity.trim() || '1',
           shipping_address: form.address.trim(),
         }),
@@ -130,6 +216,8 @@ export function WhatsAppOrderModal({
     const url = phone
       ? `https://wa.me/${phone}?text=${encodeURIComponent(waText)}`
       : `https://wa.me/?text=${encodeURIComponent(waText)}`;
+
+    onSuccess?.();
 
     setDone(true);
     setTimeout(() => {
@@ -149,20 +237,22 @@ export function WhatsAppOrderModal({
   return (
     <>
       {/* ── Trigger ────────────────────────────────────────────────── */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className={cn(
-          'inline-flex items-center justify-center cursor-pointer select-none',
-          'bg-[#25D366] hover:bg-[#20BA5A] text-white',
-          'shadow-lg shadow-[#25D366]/25 transition-all duration-200 active:scale-95',
-          sizeClasses[size],
-          className
-        )}
-      >
-        <MessageCircle className={size === 'sm' ? 'w-3.5 h-3.5' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'} />
-        <span>{label}</span>
-      </button>
+      {!hideTrigger && (
+        <button
+          type="button"
+          onClick={() => setInternalOpen(true)}
+          className={cn(
+            'inline-flex items-center justify-center cursor-pointer select-none',
+            'bg-[#25D366] hover:bg-[#20BA5A] text-white',
+            'shadow-lg shadow-[#25D366]/25 transition-all duration-200 active:scale-95',
+            sizeClasses[size],
+            className
+          )}
+        >
+          <MessageCircle className={size === 'sm' ? 'w-3.5 h-3.5' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'} />
+          <span>{label}</span>
+        </button>
+      )}
 
       {/* ── Modal ──────────────────────────────────────────────────── */}
       {open && (
@@ -248,19 +338,21 @@ export function WhatsAppOrderModal({
                   </Field>
 
                   {/* Quantity */}
-                  <Field label="Quantity">
-                    <div className="relative">
-                      <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-                      <input
-                        type="number"
-                        min="1"
-                        value={form.quantity}
-                        onChange={(e) => handleChange('quantity', e.target.value)}
-                        placeholder="1"
-                        className={inputCls(false)}
-                      />
-                    </div>
-                  </Field>
+                  {shouldShowQuantity && (
+                    <Field label="Quantity">
+                      <div className="relative">
+                        <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                        <input
+                          type="number"
+                          min="1"
+                          value={form.quantity}
+                          onChange={(e) => handleChange('quantity', e.target.value)}
+                          placeholder="1"
+                          className={inputCls(false)}
+                        />
+                      </div>
+                    </Field>
+                  )}
 
                   {/* Shipping Address */}
                   <Field label="Shipping Address" required error={errors.address}>
