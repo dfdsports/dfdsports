@@ -321,26 +321,21 @@ export function CollectionsCatalog({
     <div className="w-full pb-28 md:pb-0">
       {/* ================= Header Title Section ================= */}
       <div className="mb-6">
-        <h1 className="text-3xl sm:text-4xl !font-bold font-black uppercase tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl font-semibold uppercase tracking-tight text-white">
           Collections
         </h1>
       </div>
 
       {/* ================= Mobile Floating Bottom Filter & Sort Capsule (< md) ================= */}
       <div className="md:hidden fixed bottom-6 inset-x-0 z-40 flex justify-center pointer-events-none px-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-        <div className="pointer-events-auto flex items-center gap-1 p-1.5 rounded-full bg-[#0C101A]/95 backdrop-blur-2xl border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.9)] max-w-xs w-full">
+        <div className="pointer-events-auto flex items-center gap-2 max-w-xs w-full">
           {/* Mobile Filter Pill Button */}
           <button
             type="button"
             onClick={() => setMobileDrawerOpen(true)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer shadow-sm',
-              activeFilterCount > 0
-                ? 'bg-[#F5A623] text-[#080A0F] shadow-lg shadow-[#F5A623]/30'
-                : 'bg-white/10 hover:bg-white/15 text-white'
-            )}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer bg-[#F5A623] hover:bg-[#E09612] text-[#080A0F] shadow-lg shadow-black/50"
           >
-            <SlidersHorizontal className={cn('w-3.5 h-3.5', activeFilterCount > 0 ? 'text-[#080A0F]' : 'text-[#F5A623]')} />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#080A0F]" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
               <span className="px-1.5 py-0.5 rounded-full bg-[#080A0F] text-[#F5A623] text-[10px] font-black">
@@ -349,25 +344,17 @@ export function CollectionsCatalog({
             )}
           </button>
 
-          {/* Vertical Separator */}
-          <div className="h-4 w-px bg-white/15 shrink-0" />
-
           {/* Mobile Sort Pill Button */}
           <button
             type="button"
             onClick={() => setMobileSortOpen(true)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all active:scale-95 cursor-pointer truncate',
-              sortBy !== 'featured'
-                ? 'bg-amber-500/20 text-[#F5A623] border border-amber-500/40'
-                : 'bg-white/10 hover:bg-white/15 text-white'
-            )}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-bold transition-all active:scale-95 cursor-pointer truncate bg-[#F5A623] hover:bg-[#E09612] text-[#080A0F] shadow-lg shadow-black/50"
           >
-            <ArrowUpDown className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#080A0F] shrink-0" />
             <span className="truncate">
               {sortOptions.find((o) => o.value === sortBy)?.label || 'Sort'}
             </span>
-            <ChevronDown className="w-3 h-3 text-gray-400 shrink-0" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#080A0F] shrink-0" />
           </button>
         </div>
       </div>
@@ -396,7 +383,7 @@ export function CollectionsCatalog({
         {/* ================= Products Area ================= */}
         <div className="flex-1 min-w-0 w-full">
           {/* Top Bar above Product Grid */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6 border-b border-white/10">
+          <div className="hidden md:flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6">
             {/* Left: Product Count */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-base font-black uppercase tracking-wider text-white">
@@ -420,7 +407,7 @@ export function CollectionsCatalog({
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder="Filter catalog products..."
-                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0E121B] border border-white/10 text-xs font-medium text-white placeholder:text-gray-500 focus:outline-none focus:border-amber-400 transition-colors"
+                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0E121B] text-xs font-medium text-white placeholder:text-gray-500 focus:outline-none transition-colors"
                 />
                 {searchQuery && (
                   <button
@@ -444,12 +431,12 @@ export function CollectionsCatalog({
                     type="button"
                     onClick={() => setDesktopSortOpen(!desktopSortOpen)}
                     className={cn(
-                      'flex items-center gap-2.5 px-3.5 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer shadow-inner',
+                      'flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-inner',
                       desktopSortOpen
-                        ? 'bg-[#141925] border-amber-400 text-amber-300'
+                        ? 'bg-[#141925] text-amber-300'
                         : sortBy !== 'featured'
-                        ? 'bg-[#141925] border-amber-500/40 text-white'
-                        : 'bg-[#0E121B] hover:bg-white/10 border-white/10 hover:border-amber-500/40 text-white'
+                        ? 'bg-[#141925] text-white'
+                        : 'bg-[#0E121B] hover:bg-white/10 text-white'
                     )}
                   >
                     {(() => {
@@ -471,8 +458,8 @@ export function CollectionsCatalog({
                   </button>
 
                   {desktopSortOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-72 bg-[#0C101A]/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
-                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-white/5 mb-1 flex items-center justify-between">
+                    <div className="absolute right-0 top-full mt-2 w-72 bg-[#0C101A]/95 backdrop-blur-xl rounded-2xl shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 flex items-center justify-between">
                         <span>Sort Products By</span>
                         <ArrowUpDown className="w-3 h-3 text-amber-400" />
                       </div>
@@ -490,8 +477,8 @@ export function CollectionsCatalog({
                             className={cn(
                               'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left group',
                               isSelected
-                                ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] font-bold border border-amber-500/30'
-                                : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
+                                ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] font-bold'
+                                : 'text-gray-300 hover:text-white hover:bg-white/5'
                             )}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -538,7 +525,7 @@ export function CollectionsCatalog({
                     key={catSlug}
                     type="button"
                     onClick={() => handleRemoveCategory(catSlug)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F5A623]/10 border border-[#F5A623]/30 text-xs font-semibold text-[#F5A623] hover:bg-[#F5A623]/20 transition-all group cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F5A623]/10 text-xs font-semibold text-[#F5A623] hover:bg-[#F5A623]/20 transition-all group cursor-pointer"
                   >
                     <span>{catObj?.name || catSlug}</span>
                     <X className="w-3 h-3 text-[#F5A623] group-hover:scale-125 transition-transform" />
@@ -554,7 +541,7 @@ export function CollectionsCatalog({
                     key={brandSlug}
                     type="button"
                     onClick={() => handleRemoveBrand(brandSlug)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-500/10 border border-blue-500/30 text-xs font-semibold text-blue-300 hover:bg-blue-500/20 transition-all group cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-500/10 text-xs font-semibold text-blue-300 hover:bg-blue-500/20 transition-all group cursor-pointer"
                   >
                     <span>{brandObj?.name || brandSlug}</span>
                     <X className="w-3 h-3 text-blue-300 group-hover:scale-125 transition-transform" />
@@ -567,7 +554,7 @@ export function CollectionsCatalog({
                 <button
                   type="button"
                   onClick={handleClearSearch}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/10 border border-purple-500/30 text-xs font-semibold text-purple-300 hover:bg-purple-500/20 transition-all group cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/10 text-xs font-semibold text-purple-300 hover:bg-purple-500/20 transition-all group cursor-pointer"
                 >
                   <span>&ldquo;{searchQuery}&rdquo;</span>
                   <X className="w-3 h-3 text-purple-300 group-hover:scale-125 transition-transform" />
@@ -587,7 +574,7 @@ export function CollectionsCatalog({
 
           {/* Product Grid / Empty State */}
           {filteredProducts.length === 0 ? (
-            <div className="py-16 px-4 rounded-3xl bg-[#0E121B] border border-white/5 flex flex-col items-center justify-center text-center shadow-xl">
+            <div className="py-16 px-4 rounded-3xl bg-[#0E121B] flex flex-col items-center justify-center text-center shadow-xl">
               <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-500 mb-4">
                 <Tag className="w-8 h-8 text-[#F5A623]" />
               </div>
@@ -637,7 +624,7 @@ export function CollectionsCatalog({
         {/* Sliding Bottom Sheet (Bottom to Up, 75% Height) */}
         <div
           className={cn(
-            'absolute bottom-0 inset-x-0 h-[75vh] max-h-[75vh] bg-[#0B0E14] border-t border-white/10 rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out',
+            'absolute bottom-0 inset-x-0 h-[75vh] max-h-[75vh] bg-[#0B0E14] rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out',
             mobileDrawerOpen ? 'translate-y-0' : 'translate-y-full'
           )}
         >
@@ -647,7 +634,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0D111A]/80 shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 bg-[#0D111A]/80 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[#F5A623]/10 text-[#F5A623]">
                 <SlidersHorizontal className="w-5 h-5" />
@@ -691,7 +678,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Sticky Footer with CTA */}
-          <div className="p-4 sm:p-5 border-t border-white/10 bg-[#0D111A] flex items-center gap-3 shrink-0">
+          <div className="p-4 sm:p-5 bg-[#0D111A] flex items-center gap-3 shrink-0">
             {activeFilterCount > 0 && (
               <button
                 type="button"
@@ -729,7 +716,7 @@ export function CollectionsCatalog({
         {/* Sliding Bottom Sheet */}
         <div
           className={cn(
-            'absolute bottom-0 inset-x-0 bg-[#0B0E14] border-t border-white/15 rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out pb-8',
+            'absolute bottom-0 inset-x-0 bg-[#0B0E14] rounded-t-3xl shadow-2xl shadow-black flex flex-col transition-transform duration-300 ease-out pb-8',
             mobileSortOpen ? 'translate-y-0' : 'translate-y-full'
           )}
         >
@@ -742,7 +729,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0D111A]/80 shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 bg-[#0D111A]/80 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-[#F5A623]/10 text-[#F5A623]">
                 <ArrowUpDown className="w-5 h-5" />
@@ -778,8 +765,8 @@ export function CollectionsCatalog({
                   className={cn(
                     'w-full flex items-center justify-between p-3.5 rounded-2xl transition-all active:scale-98 cursor-pointer text-left',
                     isSelected
-                      ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/10 border border-amber-500/40 text-[#F5A623]'
-                      : 'bg-white/5 border border-white/5 text-gray-200 hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/10 text-[#F5A623]'
+                      : 'bg-white/5 text-gray-200 hover:bg-white/10'
                   )}
                 >
                   <div className="flex items-center gap-3 min-w-0">

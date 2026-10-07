@@ -280,6 +280,14 @@ export function Header({ company }: HeaderProps) {
     updateCart(updated);
   };
 
+  const setQuantity = (id: string, qty: number) => {
+    if (isNaN(qty) || qty <= 0) return;
+    const updated = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity: Math.max(1, Math.min(999, qty)) } : item
+    );
+    updateCart(updated);
+  };
+
   const removeCartItem = (id: string) => {
     updateCart(cartItems.filter((item) => item.id !== id));
   };
@@ -359,7 +367,7 @@ export function Header({ company }: HeaderProps) {
                     href={link.href}
                     className={cn(
                       'text-sm font-medium tracking-wide transition-colors relative py-1',
-                      isActive ? 'text-white' : 'text-gray-300 hover:text-white'
+                      isActive ? 'text-white' : 'text-white hover:text-white'
                     )}
                   >
                     {link.label}
@@ -378,7 +386,7 @@ export function Header({ company }: HeaderProps) {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search Catalog"
-                className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] hover:border-amber-500/40 text-gray-300 hover:text-white transition-all text-xs group shadow-inner"
+                className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-gray-300 hover:text-white transition-all text-xs group shadow-inner"
                 title="Search Products"
               >
                 <Search className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
@@ -390,7 +398,7 @@ export function Header({ company }: HeaderProps) {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search Catalog"
-                className="xl:hidden relative p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 active:scale-95 transition-all"
+                className="xl:hidden relative p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all"
                 title="Search Products"
               >
                 <Search className="w-5 h-5 text-amber-400" />
@@ -458,13 +466,13 @@ export function Header({ company }: HeaderProps) {
         {/* Sliding Drawer from Right */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-[#0B0E14] border-l border-white/10 shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-[#0B0E14] shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-in-out',
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Drawer Top Header */}
           <div>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-[#0D111A]">
+            <div className="flex items-center justify-between px-5 py-4 bg-[#0D111A]">
               <Link href="/" onClick={() => setMobileMenuOpen(false)} className="relative w-28 h-10 block">
                 <Image
                   src="/logo.png"
@@ -483,23 +491,8 @@ export function Header({ company }: HeaderProps) {
               </button>
             </div>
 
-            {/* Quick Search inside Drawer */}
-            <div className="p-3 border-b border-white/5 bg-[#090C12]">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSearchOpen(true);
-                }}
-                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all"
-              >
-                <Search className="w-4 h-4 text-[#F5A623]" />
-                <span>Search gear, jerseys...</span>
-              </button>
-            </div>
-
             {/* Navigation Links List */}
-            <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-320px)]">
+            <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-260px)]">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
@@ -510,7 +503,7 @@ export function Header({ company }: HeaderProps) {
                     className={cn(
                       'flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all',
                       isActive
-                        ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] border border-amber-500/20 font-bold'
+                        ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] font-bold'
                         : 'text-gray-200 hover:bg-white/5 hover:text-white'
                     )}
                   >
@@ -520,7 +513,7 @@ export function Header({ company }: HeaderProps) {
                 );
               })}
 
-              <div className="pt-2 border-t border-white/10 my-2 space-y-1">
+              <div className="pt-2 my-2 space-y-1">
                 {/* Wishlist on Menubar */}
                 <button
                   type="button"
@@ -547,30 +540,18 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Full-size Bottom on Menubar */}
-          <div className="p-4 border-t border-white/10 bg-[#0D111A] space-y-2.5">
-            {/* Full-width WhatsApp Enquiry Button */}
-            {company?.whatsapp_number && (
-              <a
-                href={`https://wa.me/${company.whatsapp_number.replace(/\D/g, '')}?text=${encodeURIComponent('Hi DFD Sports, I would like to inquire about your products.')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition-all active:scale-95"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Enquire on WhatsApp</span>
-              </a>
-            )}
-
-            {/* Full-width Explore Collections Button */}
-            <Link
-              href="/collections"
+          <div className="p-4 bg-[#0D111A] space-y-2.5">
+            {/* WhatsApp Enquiry Button */}
+            <a
+              href={`https://wa.me/${(company?.whatsapp_number || '919876543210').replace(/\D/g, '')}?text=${encodeURIComponent('Hi DFD Sports, I would like to inquire about your products.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] hover:from-[#2563EB] hover:to-[#3B82F6] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-950/40 transition-all active:scale-95"
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition-all active:scale-95 cursor-pointer"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Explore All Products</span>
-            </Link>
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Enquiry</span>
+            </a>
 
             {/* Contact Footer Details */}
             {company?.phone && (
@@ -601,12 +582,12 @@ export function Header({ company }: HeaderProps) {
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             cartOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-[#0D111A]">
+          <div className="flex items-center justify-between px-6 py-5 bg-[#0D111A]">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-blue-500/10 text-[#2563EB]">
                 <ShoppingBag className="w-5 h-5" />
@@ -628,12 +609,12 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Cart Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 divide-y divide-white/5">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <div key={item.id} className="pt-4 first:pt-0 flex gap-4">
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 rounded-xl bg-white/5 border border-white/10 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -657,14 +638,9 @@ export function Header({ company }: HeaderProps) {
                     >
                       {item.name}
                     </Link>
-                    {item.size && (
-                      <span className="inline-block mt-1 text-[11px] font-medium text-gray-400 bg-white/5 px-2 py-0.5 rounded">
-                        Size: {item.size}
-                      </span>
-                    )}
 
-                    <div className="mt-3 flex items-center justify-between">
-                      <div className="flex items-center border border-white/15 rounded-lg bg-white/5">
+                    <div className="mt-2.5 flex items-center justify-between">
+                      <div className="flex items-center rounded-lg bg-white/5">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
@@ -673,9 +649,15 @@ export function Header({ company }: HeaderProps) {
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="px-2.5 text-xs font-semibold text-white">
-                          {item.quantity}
-                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          max="999"
+                          value={item.quantity}
+                          onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 1)}
+                          className="w-10 text-center bg-transparent text-xs font-semibold text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          aria-label="Quantity"
+                        />
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
@@ -727,24 +709,7 @@ export function Header({ company }: HeaderProps) {
 
           {/* Cart Footer */}
           {cartItems.length > 0 && (
-            <div className="p-6 border-t border-white/10 bg-[#0D111A] space-y-4">
-              <div className="space-y-1.5 text-sm">
-                <div className="flex justify-between text-gray-400">
-                  <span>Subtotal</span>
-                  <span className="font-semibold text-white">
-                    ₹{cartSubtotal.toLocaleString('en-IN')}
-                  </span>
-                </div>
-                <div className="flex justify-between text-gray-400">
-                  <span>Shipping & Taxes</span>
-                  <span className="text-xs text-green-400 font-medium">Calculated at checkout</span>
-                </div>
-                <div className="pt-2 border-t border-white/10 flex justify-between text-base font-bold text-white">
-                  <span>Estimated Total</span>
-                  <span className="text-[#F5A623]">₹{cartSubtotal.toLocaleString('en-IN')}</span>
-                </div>
-              </div>
-
+            <div className="p-6 bg-[#0D111A]">
               <button
                 type="button"
                 onClick={() => {
@@ -778,12 +743,12 @@ export function Header({ company }: HeaderProps) {
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             wishlistOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-[#0D111A]">
+          <div className="flex items-center justify-between px-6 py-5 bg-[#0D111A]">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-amber-500/10 text-[#F5A623]">
                 <Heart className="w-5 h-5 fill-[#F5A623]" />
@@ -805,12 +770,12 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Wishlist Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 divide-y divide-white/5">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
             {wishlistItems.length > 0 ? (
               wishlistItems.map((item) => (
                 <div key={item.id} className="pt-4 first:pt-0 flex gap-4">
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 rounded-xl bg-white/5 border border-white/10 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -910,14 +875,14 @@ export function Header({ company }: HeaderProps) {
           role="dialog"
           aria-label="Search catalog"
           className={cn(
-            'relative w-full max-w-2xl bg-[#0B0F19] border border-white/15 rounded-2xl sm:rounded-3xl shadow-2xl shadow-black/90 backdrop-blur-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform',
+            'relative w-full max-w-2xl bg-[#0B0F19] rounded-2xl sm:rounded-3xl shadow-2xl shadow-black/90 backdrop-blur-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform',
             searchOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-2 opacity-0'
           )}
         >
           {/* Main Search Input Form Header */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center gap-3 px-4 sm:px-6 py-4 border-b border-white/10 bg-[#0E1322] shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-[#0E1322] shrink-0"
           >
             {searchLoading ? (
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#F5A623]" />
@@ -939,12 +904,24 @@ export function Header({ company }: HeaderProps) {
                   setSearchQuery('');
                   searchInputRef.current?.focus();
                 }}
-                className="p-1.5 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-                aria-label="Clear input"
+                className="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-white/5 hover:bg-white/10 transition-colors shrink-0"
+                aria-label="Clear query"
               >
-                <X className="h-4 w-4" />
+                Clear
               </button>
             )}
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setSearchOpen(false);
+              }}
+              className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              aria-label="Close search"
+              title="Close search"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </form>
 
           {/* Search Content Body (Only displays when user types a query) */}
@@ -957,14 +934,14 @@ export function Header({ company }: HeaderProps) {
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="px-5 py-2.5 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                  <div className="px-5 py-2.5 flex items-center justify-between bg-white/[0.02]">
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
                       Matching Products ({searchResults.length})
                     </p>
                     <span className="text-[11px] text-[#F5A623] font-medium hidden sm:inline">Use ↑ ↓ and Enter</span>
                   </div>
 
-                  <ul className="divide-y divide-white/5">
+                  <ul className="space-y-0.5">
                     {searchResults.map((p, idx) => {
                       const isSelected = selectedIndex === idx;
                       return (
@@ -974,10 +951,10 @@ export function Header({ company }: HeaderProps) {
                             onClick={() => setSearchOpen(false)}
                             className={cn(
                               'flex items-center gap-3.5 px-4 sm:px-5 py-3.5 transition-colors group',
-                              isSelected ? 'bg-amber-500/15 border-l-2 border-amber-400' : 'hover:bg-white/5'
+                              isSelected ? 'bg-amber-500/15' : 'hover:bg-white/5'
                             )}
                           >
-                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-xl bg-white/5 border border-white/10 overflow-hidden shrink-0">
+                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-xl bg-white/5 overflow-hidden shrink-0">
                               {p.image_url ? (
                                 <Image
                                   src={p.image_url}

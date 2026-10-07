@@ -1,14 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getActiveProducts } from '@/services/products';
 import { getCompanySettings } from '@/services/company';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
+import { ProductCard } from '@/components/ui/ProductCard';
 import { ProductDetailInteractive } from '@/components/products/ProductDetailInteractive';
-import { Tag } from 'lucide-react';
 
 export const revalidate = 60;
 
@@ -66,7 +64,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <ProductDetailInteractive product={product} company={company} />
 
         {/* Long Description and Technical Specifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-20 border-t border-white/5 pt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-20 pt-12">
           {/* Long description */}
           <div className="lg:col-span-7">
             <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">
@@ -89,7 +87,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               Specifications
             </h3>
             {product.specifications && Object.keys(product.specifications).length > 0 ? (
-              <div className="rounded-2xl overflow-hidden bg-[#0E121B] border border-white/5 divide-y divide-white/5">
+              <div className="rounded-2xl overflow-hidden bg-[#0E121B]">
                 {Object.entries(product.specifications).map(([key, val]) => (
                   <div key={key} className="flex items-center justify-between p-3.5 text-xs">
                     <span className="font-semibold text-gray-400 uppercase tracking-wider">{key}</span>
@@ -98,7 +96,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 ))}
               </div>
             ) : (
-              <div className="p-6 rounded-2xl bg-[#0E121B] border border-white/5 text-xs text-gray-400">
+              <div className="p-6 rounded-2xl bg-[#0E121B] text-xs text-gray-400">
                 Detailed technical specifications provided upon quotation request.
               </div>
             )}
@@ -107,52 +105,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
-          <div className="border-t border-white/5 pt-16">
+          <div className="pt-16">
             <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-8">
               Related Equipment & Gear
             </h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
               {relatedProducts.map((rel) => (
-                <div
+                <ProductCard
                   key={rel.id}
-                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0E121B] flex flex-col justify-between shadow-lg hover:-translate-y-1 transition-all border border-white/5"
-                >
-                  <Link
-                    href={`/products/${rel.slug}`}
-                    className="relative aspect-square w-full bg-[#121622] p-2 sm:p-4 flex items-center justify-center"
-                  >
-                    {rel.image_url ? (
-                      <Image
-                        src={rel.image_url}
-                        alt={rel.name}
-                        fill
-                        sizes="(min-width: 1024px) 25vw, 50vw"
-                        className="object-contain p-2 sm:p-4"
-                      />
-                    ) : (
-                      <Tag className="w-8 h-8 text-gray-600" />
-                    )}
-                  </Link>
-
-                  <div className="p-3 sm:p-5 flex flex-col justify-between flex-1">
-                    <Link href={`/products/${rel.slug}`}>
-                      <h4 className="text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors line-clamp-2">
-                        {rel.name}
-                      </h4>
-                    </Link>
-                    <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/5">
-                      <WhatsAppOrderModal
-                        whatsappNumber={company?.whatsapp_number}
-                        productName={rel.name}
-                        productCategory={rel.category?.name}
-                        productSizes={rel.sizes}
-                        label="Order"
-                        size="sm"
-                        className="w-full text-xs"
-                      />
-                    </div>
-                  </div>
-                </div>
+                  product={rel}
+                  company={company}
+                />
               ))}
             </div>
           </div>

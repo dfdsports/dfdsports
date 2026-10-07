@@ -105,7 +105,6 @@ export function ProductCard({
           price: price ?? undefined,
           quantity: 1,
           image: product.image_url ?? undefined,
-          size: product.sizes?.[0] || undefined,
         });
       }
 
@@ -240,7 +239,7 @@ export function ProductCard({
           {/* Product Name: STRICTLY 1 line then dot (truncate) */}
           <Link href={`/products/${product.slug}`} className="block">
             <h3
-              className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors truncate"
+              className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors truncate uppercase"
               title={product.name}
             >
               {product.name}
