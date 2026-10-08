@@ -48,7 +48,7 @@ export default async function AboutPage() {
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-semibold uppercase tracking-tight text-white leading-tight">
+              <h1 className="text-2xl sm:text-4xl font-semibold uppercase tracking-tight text-white leading-tight">
                 More Than Sports.{' '}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
                   We Support The Dream Behind It.
@@ -58,6 +58,10 @@ export default async function AboutPage() {
               <p className="text-xs sm:text-sm lg:text-base text-gray-300 leading-relaxed max-w-2xl">
                 DFD – Destination for Dreams is a dedicated sports initiative founded by passionate sports enthusiasts with a simple vision: to make high-performance sports equipment, custom sublimated teamwear, and training essentials accessible at honest prices. We empower athletes, schools, clubs, and academies across India to turn their sporting aspirations into reality.
               </p>
+              <p>
+                What started as a new journey in the sports industry has grown into a trusted choice for 100+ satisfied regular customers. Over the past two years, we have built strong relationships with athletes, students, schools, clubs and sports enthusiasts by focusing on what matters most — quality, reliability and customer satisfaction.
+              </p>
+              <p>At DFD, we provide a wide range of quality sports equipment, customised jerseys, medals, sports accessories and sports mats, sourced from leading and trusted brands. We also offer customised solutions to meet the requirements of schools, clubs, academies, tournaments and sporting events.</p>
 
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
                 <Link

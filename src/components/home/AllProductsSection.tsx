@@ -25,7 +25,7 @@ export function AllProductsSection({
   const displayProducts = products.slice(0, 10);
 
   return (
-    <section className="bg-[#080A0F] py-16 sm:py-20 border-t border-white/5">
+    <section className="bg-[#080A0F] py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 sm:mb-10">
