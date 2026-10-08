@@ -24,6 +24,11 @@ export function ProductCard({
 }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [product.image_url]);
 
   const price = extractProductPrice(product);
 
@@ -162,14 +167,16 @@ export function ProductCard({
           className="relative w-full h-full block"
           tabIndex={-1}
         >
-          {product.image_url ? (
+          {product.image_url && !imageError ? (
             <Image
               src={product.image_url}
               alt={product.name}
               fill
+              unoptimized
               priority={priority}
               sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
               className="object-contain transition-transform duration-300 group-hover:scale-105"
+              onError={() => setImageError(true)}
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">

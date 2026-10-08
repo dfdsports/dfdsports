@@ -51,9 +51,9 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
             />
           </div>
 
-          <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-10">
+          <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(300px,360px)_1fr] lg:gap-10">
             {/* Left: text */}
-            <div>
+            <div className="w-full">
               <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#B8893A]">
                 Custom team jerseys
               </p>
@@ -73,30 +73,29 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
             </div>
 
             {/* Right: jerseys + feature icons */}
-            <div className="mt-2 sm:mt-0">
+            <div className="mt-2 sm:mt-0 min-w-0 w-full">
               <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end lg:justify-center lg:gap-4">
                 {/* Main jersey: front + back */}
-                <div className="flex w-full max-w-[270px] shrink-0 items-end justify-center sm:max-w-xs lg:w-[52%] lg:max-w-none">
+                <div className="flex w-full max-w-[270px] shrink-0 items-end justify-center sm:max-w-xs lg:w-[52%]">
                   {MAIN_PAIR.map((img, i) => (
                     <div
                       key={img.src}
-                      className={`relative flex aspect-[3/4] w-1/2 items-end justify-center ${i === 1 ? '-ml-3 sm:-ml-5' : ''}`}
+                      className={`relative aspect-[3/4] w-1/2 flex-1 ${i === 1 ? '-ml-3 sm:-ml-5' : ''}`}
                     >
-                      {/* Both images use the same height (h-full, width auto) */}
                       <Image
                         src={img.src}
                         alt={img.alt}
-                        width={600}
-                        height={800}
+                        fill
+                        unoptimized
                         sizes="(min-width: 1024px) 20vw, 35vw"
-                        className="h-full w-auto max-w-none object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.25)]"
+                        className="object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.25)]"
                       />
                     </div>
                   ))}
                 </div>
 
                 {/* Other designs: placed below main jersey on mobile, side-by-side on desktop */}
-                <div className="flex w-full max-w-[220px] items-end justify-center gap-2 sm:max-w-xs lg:w-[48%] lg:max-w-none">
+                <div className="flex w-full max-w-[220px] items-end justify-center gap-2 sm:max-w-xs lg:w-[48%]">
                   {OTHER_JERSEYS.map((img) => (
                     <div key={img.src} className="relative aspect-[3/4] flex-1">
                       {/* scale-[1.15] makes these a little taller */}
@@ -104,6 +103,7 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
                         src={img.src}
                         alt={img.alt}
                         fill
+                        unoptimized
                         sizes="(min-width: 1024px) 10vw, 20vw"
                         className="origin-bottom scale-[1.15] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.2)]"
                       />
