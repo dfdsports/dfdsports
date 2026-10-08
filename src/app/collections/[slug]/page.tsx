@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -18,6 +19,34 @@ interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const category = await getCategoryBySlug(slug);
+
+  if (!category) {
+    return {
+      title: 'Category Not Found | DFD Sports',
+    };
+  }
+
+  const title = category.seo_title || `${category.name} | DFD Sports`;
+  const description =
+    category.seo_description ||
+    category.short_description ||
+    `Browse ${category.name} sports equipment and apparel at DFD Sports.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: category.image_url ? [{ url: category.image_url, alt: category.name }] : undefined,
+    },
+  };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

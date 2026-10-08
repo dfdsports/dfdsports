@@ -302,7 +302,7 @@ export function ProductForm({
         </div>
         {form.image_url ? (
           <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
-            <Image src={form.image_url} alt="Product preview" fill className="object-contain p-2" />
+            <Image src={form.image_url} alt="Product preview" fill unoptimized className="object-contain p-2" />
             <button
               type="button"
               onClick={handleRemoveMainImage}
@@ -346,7 +346,7 @@ export function ProductForm({
         <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
           {form.images.map((imgUrl, idx) => (
             <div key={idx} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs group">
-              <Image src={imgUrl} alt={`Gallery image ${idx + 1}`} fill className="object-contain p-1" />
+              <Image src={imgUrl} alt={`Gallery image ${idx + 1}`} fill unoptimized className="object-contain p-1" />
               <button
                 type="button"
                 onClick={() => handleRemoveGalleryImage(idx)}

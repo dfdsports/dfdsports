@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteFromCloudinary } from '@/lib/cloudinary';
+import { getAdminUser } from '@/lib/supabase/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    const admin = await getAdminUser();
+    if (!admin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const target = body.public_id || body.url;
 
