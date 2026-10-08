@@ -2,17 +2,7 @@ import React from 'react';
 import { Target, Compass, CheckCircle2, ShieldCheck, HeartHandshake, Zap, Quote } from 'lucide-react';
 
 export function AboutVisionMission() {
-  const visionPoints = [
-    'Affordable access to professional sports gear for schools, clubs, and academies',
-    'Empowering grassroots athletes to compete with confidence and pride',
-    'Setting new standards for custom sublimated teamwear across India',
-  ];
 
-  const missionPoints = [
-    'Source durable, high-performance equipment from proven manufacturers',
-    'Deliver tailor-made team jerseys with zero-fade inks and athletic fit',
-    'Provide transparent quotes, honest pricing, and fast nationwide doorstep delivery',
-  ];
 
   const corePillars = [
     {
@@ -53,7 +43,7 @@ export function AboutVisionMission() {
       {/* Vision & Mission Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {/* Vision Card */}
-        <div className="p-7 sm:p-9 rounded-3xl bg-[#0E121B] flex flex-col justify-between shadow-xl space-y-6">
+        <div className="p-4 sm:p-9 rounded-3xl bg-[#0E121B] flex flex-col justify-between shadow-xl space-y-6">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-[#F5A623]/10 flex items-center justify-center text-[#F5A623]">
               <Target className="w-6 h-6" />
@@ -69,24 +59,15 @@ export function AboutVisionMission() {
             </div>
 
             <p className="text-sm sm:text-base text-gray-200 font-medium leading-relaxed">
-              &ldquo;To make championship-quality sports gear and custom teamwear accessible to every player and squad across India, turning grassroots ambition into lasting sporting achievements.&rdquo;
-            </p>
+              Today, DFD is expanding its services across India, taking our products and customised sports solutions to customers beyond our local community.            </p>
+            <p>We believe that every player has a dream, every team has a goal, and every sporting journey deserves the right support.</p>
           </div>
 
-          <div className="space-y-3 pt-2">
-            {visionPoints.map((point, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <CheckCircle2 className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                <span className="text-xs sm:text-sm text-gray-400 leading-relaxed">
-                  {point}
-                </span>
-              </div>
-            ))}
-          </div>
+  
         </div>
 
         {/* Mission Card */}
-        <div className="p-7 sm:p-9 rounded-3xl bg-[#0E121B] flex flex-col justify-between shadow-xl space-y-6">
+        <div className="p-4 sm:p-9 rounded-3xl bg-[#0E121B] flex flex-col justify-between shadow-xl space-y-6">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-[#F5A623]/10 flex items-center justify-center text-[#F5A623]">
               <Compass className="w-6 h-6" />
@@ -102,20 +83,10 @@ export function AboutVisionMission() {
             </div>
 
             <p className="text-sm sm:text-base text-gray-200 font-medium leading-relaxed">
-              &ldquo;To equip teams and athletes with precision-engineered apparel, dependable equipment, and personalized customer care—delivered on time and at honest, competitive prices.&rdquo;
-            </p>
+              To provide quality sports products at fair and affordable prices, without compromising on performance or reliability.            </p>
           </div>
 
-          <div className="space-y-3 pt-2">
-            {missionPoints.map((point, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <CheckCircle2 className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                <span className="text-xs sm:text-sm text-gray-400 leading-relaxed">
-                  {point}
-                </span>
-              </div>
-            ))}
-          </div>
+
         </div>
       </div>
 

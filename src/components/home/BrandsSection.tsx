@@ -69,7 +69,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
         </div>
 
         {/* Continuous right-to-left marquee without card background color */}
-        <div className="brands-marquee-container overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] sm:[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] py-4 sm:py-8">
+        <div className="brands-marquee-container overflow-hidden py-4 sm:py-8">
           <div
             className="brands-marquee-track flex items-center gap-3 sm:gap-20"
             style={{ '--marquee-dur': `${durationSec}s` } as React.CSSProperties}
