@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { ShieldCheck, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -42,16 +43,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-[#080A0F] text-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo Mark */}
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#F5A623] flex items-center justify-center shadow-xl mx-auto mb-3 sm:mb-4">
-            <ShieldCheck className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white">
-            DFD SPORTS
-          </h1>
-          <p className="text-[11px] sm:text-xs font-medium text-gray-400 tracking-[0.2em] uppercase mt-1">
-            Admin CMS Portal
-          </p>
+        <div className="flex justify-center mb-10">
+         <Image src={'/logo.png'} alt='logo' width={100} height={100}/>
         </div>
 
         {/* Login Card */}

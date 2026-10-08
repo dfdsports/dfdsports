@@ -94,17 +94,31 @@ export function ProductCard({
       const stored = localStorage.getItem('dfd_cart');
       const items: CartItem[] = stored ? JSON.parse(stored) : [];
 
-      const existingIndex = items.findIndex((item) => item.id === product.id);
+      const availableSizes = Array.isArray(product.sizes)
+        ? product.sizes
+        : typeof product.sizes === 'string'
+        ? ((product.sizes as unknown) as string).split(',').map((s) => s.trim()).filter(Boolean)
+        : [];
+      const defaultSize = availableSizes.length > 0 ? availableSizes[0] : undefined;
+      const targetId = defaultSize ? `${product.id}-${defaultSize}` : product.id;
+
+      const existingIndex = items.findIndex(
+        (item) => item.id === targetId || (item.slug === product.slug && item.size === defaultSize)
+      );
       if (existingIndex >= 0) {
         items[existingIndex].quantity += 1;
+        if (defaultSize && !items[existingIndex].size) {
+          items[existingIndex].size = defaultSize;
+        }
       } else {
         items.push({
-          id: product.id,
+          id: targetId,
           name: product.name,
           slug: product.slug,
           price: price ?? undefined,
           quantity: 1,
           image: product.image_url ?? undefined,
+          size: defaultSize,
         });
       }
 

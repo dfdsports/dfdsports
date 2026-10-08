@@ -41,7 +41,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap">
+        <div className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap">
           <Link href="/collections" className="hover:text-white transition-colors">
             Collections
           </Link>
@@ -67,7 +67,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-20 pt-12">
           {/* Long description */}
           <div className="lg:col-span-7">
-            <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">
+            <h3 className="text-xl font-black uppercase font-semibold text-white mb-4">
               Product Overview
             </h3>
             {product.long_description ? (
@@ -83,7 +83,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
           {/* Technical Specs Key-Value Table */}
           <div className="lg:col-span-5">
-            <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">
+            <h3 className="text-xl font-black uppercase font-semibold tracking-tight text-white mb-4">
               Specifications
             </h3>
             {product.specifications && Object.keys(product.specifications).length > 0 ? (
@@ -106,7 +106,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
           <div className="pt-16">
-            <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-8">
+            <h3 className="text-2xl font-black font-semibold uppercase text-white mb-8">
               Related Equipment & Gear
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
