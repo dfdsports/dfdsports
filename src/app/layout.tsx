@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { Preloader } from '@/components/ui/Preloader';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -78,11 +79,23 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://api.fontshare.com/v2/css?f[]=rowan@400,500,600,700&display=swap"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (sessionStorage.getItem('dfd_preloader_completed') === 'true' && !window.location.search.includes('preloader=1') && !window.location.search.includes('intro=1')) {
+                  document.documentElement.classList.add('preloader-skipped');
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
       </head>
       <body
         className="min-h-screen bg-[#080A0F] text-[#F3F4F6] font-sans antialiased selection:bg-[#F5A623] selection:text-[#080A0F]"
         suppressHydrationWarning
       >
+        <Preloader />
         {children}
       </body>
     </html>
