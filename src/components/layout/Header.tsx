@@ -591,10 +591,13 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Cart Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
-                <div key={item.id} className="pt-4 first:pt-0 flex gap-4">
+                <div
+                  key={item.id}
+                  className="p-3.5 rounded-2xl bg-[#0E121B] border border-white/5 flex gap-3.5 shadow-sm hover:border-white/10 transition-colors"
+                >
                   {/* Thumbnail */}
                   <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
                     {item.image ? (
@@ -635,14 +638,6 @@ export function Header({ company }: HeaderProps) {
                           Standard
                         </span>
                       </p>
-                    )}
-
-                    {item.size && (
-                      <div className="mt-1">
-                        <span className="inline-block text-[10px] font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md">
-                          Size: {item.size}
-                        </span>
-                      </div>
                     )}
 
                     <div className="mt-2.5 flex items-center justify-between">
@@ -783,10 +778,13 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Wishlist Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
             {wishlistItems.length > 0 ? (
               wishlistItems.map((item) => (
-                <div key={item.id} className="pt-4 first:pt-0 flex gap-4">
+                <div
+                  key={item.id}
+                  className="p-3.5 rounded-2xl bg-[#0E121B] border border-white/5 flex gap-3.5 shadow-sm hover:border-white/10 transition-colors"
+                >
                   {/* Thumbnail */}
                   <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
                     {item.image ? (

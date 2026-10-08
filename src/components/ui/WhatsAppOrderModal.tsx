@@ -236,11 +236,23 @@ export function WhatsAppOrderModal({
 
     setDone(true);
     setTimeout(() => {
-      window.open(url, '_blank', 'noopener,noreferrer');
+      const isMobile =
+        typeof window !== 'undefined' &&
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        window.location.href = url;
+      } else {
+        const win = window.open(url, '_blank', 'noopener,noreferrer');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+          window.location.href = url;
+        }
+      }
+
       setSubmitting(false);
       closeModal();
       setForm({ name: '', phone: '', expectedDate: '', address: '', quantity: '1' });
-    }, 800);
+    }, 600);
   }
 
   const sizeClasses = {

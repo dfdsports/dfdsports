@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getActiveProducts } from '@/services/products';
@@ -14,6 +15,40 @@ interface ProductPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: 'Product Not Found | DFD Sports',
+    };
+  }
+
+  const title = product.seo_title || `${product.name} | DFD Sports`;
+  const description =
+    product.seo_description ||
+    product.short_description ||
+    `Order ${product.name} at DFD Sports. Premium sports gear and custom team apparel.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: product.image_url ? [{ url: product.image_url, alt: product.name }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: product.image_url ? [product.image_url] : undefined,
+    },
+  };
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {

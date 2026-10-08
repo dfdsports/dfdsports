@@ -89,7 +89,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
                       alt={isClone ? '' : brand.name}
                       width={200}
                       height={80}
-                      className="max-h-8 sm:max-h-20 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                      className="max-h-8 sm:max-h-16 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <span className="text-center text-xs sm:text-lg font-black uppercase tracking-wider text-white/80 group-hover:text-[#F5A623] transition-colors duration-300">

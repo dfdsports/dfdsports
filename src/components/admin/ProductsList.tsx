@@ -36,13 +36,6 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
 
   const handleToggle = async (product: Product, field: 'is_active' | 'is_featured') => {
     setError('');
-    if (field === 'is_featured' && !product.is_featured) {
-      const currentFeaturedCount = products.filter((p) => p.is_featured).length;
-      if (currentFeaturedCount >= 5) {
-        setError('Maximum 5 featured products allowed (5/5 already featured). Please unfeature another product first.');
-        return;
-      }
-    }
 
     const supabase = createClient();
     await supabase
