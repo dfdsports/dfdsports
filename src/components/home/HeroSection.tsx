@@ -93,7 +93,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                 src={slide.mobile_image_url}
                 alt={slide.heading}
                 fill
-                sizes="100vw"
+                sizes="(max-width: 1023px) 100vw, 1px"
                 priority={i === 0}
                 className="object-cover object-center lg:hidden"
               />
@@ -102,7 +102,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                   src={slide.image_url}
                   alt={slide.heading}
                   fill
-                  sizes="100vw"
+                  sizes="(min-width: 1024px) 100vw, 1px"
                   priority={i === 0}
                   className="hidden object-cover lg:block lg:object-right"
                 />

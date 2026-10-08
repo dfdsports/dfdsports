@@ -6,8 +6,6 @@ import { getFeaturedProducts, getActiveProducts } from '@/services/products';
 import { getFeaturedSettings } from '@/services/featuredSettings';
 import { getActiveFabrics } from '@/services/fabrics';
 import { getActiveBrands } from '@/services/brands';
-import { getActiveWhyChooseUs } from '@/services/whyChooseUs';
-import { getActiveHighlights } from '@/services/highlights';
 
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -18,8 +16,6 @@ import { AllProductsSection } from '@/components/home/AllProductsSection';
 import { CustomTeamwearSection } from '@/components/home/CustomTeamwearSection';
 import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
 import { BrandsSection } from '@/components/home/BrandsSection';
-import { WhyChooseUsSection } from '@/components/home/WhyChooseUsSection';
-import { HighlightsSection } from '@/components/home/HighlightsSection';
 import { FinalCTASection } from '@/components/home/FinalCTASection';
 import { FloatingWhatsAppButton } from '@/components/ui/FloatingWhatsAppButton';
 
@@ -36,8 +32,6 @@ export default async function HomePage() {
     allProducts,
     fabrics,
     brands,
-    whyChooseUs,
-    highlights,
   ] = await Promise.all([
     getCompanySettings(),
     getActiveHeroSlides(),
@@ -46,8 +40,6 @@ export default async function HomePage() {
     getActiveProducts({ limit: 12 }),
     getActiveFabrics(),
     getActiveBrands(),
-    getActiveWhyChooseUs(),
-    getActiveHighlights(),
   ]);
 
   const featuredSettings = getFeaturedSettings();
@@ -71,8 +63,6 @@ export default async function HomePage() {
         {/* 3. Featured Products Showcase (Untouched, original design) */}
         <FeaturedProductsSection products={featuredProducts} company={company} settings={featuredSettings} />
 
-
-
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
         <CustomTeamwearSection company={company} />
 
@@ -81,14 +71,6 @@ export default async function HomePage() {
 
         {/* 6. Fabric Collection (Dynamically shown if fabrics exist) */}
         <FabricCollectionSection fabrics={fabrics} />
-
-
-
-        {/* 8. Why DFD Sports (Trust propositions) */}
-        <WhyChooseUsSection items={whyChooseUs} />
-
-        {/* 9. Business Highlights (Confirmed stats only, hidden if empty) */}
-        <HighlightsSection highlights={highlights} />
 
         {/* 10. Final CTA */}
         <FinalCTASection company={company} />

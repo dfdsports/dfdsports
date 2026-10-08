@@ -25,7 +25,7 @@ export function AllProductsSection({
   const displayProducts = products.slice(0, 10);
 
   return (
-    <section className="bg-[#080A0F] py-16 sm:py-20">
+    <section className="bg-[#080A0F] py-5 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 sm:mb-10">
@@ -43,12 +43,11 @@ export function AllProductsSection({
 
         {/* 5 products in first row on desktop, 10 products total */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
-          {displayProducts.map((product, idx) => (
+          {displayProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
               company={company}
-              priority={idx < 5}
             />
           ))}
         </div>

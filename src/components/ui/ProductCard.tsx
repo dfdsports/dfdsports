@@ -172,7 +172,6 @@ export function ProductCard({
               src={product.image_url}
               alt={product.name}
               fill
-              unoptimized
               priority={priority}
               sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
               className="object-contain transition-transform duration-300 group-hover:scale-105"

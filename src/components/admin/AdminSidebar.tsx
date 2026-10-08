@@ -19,7 +19,6 @@ import {
   Menu,
   X,
   ChevronRight,
-  ShieldCheck,
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -63,7 +62,6 @@ const navSections: NavSection[] = [
     title: 'Customization & Tech',
     items: [
       { label: 'Fabrics & Tech', href: '/admin/fabrics', icon: Gauge },
-      { label: 'Highlights', href: '/admin/highlights', icon: Gauge },
     ],
   },
   {
@@ -71,7 +69,6 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Hero Banners', href: '/admin/hero', icon: ImageIcon },
       { label: 'Company Details', href: '/admin/company', icon: Building2 },
-      { label: 'Why Choose Us', href: '/admin/why-choose-us', icon: ShieldCheck },
     ],
   },
 ];

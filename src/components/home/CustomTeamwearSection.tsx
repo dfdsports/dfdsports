@@ -9,14 +9,14 @@ import { Shirt, Shield, Sparkles, Palette, Ruler, Layers } from 'lucide-react';
  * Put your files in  /public/images/teamwear/  and update the file names below.
  */
 const MAIN_PAIR = [
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791267418/Maroon_MITS_Football_Jersey_Mockup.png', alt: 'Maroon team jersey, front' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791267584/Maroon_Football_Jersey_Back_Mockup.png', alt: 'Maroon team jersey, back' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267418/Maroon_MITS_Football_Jersey_Mockup.png', alt: 'Maroon team jersey, front' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267584/Maroon_Football_Jersey_Back_Mockup.png', alt: 'Maroon team jersey, back' },
 ];
 
 const OTHER_JERSEYS = [
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791267951/Black_and_Neon_Green_Horizon_Jersey.png', alt: 'Green and black team jersey' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791268087/Black_and_Gold_Top_Sports_Jersey.png', alt: 'Black and gold team jersey' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791268245/The_Ideal_Blue_Football_Jersey.png', alt: 'Navy and white team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267951/Black_and_Neon_Green_Horizon_Jersey.png', alt: 'Green and black team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791268087/Black_and_Gold_Top_Sports_Jersey.png', alt: 'Black and gold team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791268245/The_Ideal_Blue_Football_Jersey.png', alt: 'Navy and white team jersey' },
 ];
 
 const FEATURES = [
@@ -42,11 +42,10 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
           {/* Background Image */}
           <div className="absolute inset-0 pointer-events-none">
             <Image
-              src="https://res.cloudinary.com/v9xqdhgw/image/upload/v1791293795/Abstract_Cream_and_Gold_Brushstrokes.png"
+              src="https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791293795/Abstract_Cream_and_Gold_Brushstrokes.png"
               alt="Abstract Cream and Gold Brushstrokes Background"
               fill
-              priority
-              unoptimized
+              sizes="100vw"
               className="object-cover object-center"
             />
           </div>
@@ -86,7 +85,6 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
                         src={img.src}
                         alt={img.alt}
                         fill
-                        unoptimized
                         sizes="(min-width: 1024px) 20vw, 35vw"
                         className="object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.25)]"
                       />
@@ -103,7 +101,6 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
                         src={img.src}
                         alt={img.alt}
                         fill
-                        unoptimized
                         sizes="(min-width: 1024px) 10vw, 20vw"
                         className="origin-bottom scale-[1.15] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.2)]"
                       />

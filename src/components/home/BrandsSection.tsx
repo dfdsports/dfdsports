@@ -26,7 +26,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
   const durationSec = Math.max(16, baseList.length * 3);
 
   return (
-    <section className="bg-black py-16 sm:py-20 border-t border-white/5">
+    <section className="bg-black py-5 sm:py-20 border-t border-white/5">
       <style>{`
         @keyframes brands-marquee-left {
           0% {

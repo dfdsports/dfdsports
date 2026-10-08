@@ -77,7 +77,7 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
   const labelCls = 'block text-xs font-semibold uppercase tracking-wider text-black mb-2';
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 max-w-4xl">
+    <form onSubmit={handleSave} className="space-y-8 max-w-7xl">
       {saveStatus === 'success' && (
         <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-emerald-800 text-sm shadow-xs">
           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
