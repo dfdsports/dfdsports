@@ -327,6 +327,7 @@ export function Header({ company }: HeaderProps) {
                   src="/logo.png"
                   alt={brandName}
                   fill
+                  sizes="100px"
                   className="object-contain transition-transform group-hover:scale-105"
               
                 />
