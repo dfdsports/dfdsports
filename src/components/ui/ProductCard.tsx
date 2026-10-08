@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Product, CompanySettings } from '@/types/database';
 import { extractProductPrice } from '@/lib/productFilters';
 import { CartItem, WishlistItem } from '@/components/layout/Header';
+import { addToCart } from '@/lib/cart';
 import { Heart, ShoppingCart, Check, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -91,26 +92,18 @@ export function ProductCard({
     e.stopPropagation();
 
     try {
-      const stored = localStorage.getItem('dfd_cart');
-      const items: CartItem[] = stored ? JSON.parse(stored) : [];
-
-      const existingIndex = items.findIndex((item) => item.id === product.id);
-      if (existingIndex >= 0) {
-        items[existingIndex].quantity += 1;
-      } else {
-        items.push({
+      addToCart(
+        {
           id: product.id,
           name: product.name,
           slug: product.slug,
           price: price ?? undefined,
           quantity: 1,
           image: product.image_url ?? undefined,
-        });
-      }
-
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-      window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
-      window.dispatchEvent(new CustomEvent('dfd_open_cart'));
+          size: product.sizes?.[0] || undefined,
+        },
+        { openCart: true }
+      );
 
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 1600);

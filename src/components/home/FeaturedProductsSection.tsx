@@ -9,6 +9,7 @@ import { FEATURED_BG_COLORS } from '@/lib/featuredColors';
 import type { FeaturedColorOption } from '@/lib/featuredColors';
 import { extractProductPrice } from '@/lib/productFilters';
 import { CartItem } from '@/components/layout/Header';
+import { addToCart } from '@/lib/cart';
 import { Tag, ArrowRight, ShoppingCart, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -45,14 +46,8 @@ function FeaturedProductCard({
     e.stopPropagation();
 
     try {
-      const stored = localStorage.getItem('dfd_cart');
-      const items: CartItem[] = stored ? JSON.parse(stored) : [];
-
-      const existingIndex = items.findIndex((item) => item.id === product.id);
-      if (existingIndex >= 0) {
-        items[existingIndex].quantity += 1;
-      } else {
-        items.push({
+      addToCart(
+        {
           id: product.id,
           name: product.name,
           slug: product.slug,
@@ -60,12 +55,9 @@ function FeaturedProductCard({
           quantity: 1,
           image: product.image_url ?? undefined,
           size: product.sizes?.[0] || undefined,
-        });
-      }
-
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-      window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
-      window.dispatchEvent(new CustomEvent('dfd_open_cart'));
+        },
+        { openCart: true }
+      );
 
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 1600);

@@ -23,19 +23,20 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
+import {
+  CartItem,
+  getCartItems,
+  saveCartItems,
+  addToCart,
+  updateCartItemQuantity,
+  removeCartItem as removeCartItemFromLib,
+  clearCart,
+} from '@/lib/cart';
+
+export type { CartItem };
 
 interface HeaderProps {
   company?: CompanySettings | null;
-}
-
-export interface CartItem {
-  id: string;
-  name: string;
-  slug: string;
-  price?: number;
-  quantity: number;
-  image?: string;
-  size?: string;
 }
 
 export interface WishlistItem {
@@ -105,12 +106,7 @@ export function Header({ company }: HeaderProps) {
   useEffect(() => {
     const syncStorage = () => {
       try {
-        const storedCart = localStorage.getItem('dfd_cart');
-        if (storedCart) {
-          setCartItems(JSON.parse(storedCart));
-        } else {
-          setCartItems([]);
-        }
+        setCartItems(getCartItems());
         const storedWishlist = localStorage.getItem('dfd_wishlist');
         if (storedWishlist) {
           setWishlistItems(JSON.parse(storedWishlist));
@@ -118,7 +114,7 @@ export function Header({ company }: HeaderProps) {
           setWishlistItems([]);
         }
       } catch {
-        // Ignore JSON parse errors
+        // Ignore errors
       }
     };
 
@@ -145,11 +141,7 @@ export function Header({ company }: HeaderProps) {
   // Sync to localStorage
   const updateCart = (items: CartItem[]) => {
     setCartItems(items);
-    try {
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-    } catch {
-      // Ignore storage errors
-    }
+    saveCartItems(items);
   };
 
   const updateWishlist = (items: WishlistItem[]) => {
@@ -268,28 +260,19 @@ export function Header({ company }: HeaderProps) {
 
   // Cart operations
   const updateQuantity = (id: string, delta: number) => {
-    const updated = cartItems
-      .map((item) => {
-        if (item.id === id) {
-          const newQty = item.quantity + delta;
-          return newQty > 0 ? { ...item, quantity: newQty } : null;
-        }
-        return item;
-      })
-      .filter(Boolean) as CartItem[];
-    updateCart(updated);
+    const updated = updateCartItemQuantity(id, { delta });
+    setCartItems(updated);
   };
 
   const setQuantity = (id: string, qty: number) => {
     if (isNaN(qty) || qty <= 0) return;
-    const updated = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: Math.max(1, Math.min(999, qty)) } : item
-    );
-    updateCart(updated);
+    const updated = updateCartItemQuantity(id, { exact: Math.max(1, Math.min(999, qty)) });
+    setCartItems(updated);
   };
 
   const removeCartItem = (id: string) => {
-    updateCart(cartItems.filter((item) => item.id !== id));
+    const updated = removeCartItemFromLib(id);
+    setCartItems(updated);
   };
 
   // Wishlist operations
@@ -299,28 +282,19 @@ export function Header({ company }: HeaderProps) {
 
   const moveToCart = (item: WishlistItem) => {
     removeWishlistItem(item.id);
-    const existing = cartItems.find((p) => p.slug === item.slug);
-    let nextCart: CartItem[];
-    if (existing) {
-      nextCart = cartItems.map((p) =>
-        p.slug === item.slug ? { ...p, quantity: p.quantity + 1 } : p
-      );
-    } else {
-      nextCart = [
-        ...cartItems,
-        {
-          id: `c-${Date.now()}`,
-          name: item.name,
-          slug: item.slug,
-          price: item.price,
-          quantity: 1,
-          image: item.image,
-        },
-      ];
-    }
-    updateCart(nextCart);
+    const updated = addToCart(
+      {
+        id: item.id,
+        name: item.name,
+        slug: item.slug,
+        price: item.price,
+        quantity: 1,
+        image: item.image,
+      },
+      { openCart: true }
+    );
+    setCartItems(updated);
     setWishlistOpen(false);
-    setCartOpen(true);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -639,12 +613,20 @@ export function Header({ company }: HeaderProps) {
                       {item.name}
                     </Link>
 
+                    {item.size && (
+                      <div className="mt-1">
+                        <span className="inline-block text-[10px] font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md">
+                          Size: {item.size}
+                        </span>
+                      </div>
+                    )}
+
                     <div className="mt-2.5 flex items-center justify-between">
                       <div className="flex items-center rounded-lg bg-white/5">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 text-gray-400 hover:text-white transition-colors"
+                          className="p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3.5 h-3.5" />
@@ -661,7 +643,7 @@ export function Header({ company }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 text-gray-400 hover:text-white transition-colors"
+                          className="p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -670,14 +652,21 @@ export function Header({ company }: HeaderProps) {
 
                       <div className="flex items-center gap-3">
                         {item.price != null && (
-                          <span className="text-sm font-bold text-[#F5A623]">
-                            ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                          </span>
+                          <div className="text-right">
+                            <span className="text-sm font-bold text-[#F5A623]">
+                              ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                            </span>
+                            {item.quantity > 1 && (
+                              <span className="block text-[10px] text-gray-400 font-medium">
+                                (₹{item.price.toLocaleString('en-IN')} ea)
+                              </span>
+                            )}
+                          </div>
                         )}
                         <button
                           type="button"
                           onClick={() => removeCartItem(item.id)}
-                          className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+                          className="p-1 text-gray-500 hover:text-red-400 transition-colors cursor-pointer"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
