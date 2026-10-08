@@ -322,11 +322,16 @@ export function Header({ company }: HeaderProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
               <div className="relative w-25 h-25">
+                <div className="absolute inset-1 rounded-full bg-white/[0.08] blur-md pointer-events-none" />
                 <Image
                   src="/logo.png"
                   alt={brandName}
                   fill
-                  className="object-contain"
+                  className="object-contain transition-transform group-hover:scale-105"
+                  style={{
+                    filter:
+                      'drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) brightness(1.15)',
+                  }}
                 />
               </div>
             </Link>
@@ -448,12 +453,17 @@ export function Header({ company }: HeaderProps) {
           <div>
             <div className="flex items-center justify-between px-5 py-4 bg-[#0D111A]">
               <Link href="/" onClick={() => setMobileMenuOpen(false)} className="relative w-28 h-10 block">
+                <div className="absolute inset-0 rounded-full bg-white/[0.08] blur-sm pointer-events-none" />
                 <Image
                   src="/logo.png"
                   alt={brandName}
                   fill
                   sizes="120px"
                   className="object-contain object-left"
+                  style={{
+                    filter:
+                      'drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) brightness(1.15)',
+                  }}
                 />
               </Link>
               <button

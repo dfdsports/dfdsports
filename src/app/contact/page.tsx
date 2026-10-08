@@ -23,7 +23,7 @@ export default async function ContactPage() {
           <p className="text-xs uppercase tracking-[0.3em] font-bold text-[#F5A623] mb-3">
             GET IN TOUCH WITH {brandName}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-semibold uppercase tracking-tight text-white mb-4">
+          <h1 className="text-4xl sm:text-4xl font-semibold uppercase tracking-tight text-white mb-4">
             LET&apos;S TALK SPORTS.
           </h1>
           <p className="text-sm sm:text-base text-gray-400">

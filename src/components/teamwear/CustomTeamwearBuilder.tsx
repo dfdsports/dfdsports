@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { CompanySettings, Fabric } from '@/types/database';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, Check, MessageCircle } from 'lucide-react';
 
 interface CustomTeamwearBuilderProps {
   company?: CompanySettings | null;
@@ -103,7 +103,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
   };
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full pb-24 lg:pb-0">
       <div className="relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-8 sm:mb-10">
@@ -334,15 +334,30 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3.5 sm:py-4 px-6 rounded-md bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#25D366]/20 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold"
+                    className="w-full py-3.5 sm:py-4 px-6 rounded-md bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#25D366]/20 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold flex items-center justify-center gap-2"
                   >
-                    {isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}
+                    <MessageCircle className="w-4 h-4 fill-current shrink-0" />
+                    <span>{isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}</span>
                   </button>
                   <p className="text-[10px] sm:text-[9px] text-center text-gray-400 mt-2.5">
                     Connect instantly with our master designer. No waiting, no paperwork.
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Sticky Bottom Navbar for Mobile View */}
+          <div className="fixed bottom-0 inset-x-0 z-50 p-3 sm:p-4 bg-[#0A0D14]/95 backdrop-blur-md border-t border-white/10 shadow-2xl lg:hidden">
+            <div className="max-w-md mx-auto">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 px-6 rounded-xl bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-lg shadow-[#25D366]/25 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4 fill-current shrink-0" />
+                <span>{isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}</span>
+              </button>
             </div>
           </div>
         </form>
