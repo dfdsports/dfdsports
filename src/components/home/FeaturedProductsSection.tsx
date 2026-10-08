@@ -77,7 +77,7 @@ function FeaturedProductCard({
   return (
     <div className="group block focus-visible:outline-none">
       <div
-        className="relative aspect-[4/5] overflow-hidden rounded-sm transition-shadow duration-300 !bg-white group-hover:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-[#F5A623]"
+        className="relative aspect-[4/5] overflow-hidden rounded-sm transition-shadow duration-300 !bg-white group-hover:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-[#F5A623] transition-transform duration-300 group-hover:scale-105"
         style={{ backgroundColor: cardBg }}
       >
         <Link
@@ -91,7 +91,7 @@ function FeaturedProductCard({
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
+              className="object-contain  motion-reduce:transition-none"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-white/40">

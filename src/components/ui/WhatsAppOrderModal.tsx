@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X, MessageCircle, User, Phone, MapPin, Loader2, Hash, CheckCircle2 } from 'lucide-react';
+import { X, MessageCircle, User, Phone, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatPhoneNumber } from '@/lib/whatsapp';
 
@@ -64,10 +64,6 @@ export function WhatsAppOrderModal({
   const isControlled = isOpen !== undefined;
   const open = isControlled ? isOpen : internalOpen;
 
-  const shouldShowQuantity =
-    showQuantity !== undefined
-      ? showQuantity
-      : !(cartItems && cartItems.length > 0);
 
   const [form, setForm] = useState<FormState>({
     name: '',
@@ -316,7 +312,7 @@ export function WhatsAppOrderModal({
                         type="text"
                         value={form.name}
                         onChange={(e) => handleChange('name', e.target.value)}
-                        placeholder="Your full name"
+                        placeholder="Enter name"
                         className={inputCls(!!errors.name)}
                       />
                     </div>
@@ -330,28 +326,11 @@ export function WhatsAppOrderModal({
                         type="tel"
                         value={form.phone}
                         onChange={(e) => handleChange('phone', e.target.value)}
-                        placeholder="+91 9876543210"
+                        placeholder="Enter mobile number"
                         className={inputCls(!!errors.phone)}
                       />
                     </div>
                   </Field>
-
-                  {/* Quantity */}
-                  {shouldShowQuantity && (
-                    <Field label="Quantity">
-                      <div className="relative">
-                        <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-                        <input
-                          type="number"
-                          min="1"
-                          value={form.quantity}
-                          onChange={(e) => handleChange('quantity', e.target.value)}
-                          placeholder="1"
-                          className={inputCls(false)}
-                        />
-                      </div>
-                    </Field>
-                  )}
 
                   {/* Shipping Address */}
                   <Field label="Shipping Address" required error={errors.address}>
@@ -360,7 +339,7 @@ export function WhatsAppOrderModal({
                       <textarea
                         value={form.address}
                         onChange={(e) => handleChange('address', e.target.value)}
-                        placeholder="House/Flat no, Street, City, State, PIN code"
+                        placeholder="Enter address"
                         rows={3}
                         className={cn(inputCls(!!errors.address), 'resize-none')}
                       />
@@ -399,10 +378,9 @@ export function WhatsAppOrderModal({
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function inputCls(hasError: boolean) {
+function inputCls(hasError?: boolean) {
   return cn(
-    'w-full bg-white/5 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-colors',
-    hasError ? 'ring-1 ring-red-500/60' : 'focus:ring-1 focus:ring-[#25D366]'
+    'w-full bg-white/5 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 border-0 border-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none transition-colors'
   );
 }
 
