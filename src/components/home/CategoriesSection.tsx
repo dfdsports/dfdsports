@@ -70,9 +70,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                     src={category.image_url}
                     alt={category.name}
                     fill
-                    priority
-                    unoptimized
-                    sizes="(min-width:1024px) 33vw, 100vw"
+                    sizes="(min-width: 1024px) 33vw, 50vw"
                     className="object-cover object-center transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none [backface-visibility:hidden] [transform:translateZ(0)]"
                   />
                 ) : (

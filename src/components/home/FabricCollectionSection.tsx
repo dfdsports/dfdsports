@@ -37,7 +37,7 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
   );
 
   return (
-    <section id="fabrics" className="bg-[#080A0F] py-16 sm:py-20">
+    <section id="fabrics" className="bg-[#080A0F] py-5 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Top Header Row matching Featured Products text size & color */}
         <div className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">

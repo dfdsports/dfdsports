@@ -9,7 +9,7 @@ interface FinalCTASectionProps {
 
 export function FinalCTASection({ company }: FinalCTASectionProps) {
   return (
-    <section className="py-16 sm:py-20 relative overflow-hidden bg-[#080A0F]">
+    <section className="py-5 sm:py-10 relative overflow-hidden bg-[#080A0F]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="rounded-2xl sm:rounded-md bg-[#0D111A] p-4 sm:p-10 lg:p-12 shadow-2xl relative overflow-hidden">
           {/* Subtle Ambient Glows */}
@@ -43,14 +43,14 @@ export function FinalCTASection({ company }: FinalCTASectionProps) {
                 type="custom_jersey"
                 variant="whatsapp"
                 size="md"
-                className="justify-center shadow-lg shadow-[#25D366]/20"
+                className="h-11 justify-center shadow-lg shadow-[#25D366]/20"
               >
                 Enquire on WhatsApp
               </WhatsAppButton>
 
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm transition-colors hover:border-white/20 text-center"
+                className="inline-flex h-11 items-center justify-center px-5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm transition-colors hover:border-white/20 text-center"
               >
                 Submit Custom Quote Request
               </Link>
