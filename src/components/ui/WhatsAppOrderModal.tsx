@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X, MessageCircle, User, Phone, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, MessageCircle, User, Phone, MapPin, Loader2, CheckCircle2, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatPhoneNumber } from '@/lib/whatsapp';
 
@@ -32,11 +32,14 @@ export interface WhatsAppOrderModalProps {
   initialQuantity?: string;
   showQuantity?: boolean;
   onSuccess?: () => void;
+  specifications?: string[];
+  customNotes?: string;
 }
 
 interface FormState {
   name: string;
   phone: string;
+  expectedDate: string;
   address: string;
   quantity: string;
 }
@@ -59,6 +62,8 @@ export function WhatsAppOrderModal({
   initialQuantity,
   showQuantity,
   onSuccess,
+  specifications,
+  customNotes,
 }: WhatsAppOrderModalProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = isOpen !== undefined;
@@ -68,6 +73,7 @@ export function WhatsAppOrderModal({
   const [form, setForm] = useState<FormState>({
     name: '',
     phone: '',
+    expectedDate: '',
     address: '',
     quantity: initialQuantity || '1',
   });
@@ -123,6 +129,7 @@ export function WhatsAppOrderModal({
     } else if (!/^\+?[0-9\s\-]{7,15}$/.test(form.phone.trim())) {
       e.phone = 'Enter a valid phone number';
     }
+    if (!form.expectedDate) e.expectedDate = 'Expected delivery date is required';
     if (!form.address.trim()) e.address = 'Shipping address is required';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -145,7 +152,8 @@ export function WhatsAppOrderModal({
         const priceStr = item.price
           ? ` — ₹${(item.price * item.quantity).toLocaleString('en-IN')}`
           : '';
-        lines.push(`• ${item.name} x ${item.quantity}${priceStr}`);
+        const sizeStr = item.size ? ` (Size: ${item.size})` : '';
+        lines.push(`• ${item.name}${sizeStr} x ${item.quantity}${priceStr}`);
       });
       if (cartSubtotal != null && cartSubtotal > 0) {
         lines.push(``);
@@ -155,6 +163,7 @@ export function WhatsAppOrderModal({
       lines.push(`👤 *Customer Details*`);
       lines.push(`• Name: ${form.name.trim()}`);
       lines.push(`• Phone: ${form.phone.trim()}`);
+      if (form.expectedDate) lines.push(`• Expected Delivery Date: ${form.expectedDate}`);
       lines.push(`• Shipping Address: ${form.address.trim()}`);
       lines.push(``);
       lines.push(`Please confirm availability and share the order details. Thank you!`);
@@ -170,10 +179,15 @@ export function WhatsAppOrderModal({
       if (form.quantity) lines.push(`• Quantity: ${form.quantity}`);
       if (productSizes && productSizes.length > 0)
         lines.push(`• Available Sizes: ${productSizes.join(', ')}`);
+      if (specifications && specifications.length > 0)
+        lines.push(`• Specifications: ${specifications.join(' | ')}`);
+      if (customNotes)
+        lines.push(`• Custom Notes: ${customNotes}`);
       lines.push(``);
       lines.push(`👤 *Customer Details*`);
       lines.push(`• Name: ${form.name.trim()}`);
       lines.push(`• Phone: ${form.phone.trim()}`);
+      if (form.expectedDate) lines.push(`• Expected Delivery Date: ${form.expectedDate}`);
       lines.push(`• Shipping Address: ${form.address.trim()}`);
       lines.push(``);
       lines.push(`Please confirm availability and share the order details. Thank you!`);
@@ -188,7 +202,13 @@ export function WhatsAppOrderModal({
               .map((i) => `${i.name}${i.size ? ` [${i.size}]` : ''} (x${i.quantity})`)
               .join(', ')
               .slice(0, 500)
+          : specifications && specifications.length > 0
+          ? `${productName} (${specifications.join(', ')})${customNotes ? ` [Notes: ${customNotes}]` : ''}`.slice(0, 500)
           : productName;
+
+      const shippingAddressWithDate = form.expectedDate
+        ? `${form.address.trim()} (Expected Delivery: ${form.expectedDate})`
+        : form.address.trim();
 
       await fetch('/api/orders', {
         method: 'POST',
@@ -199,7 +219,7 @@ export function WhatsAppOrderModal({
           product_name: dbProductName,
           category: productCategory ?? (cartItems ? 'Cart Order' : null),
           quantity: form.quantity.trim() || '1',
-          shipping_address: form.address.trim(),
+          shipping_address: shippingAddressWithDate,
         }),
       });
     } catch {
@@ -219,7 +239,7 @@ export function WhatsAppOrderModal({
       window.open(url, '_blank', 'noopener,noreferrer');
       setSubmitting(false);
       closeModal();
-      setForm({ name: '', phone: '', address: '', quantity: '1' });
+      setForm({ name: '', phone: '', expectedDate: '', address: '', quantity: '1' });
     }, 800);
   }
 
@@ -271,7 +291,7 @@ export function WhatsAppOrderModal({
                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#25D366]">
                       WhatsApp Order
                     </p>
-                    <h2 className="text-sm font-bold text-white leading-snug line-clamp-1 mt-0.5">
+                    <h2 className="text-sm font-bold text-white leading-snug line-clamp-1 mt-0.5 uppercase">
                       {productName}
                     </h2>
                     {productCategory && (
@@ -328,6 +348,25 @@ export function WhatsAppOrderModal({
                         onChange={(e) => handleChange('phone', e.target.value)}
                         placeholder="Enter mobile number"
                         className={inputCls(!!errors.phone)}
+                      />
+                    </div>
+                  </Field>
+
+                  {/* Expected Delivery Date */}
+                  <Field label="Expected Delivery Date" required error={errors.expectedDate}>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                      <input
+                        type="date"
+                        min={new Date().toISOString().split('T')[0]}
+                        value={form.expectedDate}
+                        onChange={(e) => handleChange('expectedDate', e.target.value)}
+                        onClick={(e) => e.currentTarget.showPicker?.()}
+                        className={cn(
+                          inputCls(!!errors.expectedDate),
+                          '[color-scheme:dark] cursor-pointer',
+                          !form.expectedDate && 'text-gray-400'
+                        )}
                       />
                     </div>
                   </Field>

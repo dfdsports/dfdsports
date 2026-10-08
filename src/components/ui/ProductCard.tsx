@@ -92,6 +92,13 @@ export function ProductCard({
     e.stopPropagation();
 
     try {
+      const availableSizes = Array.isArray(product.sizes)
+        ? product.sizes
+        : typeof product.sizes === 'string'
+        ? ((product.sizes as unknown) as string).split(',').map((s) => s.trim()).filter(Boolean)
+        : [];
+      const defaultSize = availableSizes.length > 0 ? availableSizes[0] : undefined;
+
       addToCart(
         {
           id: product.id,
@@ -100,7 +107,7 @@ export function ProductCard({
           price: price ?? undefined,
           quantity: 1,
           image: product.image_url ?? undefined,
-          size: product.sizes?.[0] || undefined,
+          size: defaultSize,
         },
         { openCart: true }
       );

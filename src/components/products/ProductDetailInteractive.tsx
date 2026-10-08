@@ -34,8 +34,14 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
   const [activeImage, setActiveImage] = useState<string>(
     allImages.length > 0 ? allImages[0] : ''
   );
+  const availableSizes = Array.isArray(product.sizes)
+    ? product.sizes
+    : typeof product.sizes === 'string'
+    ? ((product.sizes as unknown) as string).split(',').map((s) => s.trim()).filter(Boolean)
+    : [];
+
   const [selectedSize, setSelectedSize] = useState<string>(
-    product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
+    availableSizes.length > 0 ? availableSizes[0] : ''
   );
   const [quantity, setQuantity] = useState<number>(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -110,6 +116,8 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   const handleAddToCart = () => {
     try {
+      const sizeToSave = selectedSize || (availableSizes.length > 0 ? availableSizes[0] : undefined);
+
       addToCart(
         {
           id: product.id,
@@ -118,7 +126,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           price: price ?? undefined,
           quantity: quantity,
           image: activeImage || product.image_url || undefined,
-          size: selectedSize || undefined,
+          size: sizeToSave,
         },
         { openCart: true }
       );
@@ -136,7 +144,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
         {/* Left Column: Full-Section Image Showcase */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* Main Hero Image Taking Full Section Area */}
-          <div className="relative aspect-square w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A0D14] shadow-2xl group flex items-center justify-center">
+          <div className="relative aspect-square w-full bg-white rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A0D14] shadow-2xl group flex items-center justify-center">
             {activeImage ? (
               <Image
                 src={activeImage}
@@ -144,7 +152,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 fill
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-contain "
               />
             ) : (
               <div className="flex flex-col items-center justify-center text-gray-600">
@@ -235,7 +243,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 )}
               </>
             ) : (
-              <span className="text-base font-bold text-[#F5A623]">Price on Wholesale Inquiry</span>
+              <span className="text-base font-semibold text-[#F5A623]">Price on Wholesale Inquiry</span>
             )}
           </div>
 
@@ -247,18 +255,18 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           )}
 
           {/* Available Sizes / Specs Chips */}
-          {product.sizes && product.sizes.length > 0 && (
+          {availableSizes.length > 0 && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-300">
                   Select Size / Specification:
                 </span>
                 {selectedSize && (
-                  <span className="text-xs text-[#F5A623] font-bold">Selected: {selectedSize}</span>
+                  <span className="text-xs text-[#F5A623]">Selected: {selectedSize}</span>
                 )}
               </div>
               <div className="flex flex-wrap gap-2.5">
-                {product.sizes.map((size) => {
+                {availableSizes.map((size) => {
                   const isSelected = selectedSize === size;
                   return (
                     <button
@@ -266,7 +274,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        'px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer',
+                        'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer',
                         isSelected
                           ? 'bg-[#F5A623] text-black shadow-md shadow-[#F5A623]/20'
                           : 'bg-white/5 text-gray-300 hover:bg-white/10'
@@ -353,7 +361,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 ) : (
                   <>
                     <ShoppingCart className="w-4 h-4 text-black stroke-[2.5]" />
-                    <span>Add to Cart</span>
+                    <span className='font-semibold'>Add to Cart</span>
                   </>
                 )}
               </button>
@@ -366,7 +374,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
               className="w-full h-12 px-6 rounded-xl bg-gradient-to-r from-[#22C55E] to-[#16A34A] hover:from-[#25D366] hover:to-[#22C55E] text-white font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-950/40 transition-all duration-200 active:scale-[0.98] cursor-pointer"
             >
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 fill-white/20" />
-              <span>Place Order on WhatsApp</span>
+              <span className='font-semibold'>Place Order on WhatsApp</span>
             </button>
           </div>
         </div>

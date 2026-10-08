@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { CompanySettings, Fabric } from '@/types/database';
-import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { ChevronDown, Check, MessageCircle } from 'lucide-react';
+import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
 
 interface CustomTeamwearBuilderProps {
   company?: CompanySettings | null;
@@ -13,17 +13,18 @@ interface CustomTeamwearBuilderProps {
 export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilderProps) {
   const [teamName, setTeamName] = useState('');
   const [sport, setSport] = useState('Football');
-  const [quantity, setQuantity] = useState('20-50 sets');
+  const [quantity, setQuantity] = useState('1-10 sets');
   const [selectedFabric, setSelectedFabric] = useState(
     fabrics.length > 0 ? fabrics[0].name : 'Drynet'
   );
+  const [neckType, setNeckType] = useState('Round Neck');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([
     'Team Logo / Crest',
     'Player Name',
     'Player Number',
   ]);
   const [notes, setNotes] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
 
   const sportsList = [
     'Football',
@@ -38,11 +39,22 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
     'Other Sport',
   ];
 
+  const neckTypes = [
+    'Round Neck',
+    'V-Neck',
+    'Polo Collar',
+    'Chinese neck',
+    'Henley Neck',
+    'Stand Collar',
+  ];
+
   const quantityRanges = [
-    { label: '10 - 20 Sets', value: '10-20 sets', badge: 'Small Squad' },
+    {label:'1-10 sets', value:'1-10 sets', badge:'Small Squad'},
+    { label: '10 - 20 Sets', value: '10-20 sets', badge: 'Medium Team' },
     { label: '20 - 50 Sets', value: '20-50 sets', badge: 'Standard Team' },
     { label: '50 - 100 Sets', value: '50-100 sets', badge: 'Club / Academy' },
     { label: '100+ Sets', value: '100+ sets', badge: 'Tournament Bulk' },
+    {label:'other', value:'other', badge:'Custom Quantity'}
   ];
 
   const customizationOptions = [
@@ -64,50 +76,12 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
     }
   };
 
-  const handleLaunchWhatsApp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      await fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          enquiry_type: 'custom_jersey',
-          name: teamName ? `Team: ${teamName}` : 'Custom Jersey Prospect',
-          phone: company?.whatsapp_number || 'Direct WhatsApp',
-          quantity: quantity,
-          size_or_requirement: `Sport: ${sport}, Fabric: ${selectedFabric}`,
-          customization_details: selectedOptions.join(', '),
-          message: notes || `Custom team jersey enquiry for ${sport}`,
-        }),
-      }).catch(() => {});
-    } catch {
-      // Continue even if logging fails
-    }
-
-    const url = generateWhatsAppLink({
-      phoneNumber: company?.whatsapp_number,
-      type: 'custom_jersey',
-      customDetails: {
-        teamName: teamName ? `${teamName} (${sport})` : sport,
-        fabricName: selectedFabric,
-        quantity: quantity,
-        requirements: selectedOptions,
-        notes: notes,
-      },
-    });
-
-    setIsSubmitting(false);
-    window.open(url, '_blank');
-  };
-
   return (
     <section className="relative w-full pb-24 lg:pb-0">
       <div className="relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-8 sm:mb-10">
-          <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#F5A623] mb-2 sm:mb-3">
+          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#F5A623] mb-2 sm:mb-3">
             INTERACTIVE JERSEY BUILDER
           </p>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase tracking-tight text-white mb-2 sm:mb-3">
@@ -122,7 +96,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
           </p>
         </div>
 
-        <form onSubmit={handleLaunchWhatsApp}>
+        <form onSubmit={(e) => { e.preventDefault(); setIsWhatsAppModalOpen(true); }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10">
             {/* Left Column: Form Configuration Controls (7 cols on desktop) */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
@@ -130,7 +104,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* 1. Sport Discipline Dropdown */}
                 <div className="space-y-2">
-                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                  <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
                     Select Sport Discipline
                   </label>
                   <div className="relative">
@@ -152,7 +126,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 {/* 2. Performance Fabric Dropdown */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                    <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
                       Performance Fabric
                     </label>
                   </div>
@@ -190,24 +164,32 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 </div>
               </div>
 
-              {/* Row 2: Team Name & Order Quantity */}
+              {/* Row 2: Neck Types & Order Quantity Dropdowns */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                {/* 3. Team Name */}
+                {/* 3. Neck Types Dropdown */}
                 <div className="space-y-2">
-                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
-                    Team / Academy / Org
+                  <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
+                    Neck Types
                   </label>
-                  <input
-                    type="text"
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all"
-                  />
+                  <div className="relative">
+                    <select
+                      value={neckType}
+                      onChange={(e) => setNeckType(e.target.value)}
+                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer"
+                    >
+                      {neckTypes.map((n) => (
+                        <option key={n} value={n} className="bg-[#0E121B] text-white py-2">
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
 
                 {/* 4. Quantity Volume */}
                 <div className="space-y-2">
-                  <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                  <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
                     Estimated Order Volume
                   </label>
                   <div className="relative">
@@ -227,9 +209,22 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 </div>
               </div>
 
-              {/* Row 3: Included Customization Elements */}
+              {/* Row 3: Team Name */}
+              <div className="space-y-2">
+                <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
+                  Team / Academy / Org
+                </label>
+                <input
+                  type="text"
+                  value={teamName}
+                  onChange={(e) => setTeamName(e.target.value)}
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all"
+                />
+              </div>
+
+              {/* Row 4: Included Customization Elements */}
               <div className="space-y-2.5">
-                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
                   Included Customization Elements
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
@@ -262,9 +257,9 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 </div>
               </div>
 
-              {/* Row 4: Design Preferences & Color Specs */}
+              {/* Row 5: Design Preferences & Color Specs */}
               <div className="space-y-2">
-                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-200">
+                <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-200">
                   Design Preferences & Color Specs (Optional)
                 </label>
                 <textarea
@@ -280,10 +275,10 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
             <div className="lg:col-span-5 flex flex-col justify-between">
               <div className="rounded-2xl bg-[#0E121B] p-5 sm:p-7 space-y-5 shadow-xl">
                 <div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#F5A623] mb-1">
+                  <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#F5A623] mb-1">
                     SPECIFICATION SUMMARY
                   </p>
-                  <h3 className="text-lg sm:text-xl font-black uppercase text-white tracking-tight font-semibold">
+                  <h3 className="text-lg sm:text-xl uppercase text-white tracking-tight font-semibold">
                     Custom Kit Overview
                   </h3>
                 </div>
@@ -291,21 +286,25 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                 <div className="space-y-3 py-4 text-xs sm:text-sm">
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-400 font-medium">Sport:</span>
-                    <span className="font-bold text-white uppercase text-right">{sport}</span>
+                    <span className="font-semibold text-white uppercase text-right">{sport}</span>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-400 font-medium">Neck Type:</span>
+                    <span className="font-semibold text-white text-right">{neckType}</span>
                   </div>
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-400 font-medium">Team:</span>
-                    <span className="font-bold text-white text-right truncate max-w-[180px]">
+                    <span className="font-semibold text-white text-right truncate max-w-[180px]">
                       {teamName ? teamName : 'To be specified'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-400 font-medium">Quantity Tier:</span>
-                    <span className="font-bold text-[#F5A623] text-right">{quantity}</span>
+                    <span className="font-semibold text-[#F5A623] text-right">{quantity}</span>
                   </div>
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-400 font-medium">Fabric:</span>
-                    <span className="font-bold text-white uppercase text-right truncate max-w-[180px]">
+                    <span className="font-semibold text-white uppercase text-right truncate max-w-[180px]">
                       {selectedFabric}
                     </span>
                   </div>
@@ -328,16 +327,15 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                   </div>
                 </div>
 
-
                 {/* WhatsApp Action Button */}
                 <div className="pt-1">
                   <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3.5 sm:py-4 px-6 rounded-md bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#25D366]/20 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold flex items-center justify-center gap-2"
+                    type="button"
+                    onClick={() => setIsWhatsAppModalOpen(true)}
+                    className="w-full py-3.5 sm:py-4 px-6 rounded-md bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B] hover:brightness-110 text-black font-semibold uppercase tracking-wider text-xs sm:text-sm shadow-xl shadow-[#F5A623]/25 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4 fill-current shrink-0" />
-                    <span>{isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}</span>
+                    <span>Send Specifications on WhatsApp</span>
                   </button>
                   <p className="text-[10px] sm:text-[9px] text-center text-gray-400 mt-2.5">
                     Connect instantly with our master designer. No waiting, no paperwork.
@@ -351,17 +349,35 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
           <div className="fixed bottom-0 inset-x-0 z-50 p-3 sm:p-4 bg-[#0A0D14]/95 backdrop-blur-md border-t border-white/10 shadow-2xl lg:hidden">
             <div className="max-w-md mx-auto">
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#25D366] hover:bg-[#20BA5A] text-white font-black uppercase tracking-wider text-xs sm:text-sm shadow-lg shadow-[#25D366]/25 transition-all duration-200 active:scale-[0.98] cursor-pointer font-semibold flex items-center justify-center gap-2"
+                type="button"
+                onClick={() => setIsWhatsAppModalOpen(true)}
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B] hover:brightness-110 text-black font-semibold uppercase tracking-wider text-xs sm:text-sm shadow-lg shadow-[#F5A623]/25 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-4 h-4 fill-current shrink-0" />
-                <span>{isSubmitting ? 'Generating Specifications...' : 'Send Specifications on WhatsApp'}</span>
+                <span>Send Specifications on WhatsApp</span>
               </button>
             </div>
           </div>
         </form>
       </div>
+
+      {/* WhatsApp Order Modal */}
+      <WhatsAppOrderModal
+        isOpen={isWhatsAppModalOpen}
+        onClose={() => setIsWhatsAppModalOpen(false)}
+        hideTrigger={true}
+        whatsappNumber={company?.whatsapp_number}
+        productName={teamName ? `Custom Kit — ${teamName}` : `Custom ${sport} Kit`}
+        productCategory={sport}
+        initialQuantity={quantity}
+        specifications={[
+          `Sport: ${sport}`,
+          `Fabric: ${selectedFabric}`,
+          `Neck Type: ${neckType}`,
+          ...(selectedOptions.length > 0 ? [`Customizations: ${selectedOptions.join(', ')}`] : []),
+        ]}
+        customNotes={notes || undefined}
+      />
     </section>
   );
 }

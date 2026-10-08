@@ -322,17 +322,14 @@ export function Header({ company }: HeaderProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
               <div className="relative w-25 h-25">
-                <div className="absolute inset-1 rounded-full bg-white/[0.08] blur-md pointer-events-none" />
+                <div className="absolute rounded-full" />
                 <Image
                   src="/logo.png"
                   alt={brandName}
                   fill
                   sizes="100px"
                   className="object-contain transition-transform group-hover:scale-105"
-                  style={{
-                    filter:
-                      'drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) brightness(1.15)',
-                  }}
+              
                 />
               </div>
             </Link>
@@ -623,6 +620,22 @@ export function Header({ company }: HeaderProps) {
                     >
                       {item.name}
                     </Link>
+
+                    {item.size ? (
+                      <p className="mt-1 text-xs text-gray-400 flex items-center gap-1.5">
+                        <span>Size:</span>
+                        <span className="font-bold text-[#F5A623] px-1.5 py-0.5 rounded bg-[#F5A623]/10 uppercase text-[11px]">
+                          {item.size}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-xs text-gray-400 flex items-center gap-1.5">
+                        <span>Size:</span>
+                        <span className="font-medium text-gray-300 px-1.5 py-0.5 rounded bg-white/5 uppercase text-[11px]">
+                          Standard
+                        </span>
+                      </p>
+                    )}
 
                     {item.size && (
                       <div className="mt-1">
