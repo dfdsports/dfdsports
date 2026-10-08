@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { addToCart } from '@/lib/cart';
+
 interface ProductDetailInteractiveProps {
   product: Product;
   company?: CompanySettings | null;
@@ -108,30 +110,18 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   const handleAddToCart = () => {
     try {
-      const stored = localStorage.getItem('dfd_cart');
-      const items: CartItem[] = stored ? JSON.parse(stored) : [];
-
-      const existingIndex = items.findIndex(
-        (item) => item.id === product.id && item.size === (selectedSize || undefined)
-      );
-
-      if (existingIndex >= 0) {
-        items[existingIndex].quantity += quantity;
-      } else {
-        items.push({
-          id: selectedSize ? `${product.id}-${selectedSize}` : product.id,
+      addToCart(
+        {
+          id: product.id,
           name: product.name,
           slug: product.slug,
           price: price ?? undefined,
           quantity: quantity,
           image: activeImage || product.image_url || undefined,
           size: selectedSize || undefined,
-        });
-      }
-
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-      window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
-      window.dispatchEvent(new CustomEvent('dfd_open_cart'));
+        },
+        { openCart: true }
+      );
 
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2000);

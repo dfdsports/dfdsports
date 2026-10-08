@@ -53,9 +53,9 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
             </p>
           </div>
 
-          {/* Right Header: Tagline and Next/Previous navigation buttons (hidden on mobile) */}
-          <div className="hidden sm:flex items-center gap-4 shrink-0">
-            <div className="flex items-center gap-2">
+          {/* Right Header: Tagline and Next/Previous navigation buttons */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
               <button
                 type="button"
                 onClick={handlePrev}
@@ -75,22 +75,25 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* 2 columns on mobile, 4 columns on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-3 sm:gap-x-5 gap-y-6 sm:gap-y-8">
+        {/* Centered responsive flex layout: 2 cols on mobile, 3 on md, 4 on lg; remaining cards center-aligned */}
+        <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-5 lg:gap-x-6 gap-y-6 sm:gap-y-8">
           {visibleFabrics.map((fabric) => (
-            <div key={fabric.id} className="group">
+            <div
+              key={fabric.id}
+              className="group w-[calc(50%-6px)] sm:w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] lg:w-[calc(25%-18px)] shrink-0"
+            >
               {/* Fabric image with the name overlapping its bottom edge */}
               <div className="relative">
-                <div className="relative aspect-[18/7] w-full overflow-hidden rounded-xl bg-white/5">
+                <div className="relative aspect-[18/7] w-full overflow-hidden rounded-xl bg-white/5 shadow-md">
                   {fabric.image_url ? (
                     <Image
                       src={fabric.image_url}
                       alt={fabric.name}
                       fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 50vw"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
                     />
                   ) : (
