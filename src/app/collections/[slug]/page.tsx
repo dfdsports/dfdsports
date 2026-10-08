@@ -90,6 +90,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 alt={category.name}
                 fill
                 priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-[#0E121B] via-[#0E121B]/60 to-transparent" />

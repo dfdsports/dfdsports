@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days cache for optimized images
     remotePatterns: [
       {
         protocol: "https",
@@ -35,6 +38,17 @@ const nextConfig: NextConfig = {
         source: '/collection',
         destination: '/collections',
         permanent: true,
+      },
+      // Redirect removed admin sections to /admin
+      {
+        source: '/admin/why-choose-us',
+        destination: '/admin',
+        permanent: false,
+      },
+      {
+        source: '/admin/highlights',
+        destination: '/admin',
+        permanent: false,
       },
     ];
   },

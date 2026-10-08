@@ -150,7 +150,6 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 src={activeImage}
                 alt={product.name}
                 fill
-                unoptimized
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-contain "
@@ -207,7 +206,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       src={img}
                       alt={`${product.name} thumbnail ${i + 1}`}
                       fill
-                      unoptimized
+                      sizes="80px"
                       className="object-cover rounded-lg"
                     />
                   </button>

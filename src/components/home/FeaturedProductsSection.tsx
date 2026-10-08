@@ -175,7 +175,7 @@ export function FeaturedProductsSection({
   };
 
   return (
-    <section style={{ backgroundColor: sectionColor.sectionBg }} className="py-16 sm:py-20">
+    <section style={{ backgroundColor: sectionColor.sectionBg }} className="py-5 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Top: heading, then short description, both left-aligned */}
         <div className="mb-10 sm:mb-12">
