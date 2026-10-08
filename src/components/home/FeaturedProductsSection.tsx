@@ -9,6 +9,7 @@ import { FEATURED_BG_COLORS } from '@/lib/featuredColors';
 import type { FeaturedColorOption } from '@/lib/featuredColors';
 import { extractProductPrice } from '@/lib/productFilters';
 import { CartItem } from '@/components/layout/Header';
+import { addToCart } from '@/lib/cart';
 import { Tag, ArrowRight, ShoppingCart, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -45,40 +46,25 @@ function FeaturedProductCard({
     e.stopPropagation();
 
     try {
-      const stored = localStorage.getItem('dfd_cart');
-      const items: CartItem[] = stored ? JSON.parse(stored) : [];
-
       const availableSizes = Array.isArray(product.sizes)
         ? product.sizes
         : typeof product.sizes === 'string'
         ? ((product.sizes as unknown) as string).split(',').map((s) => s.trim()).filter(Boolean)
         : [];
       const defaultSize = availableSizes.length > 0 ? availableSizes[0] : undefined;
-      const targetId = defaultSize ? `${product.id}-${defaultSize}` : product.id;
 
-      const existingIndex = items.findIndex(
-        (item) => item.id === targetId || (item.slug === product.slug && item.size === defaultSize)
-      );
-      if (existingIndex >= 0) {
-        items[existingIndex].quantity += 1;
-        if (defaultSize && !items[existingIndex].size) {
-          items[existingIndex].size = defaultSize;
-        }
-      } else {
-        items.push({
-          id: targetId,
+      addToCart(
+        {
+          id: product.id,
           name: product.name,
           slug: product.slug,
           price: price ?? undefined,
           quantity: 1,
           image: product.image_url ?? undefined,
           size: defaultSize,
-        });
-      }
-
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-      window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
-      window.dispatchEvent(new CustomEvent('dfd_open_cart'));
+        },
+        { openCart: true }
+      );
 
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 1600);

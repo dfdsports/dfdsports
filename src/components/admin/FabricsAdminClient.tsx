@@ -33,22 +33,24 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
   const [fabricToDelete, setFabricToDelete] = useState<Fabric | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [form, setForm] = useState(emptyFabric);
+  const [isSlugTouched, setIsSlugTouched] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  const generateSlug = (val: string) => {
-    return val
+  const slugify = (text: string) => {
+    return text
+      .toString()
       .toLowerCase()
       .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
+      .replace(/[\s\W-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   };
 
   const openCreate = () => {
     setEditing(null);
+    setIsSlugTouched(false);
     setForm({ ...emptyFabric, display_order: fabrics.length });
     setShowForm(true);
     setSavedSuccess(false);
@@ -56,6 +58,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
 
   const openEdit = (fabric: Fabric) => {
     setEditing(fabric);
+    setIsSlugTouched(true);
     setForm({
       name: fabric.name,
       slug: fabric.slug,
@@ -69,18 +72,30 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
     setSavedSuccess(false);
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    setForm((prev) => ({
+      ...prev,
+      name,
+      slug: !isSlugTouched ? slugify(name) : prev.slug,
+    }));
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    setForm((prev) => {
-      const updated = {
-        ...prev,
-        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-      };
-      if (name === 'name' && !editing) {
-        updated.slug = generateSlug(value);
-      }
-      return updated;
-    });
+    if (name === 'slug') {
+      setIsSlugTouched(value.trim() !== '');
+    }
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
+
+  const handleRegenerateSlug = () => {
+    const newSlug = slugify(form.name);
+    setForm((prev) => ({ ...prev, slug: newSlug }));
+    setIsSlugTouched(false);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +230,7 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
               <input
                 name="name"
                 value={form.name}
-                onChange={handleChange}
+                onChange={handleNameChange}
                 className={inputCls}
                 placeholder="e.g. Micro Polyester Interlock (160 GSM)"
                 required
@@ -223,15 +238,26 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
             </div>
 
             <div>
-              <label className={labelCls}>
-                Slug <span className="text-amber-600">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-black">
+                  Slug <span className="text-amber-600">*</span>
+                </label>
+                {form.name && (
+                  <button
+                    type="button"
+                    onClick={handleRegenerateSlug}
+                    className="text-[11px] font-bold text-amber-600 hover:text-amber-700 hover:underline cursor-pointer"
+                  >
+                    Auto-create from name
+                  </button>
+                )}
+              </div>
               <input
                 name="slug"
                 value={form.slug}
                 onChange={handleChange}
                 className={inputCls}
-                placeholder="micro-poly-interlock-160gsm"
+                placeholder="micro-polyester-interlock-160-gsm"
                 required
               />
             </div>

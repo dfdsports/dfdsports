@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { addToCart } from '@/lib/cart';
+
 interface ProductDetailInteractiveProps {
   product: Product;
   company?: CompanySettings | null;
@@ -114,36 +116,20 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   const handleAddToCart = () => {
     try {
-      const stored = localStorage.getItem('dfd_cart');
-      const items: CartItem[] = stored ? JSON.parse(stored) : [];
-
       const sizeToSave = selectedSize || (availableSizes.length > 0 ? availableSizes[0] : undefined);
-      const targetId = sizeToSave ? `${product.id}-${sizeToSave}` : product.id;
 
-      const existingIndex = items.findIndex(
-        (item) => item.id === targetId || (item.slug === product.slug && item.size === sizeToSave)
-      );
-
-      if (existingIndex >= 0) {
-        items[existingIndex].quantity += quantity;
-        if (sizeToSave && !items[existingIndex].size) {
-          items[existingIndex].size = sizeToSave;
-        }
-      } else {
-        items.push({
-          id: targetId,
+      addToCart(
+        {
+          id: product.id,
           name: product.name,
           slug: product.slug,
           price: price ?? undefined,
           quantity: quantity,
           image: activeImage || product.image_url || undefined,
           size: sizeToSave,
-        });
-      }
-
-      localStorage.setItem('dfd_cart', JSON.stringify(items));
-      window.dispatchEvent(new CustomEvent('dfd_cart_updated'));
-      window.dispatchEvent(new CustomEvent('dfd_open_cart'));
+        },
+        { openCart: true }
+      );
 
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2000);
