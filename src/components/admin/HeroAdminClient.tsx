@@ -107,6 +107,22 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
     }
   };
 
+  const handleRemoveDesktopImage = async () => {
+    const oldUrl = form.image_url;
+    setForm((p) => ({ ...p, image_url: '' }));
+    if (oldUrl) {
+      await deleteImageFromCloudinary(oldUrl);
+    }
+  };
+
+  const handleRemoveMobileImage = async () => {
+    const oldUrl = form.mobile_image_url;
+    setForm((p) => ({ ...p, mobile_image_url: '' }));
+    if (oldUrl) {
+      await deleteImageFromCloudinary(oldUrl);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -114,6 +130,14 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
       try {
         const supabase = createClient();
         if (editing) {
+          // Cleanup replaced/removed images from Cloudinary
+          if (editing.image_url && editing.image_url !== form.image_url) {
+            deleteImageFromCloudinary(editing.image_url).catch(console.warn);
+          }
+          if (editing.mobile_image_url && editing.mobile_image_url !== form.mobile_image_url) {
+            deleteImageFromCloudinary(editing.mobile_image_url).catch(console.warn);
+          }
+
           const { error } = await supabase.from('hero_slides').update({ ...form, updated_at: new Date().toISOString() }).eq('id', editing.id);
           if (error) throw error;
         } else {
@@ -231,7 +255,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                 {form.image_url && (
                   <div className="relative w-32 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs shrink-0">
                     <Image src={form.image_url} alt="Desktop Preview" fill className="object-cover" />
-                    <button type="button" onClick={() => setForm((p) => ({ ...p, image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
+                    <button type="button" onClick={handleRemoveDesktopImage} title="Delete from Cloudinary" className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -255,7 +279,7 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
                 {form.mobile_image_url && (
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs shrink-0">
                     <Image src={form.mobile_image_url} alt="Mobile Preview" fill className="object-cover" />
-                    <button type="button" onClick={() => setForm((p) => ({ ...p, mobile_image_url: '' }))} className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
+                    <button type="button" onClick={handleRemoveMobileImage} title="Delete from Cloudinary" className="absolute top-1 right-1 w-6 h-6 bg-rose-600 flex items-center justify-center text-white hover:bg-rose-700 rounded-full shadow-xs cursor-pointer">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>

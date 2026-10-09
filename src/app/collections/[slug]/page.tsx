@@ -12,6 +12,7 @@ import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { Tag, ArrowLeft, ArrowRight } from 'lucide-react';
+import { SITE_URL } from '@/lib/seo';
 
 export const revalidate = 60;
 
@@ -40,10 +41,14 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   return {
     title,
     description,
+    alternates: {
+      canonical: `${SITE_URL}/collections/${slug}`,
+    },
     openGraph: {
       title,
       description,
       type: 'website',
+      url: `${SITE_URL}/collections/${slug}`,
       images: category.image_url ? [{ url: category.image_url, alt: category.name }] : undefined,
     },
   };
@@ -66,8 +71,37 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     categoryId: category.id,
   });
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Collections',
+        item: `${SITE_URL}/collections`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: category.name,
+        item: `${SITE_URL}/collections/${category.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Header company={company} />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">

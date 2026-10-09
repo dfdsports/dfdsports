@@ -18,8 +18,6 @@ const jakarta = Plus_Jakarta_Sans({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export const metadata: Metadata = {
@@ -43,6 +41,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'DFD SPORTS' }],
   creator: 'DFD SPORTS',
   metadataBase: new URL('https://dfdsports.com'),
+  alternates: {
+    canonical: 'https://dfdsports.com',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_IN',
@@ -61,6 +62,39 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  verification: {
+    google: 'ada9scEB1Mhb2YgS4Ywpso9ftoye_htPvkMFMj7w0U8',
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'DFD Sports',
+  alternateName: 'Destination For Dreams',
+  url: 'https://dfdsports.com',
+  logo: 'https://dfdsports.com/logo.png',
+  description:
+    'Premier sports equipment supplier and custom sublimated teamwear manufacturer across India.',
+  sameAs: [
+    'https://www.instagram.com',
+    'https://www.facebook.com',
+  ],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'DFD Sports',
+  url: 'https://dfdsports.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://dfdsports.com/collections?search={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 export default function RootLayout({
@@ -75,9 +109,22 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://api.fontshare.com/v2/css?f[]=rowan@400,500,600,700&display=swap"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
         />
         <script
           dangerouslySetInnerHTML={{

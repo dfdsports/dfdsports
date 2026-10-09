@@ -6,7 +6,26 @@ import { ContactForm } from '@/components/contact/ContactForm';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/seo';
+
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: 'Contact DFD Sports | Sports Equipment & Custom Jerseys',
+  description:
+    'Have questions about sports equipment supply, brand catalog quotations, or custom team jerseys? Connect with DFD Sports directly.',
+  alternates: {
+    canonical: `${SITE_URL}/contact`,
+  },
+  openGraph: {
+    title: 'Contact DFD Sports | Sports Equipment & Custom Jerseys',
+    description:
+      'Have questions about sports equipment supply, brand catalog quotations, or custom team jerseys? Connect with DFD Sports directly.',
+    url: `${SITE_URL}/contact`,
+    siteName: 'DFD Sports',
+  },
+};
 
 export default async function ContactPage() {
   const company = await getCompanySettings();
