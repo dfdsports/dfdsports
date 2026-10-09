@@ -140,7 +140,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-6 sm:mb-8 lg:mb-20">
         {/* Left Column: Full-Section Image Showcase */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* Main Hero Image Taking Full Section Area */}
@@ -307,7 +307,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           )}
 
           {/* ================= ACTIONS ================= */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-3 mb-0 lg:mb-8">
             {/* ROW 1: Quantity Stepper + Add to Cart */}
             <div className="flex items-center gap-3">
               {/* Quantity Stepper */}
