@@ -161,3 +161,16 @@ export interface Enquiry {
   created_at: string;
   updated_at?: string;
 }
+
+export type PolicyType = 'privacy_policy' | 'delivery_policy';
+
+export interface PolicySection {
+  id: string;
+  policy_type: PolicyType;
+  heading: string;
+  description: string;
+  display_order: number;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}

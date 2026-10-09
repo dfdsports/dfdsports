@@ -123,7 +123,7 @@ export function FilterSidebar({
                 />
               )}
 
-              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
+              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#F5A623]">
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((cat) => {
                     const isChecked = selectedCategories.includes(cat.slug);
@@ -204,7 +204,7 @@ export function FilterSidebar({
                   />
                 )}
 
-                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
+                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#F5A623]">
                   {filteredBrands.length > 0 ? (
                     filteredBrands.map((brand) => {
                       const isChecked = selectedBrands.includes(brand.slug);

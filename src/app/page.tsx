@@ -36,8 +36,8 @@ export default async function HomePage() {
     getCompanySettings(),
     getActiveHeroSlides(),
     getActiveCategories(),
-    getFeaturedProducts(12),
-    getActiveProducts({ limit: 12 }),
+    getFeaturedProducts(8),
+    getActiveProducts(),
     getActiveFabrics(),
     getActiveBrands(),
   ]);
@@ -66,7 +66,7 @@ export default async function HomePage() {
         {/* 4. Custom Teamwear & Sublimation Jerseys ("Made for Your Team") */}
         <CustomTeamwearSection company={company} />
 
-        {/* 5. All Products Showcase (New product cards: 10 items, 5 per row, View All button) */}
+        {/* 5. All Products Showcase (8 products: 2 rows of 4, View All button) */}
         <AllProductsSection products={allProducts} company={company} />
 
         {/* 6. Fabric Collection (Dynamically shown if fabrics exist) */}

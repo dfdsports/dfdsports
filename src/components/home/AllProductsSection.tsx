@@ -14,6 +14,15 @@ interface AllProductsSectionProps {
 const DEFAULT_DESCRIPTION =
   'Explore our full range of sports equipment, training essentials, and team gear.';
 
+function shuffleProducts(items: Product[]): Product[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export function AllProductsSection({
   products,
   company,
@@ -21,8 +30,8 @@ export function AllProductsSection({
 }: AllProductsSectionProps) {
   if (!products || products.length === 0) return null;
 
-  // Show up to 10 products total (2 rows of 5 on desktop)
-  const displayProducts = products.slice(0, 10);
+  // Shuffle products and display 8 randomized products (2 rows of 4 on desktop)
+  const displayProducts = shuffleProducts(products).slice(0, 8);
 
   return (
     <section className="bg-[#080A0F] py-5 sm:py-20">

@@ -366,7 +366,7 @@ export function WhatsAppOrderModal({
 
                   {/* Expected Delivery Date */}
                   <Field label="Expected Delivery Date" required error={errors.expectedDate}>
-                    <div className="relative">
+                    <div className="relative w-full">
                       <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                       <input
                         type="date"
@@ -376,7 +376,7 @@ export function WhatsAppOrderModal({
                         onClick={(e) => e.currentTarget.showPicker?.()}
                         className={cn(
                           inputCls(!!errors.expectedDate),
-                          '[color-scheme:dark] cursor-pointer',
+                          'w-full max-w-full min-w-0 box-border block [appearance:none] [-webkit-appearance:none] [color-scheme:dark] cursor-pointer [&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:min-h-[1.25rem]',
                           !form.expectedDate && 'text-gray-400'
                         )}
                       />
