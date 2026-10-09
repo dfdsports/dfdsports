@@ -99,7 +99,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <ProductDetailInteractive product={product} company={company} />
 
         {/* Long Description and Technical Specifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-20 pt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 pt-0 sm:pt-4 lg:pt-12">
           {/* Long description */}
           <div className="lg:col-span-7">
             <h3 className="text-xl font-black uppercase font-semibold text-white mb-4">
