@@ -84,12 +84,12 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
           <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#F5A623] mb-2 sm:mb-3">
             INTERACTIVE JERSEY BUILDER
           </p>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase tracking-tight text-white mb-2 sm:mb-3">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase tracking-tight text-white mb-2 sm:mb-3">
             Configure Your{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
               Team Kit & Quote
             </span>
-          </h2>
+          </h1>
           <p className="text-xs sm:text-sm text-gray-300 leading-relaxed max-w-2xl">
             Customize high-performance kits tailored to your squad&apos;s exact colors and branding. Select your sport,
             fabrics, and custom requirements to generate an instant quotation.

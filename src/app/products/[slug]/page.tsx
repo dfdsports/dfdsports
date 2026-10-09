@@ -8,6 +8,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { ProductDetailInteractive } from '@/components/products/ProductDetailInteractive';
+import { SITE_URL } from '@/lib/seo';
+import { extractProductPrice } from '@/lib/productFilters';
 
 export const revalidate = 60;
 
@@ -36,10 +38,14 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   return {
     title,
     description,
+    alternates: {
+      canonical: `${SITE_URL}/products/${slug}`,
+    },
     openGraph: {
       title,
       description,
       type: 'website',
+      url: `${SITE_URL}/products/${slug}`,
       images: product.image_url ? [{ url: product.image_url, alt: product.name }] : undefined,
     },
     twitter: {
@@ -70,8 +76,92 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       )
     : [];
 
+  const productPrice = extractProductPrice(product);
+  const allImages = [
+    ...(product.image_url ? [product.image_url] : []),
+    ...(product.images || []),
+  ];
+
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description:
+      product.short_description ||
+      product.seo_description ||
+      `Order ${product.name} at DFD Sports.`,
+    ...(allImages.length > 0 ? { image: allImages } : {}),
+    sku: product.id,
+    url: `${SITE_URL}/products/${product.slug}`,
+    ...(product.brand?.name
+      ? {
+          brand: {
+            '@type': 'Brand',
+            name: product.brand.name,
+          },
+        }
+      : {}),
+    ...(productPrice !== null
+      ? {
+          offers: {
+            '@type': 'Offer',
+            url: `${SITE_URL}/products/${product.slug}`,
+            priceCurrency: 'INR',
+            price: productPrice,
+            availability: product.is_active
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+            itemCondition: 'https://schema.org/NewCondition',
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Collections',
+        item: `${SITE_URL}/collections`,
+      },
+      ...(product.category
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: product.category.name,
+              item: `${SITE_URL}/collections/${product.category.slug}`,
+            },
+          ]
+        : []),
+      {
+        '@type': 'ListItem',
+        position: product.category ? 4 : 3,
+        name: product.name,
+        item: `${SITE_URL}/products/${product.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Header company={company} />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">

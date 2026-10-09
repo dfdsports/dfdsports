@@ -86,6 +86,10 @@ export function BrandsAdminClient({ brands }: BrandsAdminClientProps) {
       try {
         const supabase = createClient();
         if (editing) {
+          // Cleanup replaced or removed logo from Cloudinary
+          if (editing.logo_url && editing.logo_url !== form.logo_url) {
+            deleteImageFromCloudinary(editing.logo_url).catch(console.warn);
+          }
           const { error } = await supabase.from('brands').update({ ...form, updated_at: new Date().toISOString() }).eq('id', editing.id);
           if (error) throw error;
         } else {

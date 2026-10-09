@@ -57,8 +57,21 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
         await deleteImageFromCloudinary(product.image_url);
       }
       // 2. Delete gallery images from Cloudinary
-      if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        await Promise.all(product.images.map((url) => deleteImageFromCloudinary(url)));
+      const gallery: string[] = Array.isArray(product.images)
+        ? product.images
+        : typeof product.images === 'string'
+          ? (() => {
+              try {
+                const parsed = JSON.parse(product.images);
+                return Array.isArray(parsed) ? parsed : [];
+              } catch {
+                return [];
+              }
+            })()
+          : [];
+
+      if (gallery.length > 0) {
+        await deleteImageFromCloudinary(gallery);
       }
 
       // 3. Delete from database

@@ -10,12 +10,25 @@ import { AboutStats } from '@/components/about/AboutStats';
 import { AboutVisionMission } from '@/components/about/AboutVisionMission';
 import { FinalCTASection } from '@/components/home/FinalCTASection';
 
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/seo';
+
 export const revalidate = 60;
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'About Us | DFD Sports — Destination for Dreams',
   description:
     'Learn about DFD (Destination for Dreams) — high-performance sports equipment, custom teamwear, and tournament gear for athletes, schools, and academies across India.',
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+  },
+  openGraph: {
+    title: 'About Us | DFD Sports — Destination for Dreams',
+    description:
+      'Learn about DFD (Destination for Dreams) — high-performance sports equipment, custom teamwear, and tournament gear for athletes, schools, and academies across India.',
+    url: `${SITE_URL}/about`,
+    type: 'website',
+  },
 };
 
 export default async function AboutPage() {
