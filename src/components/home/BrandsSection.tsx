@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Brand } from '@/types/database';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
@@ -77,11 +78,13 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
             {marqueeItems.map((brand, i) => {
               const isClone = i >= baseList.length;
               return (
-                <div
+                <Link
                   key={`${brand.id}-${i}`}
-                  title={brand.name}
+                  href={`/collections?brand=${encodeURIComponent(brand.slug)}`}
+                  title={`View ${brand.name} collection`}
                   aria-hidden={isClone || undefined}
-                  className="group flex h-12 sm:h-24 w-24 sm:w-52 shrink-0 items-center justify-center bg-transparent transition-all duration-300"
+                  tabIndex={isClone ? -1 : undefined}
+                  className="group flex h-12 sm:h-24 w-24 sm:w-52 shrink-0 items-center justify-center bg-transparent transition-all duration-300 cursor-pointer"
                 >
                   {brand.logo_url ? (
                     <Image
@@ -96,7 +99,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
                       {brand.name}
                     </span>
                   )}
-                </div>
+                </Link>
               );
             })}
           </div>

@@ -9,14 +9,14 @@ import { Shirt, Shield, Sparkles, Palette, Ruler, Layers } from 'lucide-react';
  * Put your files in  /public/images/teamwear/  and update the file names below.
  */
 const MAIN_PAIR = [
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267418/Maroon_MITS_Football_Jersey_Mockup.png', alt: 'Maroon team jersey, front' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267584/Maroon_Football_Jersey_Back_Mockup.png', alt: 'Maroon team jersey, back' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791543643/Maroon_DFD_Sports_Football_Jersey.png', alt: 'Maroon team jersey, front' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791544110/Maroon_DFD_Sports_Jersey_Mockup.png', alt: 'Maroon team jersey, back' },
 ];
 
 const OTHER_JERSEYS = [
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791267951/Black_and_Neon_Green_Horizon_Jersey.png', alt: 'Green and black team jersey' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791268087/Black_and_Gold_Top_Sports_Jersey.png', alt: 'Black and gold team jersey' },
-  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/f_auto,q_auto/v1791268245/The_Ideal_Blue_Football_Jersey.png', alt: 'Navy and white team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791544748/Green_Horizon_Esports_Jersey_Mockup.png', alt: 'Green and black team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791544771/Top_Sports_Esports_Jersey_Mockup.png ', alt: 'Black and gold team jersey' },
+  { src: 'https://res.cloudinary.com/v9xqdhgw/image/upload/v1791544781/Blue-and-White_Football_Jersey_Mockup.png', alt: 'Navy and white team jersey' },
 ];
 
 const FEATURES = [
@@ -56,7 +56,7 @@ export function CustomTeamwearSection(_props: CustomTeamwearSectionProps) {
               <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#B8893A]">
                 Custom team jerseys
               </p>
-              <h2 className="mb-3.5 text-2xl font-black uppercase leading-tight tracking-tight text-[#111] sm:text-4xl lg:text-5xl">
+              <h2 className="mb-3.5 text-2xl font-black font-semibold uppercase leading-tight tracking-tight text-[#111] sm:text-4xl lg:text-5xl">
                 Made for <span className="text-blue-700">your team</span>
               </h2>
               <p className="hidden sm:block mb-6 max-w-sm text-sm leading-relaxed text-[#444] sm:mb-7 sm:text-base sm:text-[#2a2a2a]">
