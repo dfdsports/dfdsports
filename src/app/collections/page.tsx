@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CollectionsCatalog } from '@/components/collections/CollectionsCatalog';
+import { SITE_URL } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -16,13 +17,13 @@ export const metadata: Metadata = {
   description:
     'Browse authentic sports equipment, custom sublimation team jerseys, tournament kits, and athletic gear at DFD Sports across India.',
   alternates: {
-    canonical: 'https://dfdsports.com/collections',
+    canonical: `${SITE_URL}/collections`,
   },
   openGraph: {
     title: 'All Collections | DFD Sports — Sportswear & Sports Equipment',
     description:
       'Browse authentic sports equipment, custom sublimation team jerseys, tournament kits, and athletic gear at DFD Sports across India.',
-    url: 'https://dfdsports.com/collections',
+    url: `${SITE_URL}/collections`,
     type: 'website',
   },
 };

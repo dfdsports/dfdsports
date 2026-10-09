@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const categoryRoutes: MetadataRoute.Sitemap = (categories || [])
       .filter((c) => Boolean(c.slug && c.is_active))
       .map((c) => ({
-        url: `${SITE_URL}/collections/${c.slug}`,
+        url: `${SITE_URL}/collections/${c.slug.trim()}`,
         lastModified: c.updated_at ? new Date(c.updated_at) : new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
@@ -69,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const productRoutes: MetadataRoute.Sitemap = (products || [])
       .filter((p) => Boolean(p.slug && p.is_active))
       .map((p) => ({
-        url: `${SITE_URL}/products/${p.slug}`,
+        url: `${SITE_URL}/products/${p.slug.trim()}`,
         lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
         changeFrequency: 'weekly',
         priority: p.is_featured ? 0.9 : 0.8,
