@@ -101,7 +101,7 @@ export function Footer({ company }: FooterProps) {
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Delivery Policy', href: '/delivery-policy' },
     { label: 'Contact Us', href: '/contact' },
-    { label: 'Inquiry', href: '/contact#enquiry' },
+ 
   ];
 
   return (

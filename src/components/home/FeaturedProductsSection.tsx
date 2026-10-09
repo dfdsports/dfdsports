@@ -162,6 +162,8 @@ export function FeaturedProductsSection({
 }: FeaturedProductsSectionProps) {
   if (!products || products.length === 0) return null;
 
+  const displayProducts = products.slice(0, 8);
+
   const sectionColor = settings?.color ?? FEATURED_BG_COLORS[0];
 
   /** Card background: per-card override or section default */
@@ -193,7 +195,7 @@ export function FeaturedProductsSection({
 
         {/* Bottom: products */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
-          {products.map((p) => (
+          {displayProducts.map((p) => (
             <FeaturedProductCard
               key={p.id}
               product={p}
