@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { Preloader } from '@/components/ui/Preloader';
+import { SITE_URL } from '@/lib/seo';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -40,14 +41,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'DFD SPORTS' }],
   creator: 'DFD SPORTS',
-  metadataBase: new URL('https://dfdsports.com'),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: 'https://dfdsports.com',
+    canonical: SITE_URL,
   },
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://dfdsports.com',
+    url: SITE_URL,
     title: 'DFD SPORTS | Destination For Dreams',
     description:
       'Custom sublimated teamwear and premium sports equipment supplier for academies, clubs, and athletes.',
@@ -72,8 +73,8 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'DFD Sports',
   alternateName: 'Destination For Dreams',
-  url: 'https://dfdsports.com',
-  logo: 'https://dfdsports.com/logo.png',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
   description:
     'Premier sports equipment supplier and custom sublimated teamwear manufacturer across India.',
   sameAs: [
@@ -86,12 +87,12 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'DFD Sports',
-  url: 'https://dfdsports.com',
+  url: SITE_URL,
   potentialAction: {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: 'https://dfdsports.com/collections?search={search_term_string}',
+      urlTemplate: `${SITE_URL}/collections?search={search_term_string}`,
     },
     'query-input': 'required name=search_term_string',
   },

@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CustomTeamwearBuilder } from '@/components/teamwear/CustomTeamwearBuilder';
 import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
+import { SITE_URL } from '@/lib/seo';
 
 export const revalidate = 60;
 
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
   description:
     'Design and order custom sublimation team jerseys, kits, and athletic apparel tailored for schools, clubs, academies, and tournaments across India.',
   alternates: {
-    canonical: 'https://dfdsports.com/custom-jerseys',
+    canonical: `${SITE_URL}/custom-jerseys`,
   },
   openGraph: {
     title: 'Custom Sublimation Sports Jerseys & Teamwear | DFD Sports',
     description:
       'Design and order custom sublimation team jerseys, kits, and athletic apparel tailored for schools, clubs, academies, and tournaments across India.',
-    url: 'https://dfdsports.com/custom-jerseys',
+    url: `${SITE_URL}/custom-jerseys`,
     type: 'website',
   },
 };
