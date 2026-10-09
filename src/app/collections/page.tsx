@@ -3,12 +3,29 @@ import { getActiveCategories } from '@/services/categories';
 import { getActiveProducts } from '@/services/products';
 import { getActiveBrands } from '@/services/brands';
 import { getCompanySettings } from '@/services/company';
+import type { Metadata } from 'next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CollectionsCatalog } from '@/components/collections/CollectionsCatalog';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'All Collections | DFD Sports — Sportswear & Sports Equipment',
+  description:
+    'Browse authentic sports equipment, custom sublimation team jerseys, tournament kits, and athletic gear at DFD Sports across India.',
+  alternates: {
+    canonical: 'https://dfdsports.com/collections',
+  },
+  openGraph: {
+    title: 'All Collections | DFD Sports — Sportswear & Sports Equipment',
+    description:
+      'Browse authentic sports equipment, custom sublimation team jerseys, tournament kits, and athletic gear at DFD Sports across India.',
+    url: 'https://dfdsports.com/collections',
+    type: 'website',
+  },
+};
 
 interface CollectionsPageProps {
   searchParams: Promise<{

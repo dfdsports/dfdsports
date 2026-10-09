@@ -116,6 +116,11 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         const supabase = createClient();
 
         if (mode === 'edit' && initialData?.id) {
+          // Cleanup replaced or removed category image from Cloudinary
+          if (initialData.image_url && initialData.image_url !== form.image_url) {
+            deleteImageFromCloudinary(initialData.image_url).catch(console.warn);
+          }
+
           const { error } = await supabase
             .from('categories')
             .update({ ...form, updated_at: new Date().toISOString() })

@@ -12,9 +12,11 @@ cloudinary.config({
 
 /**
  * Extracts Cloudinary public_id from a URL or returns the public_id as-is.
- * Example URL:
- * https://res.cloudinary.com/demo/image/upload/v1312461204/dfd-sports/products/sample.jpg
- * -> "dfd-sports/products/sample"
+ * Supports:
+ * - standard URLs: https://res.cloudinary.com/demo/image/upload/v1312461204/dfd-sports/products/sample.jpg
+ * - URLs with transformations: .../image/upload/f_auto,q_auto/v1791293795/Abstract_Brush.png
+ * - URLs without versions: .../image/upload/dfd-sports/products/sample.png
+ * - Encoded URLs with spaces / special characters
  */
 export function extractPublicId(urlOrId: string): string | null {
   if (!urlOrId) return null;
@@ -22,29 +24,60 @@ export function extractPublicId(urlOrId: string): string | null {
 
   // If it's already a public_id (no protocol)
   if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
-    return trimmed;
+    const clean = trimmed.split('?')[0].split('#')[0];
+    const lastDot = clean.lastIndexOf('.');
+    if (lastDot !== -1 && lastDot > clean.lastIndexOf('/')) {
+      return decodeURIComponent(clean.substring(0, lastDot));
+    }
+    return decodeURIComponent(clean);
   }
 
   try {
-    const url = new URL(trimmed);
-    if (!url.hostname.includes('cloudinary.com')) {
+    const parsedUrl = new URL(trimmed);
+    if (!parsedUrl.hostname.includes('cloudinary.com')) {
       return null;
     }
 
-    const segments = url.pathname.split('/upload/');
-    if (segments.length < 2) return null;
-
-    let pathAfterUpload = segments[1];
-    // Remove optional version segment like "v1712345678/"
-    pathAfterUpload = pathAfterUpload.replace(/^v\d+\//, '');
-
-    // Remove file extension
-    const lastDotIndex = pathAfterUpload.lastIndexOf('.');
-    if (lastDotIndex !== -1) {
-      return pathAfterUpload.substring(0, lastDotIndex);
+    const decodedPath = decodeURIComponent(parsedUrl.pathname);
+    // Cloudinary URLs standard: /<cloud>/<resource_type>/<type>/[<transformations>/][<version>/]<public_id>.<ext>
+    const match = decodedPath.match(/\/(?:upload|private|authenticated)\/(.+)$/);
+    if (!match || !match[1]) {
+      return null;
     }
 
-    return pathAfterUpload;
+    const pathAfterUpload = match[1];
+    const segments = pathAfterUpload.split('/');
+
+    // Check if there is a version segment like "v1712345678"
+    const versionIdx = segments.findIndex((seg) => /^v\d+$/.test(seg));
+
+    let publicIdSegments: string[];
+    if (versionIdx !== -1) {
+      publicIdSegments = segments.slice(versionIdx + 1);
+    } else {
+      // Skip leading transformation segments if any
+      let startIdx = 0;
+      while (
+        startIdx < segments.length - 1 &&
+        (segments[startIdx].includes(',') ||
+          /^[a-z]{1,3}_[a-zA-Z0-9_,-]+$/.test(segments[startIdx]))
+      ) {
+        startIdx++;
+      }
+      publicIdSegments = segments.slice(startIdx);
+    }
+
+    if (publicIdSegments.length === 0) return null;
+
+    let fullPublicId = publicIdSegments.join('/');
+
+    // Remove file extension from the final segment (.png, .jpg, etc.)
+    const lastDot = fullPublicId.lastIndexOf('.');
+    if (lastDot !== -1 && lastDot > fullPublicId.lastIndexOf('/')) {
+      fullPublicId = fullPublicId.substring(0, lastDot);
+    }
+
+    return fullPublicId;
   } catch {
     return null;
   }
@@ -70,7 +103,8 @@ export async function uploadToCloudinary(
 }
 
 /**
- * Deletes a file from Cloudinary given its public_id or full URL
+ * Deletes a file from Cloudinary given its public_id or full URL.
+ * Automatically tries 'image', 'raw', and 'video' resource types and name variations.
  */
 export async function deleteFromCloudinary(
   urlOrPublicId: string
@@ -81,18 +115,73 @@ export async function deleteFromCloudinary(
   }
 
   try {
-    const res = await cloudinary.uploader.destroy(publicId, {
+    // 1. Try destroying as resource_type: 'image'
+    let res = await cloudinary.uploader.destroy(publicId, {
       invalidate: true,
+      resource_type: 'image',
     });
+
+    // 2. Fallback to resource_type: 'raw' (SVGs, PDFs, generic assets)
+    if (res.result === 'not found') {
+      const rawRes = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+        resource_type: 'raw',
+      });
+      if (rawRes.result === 'ok') {
+        res = rawRes;
+      }
+    }
+
+    // 3. Fallback to resource_type: 'video'
+    if (res.result === 'not found') {
+      const videoRes = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+        resource_type: 'video',
+      });
+      if (videoRes.result === 'ok') {
+        res = videoRes;
+      }
+    }
+
+    // 4. Fallback for public IDs with spaces converted to underscores
+    if (res.result === 'not found' && publicId.includes(' ')) {
+      const underscoreId = publicId.replace(/ /g, '_');
+      const retryRes = await cloudinary.uploader.destroy(underscoreId, {
+        invalidate: true,
+        resource_type: 'image',
+      });
+      if (retryRes.result === 'ok') {
+        res = retryRes;
+      }
+    }
+
+    // 5. Fallback with original file extension if raw asset kept extension
+    if (res.result === 'not found') {
+      const extMatch = urlOrPublicId.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
+      if (extMatch && extMatch[1]) {
+        const idWithExt = `${publicId}.${extMatch[1]}`;
+        const rawWithExtRes = await cloudinary.uploader.destroy(idWithExt, {
+          invalidate: true,
+          resource_type: 'raw',
+        });
+        if (rawWithExtRes.result === 'ok') {
+          res = rawWithExtRes;
+        }
+      }
+    }
+
+    console.log(`[Cloudinary Destroy] "${publicId}" -> ${res.result}`);
+
     return {
       success: res.result === 'ok' || res.result === 'not found',
       result: res.result,
     };
-  } catch (error: any) {
-    console.error('Error deleting from Cloudinary:', error);
+  } catch (error: unknown) {
+    const err = error as Error | undefined;
+    console.error('[Cloudinary Destroy Error]:', error);
     return {
       success: false,
-      message: error?.message || 'Cloudinary delete failed',
+      message: err?.message || 'Cloudinary delete failed',
     };
   }
 }

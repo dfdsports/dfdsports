@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { getActiveFabrics } from '@/services/fabrics';
 import { getCompanySettings } from '@/services/company';
 import { Header } from '@/components/layout/Header';
@@ -7,6 +8,22 @@ import { CustomTeamwearBuilder } from '@/components/teamwear/CustomTeamwearBuild
 import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: 'Custom Sublimation Sports Jerseys & Teamwear | DFD Sports',
+  description:
+    'Design and order custom sublimation team jerseys, kits, and athletic apparel tailored for schools, clubs, academies, and tournaments across India.',
+  alternates: {
+    canonical: 'https://dfdsports.com/custom-jerseys',
+  },
+  openGraph: {
+    title: 'Custom Sublimation Sports Jerseys & Teamwear | DFD Sports',
+    description:
+      'Design and order custom sublimation team jerseys, kits, and athletic apparel tailored for schools, clubs, academies, and tournaments across India.',
+    url: 'https://dfdsports.com/custom-jerseys',
+    type: 'website',
+  },
+};
 
 export default async function CustomJerseysPage() {
   const [company, fabrics] = await Promise.all([

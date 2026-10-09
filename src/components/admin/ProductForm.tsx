@@ -215,6 +215,20 @@ export function ProductForm({
       try {
         const supabase = createClient();
         if (mode === 'edit' && initialData?.id) {
+          // Cleanup replaced or removed main image from Cloudinary
+          if (initialData.image_url && initialData.image_url !== form.image_url) {
+            deleteImageFromCloudinary(initialData.image_url).catch(console.warn);
+          }
+          // Cleanup removed gallery images from Cloudinary
+          if (Array.isArray(initialData.images)) {
+            const removedGalleryImages = initialData.images.filter(
+              (img) => !form.images.includes(img)
+            );
+            if (removedGalleryImages.length > 0) {
+              deleteImageFromCloudinary(removedGalleryImages).catch(console.warn);
+            }
+          }
+
           const { error } = await supabase.from('products').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', initialData.id);
           if (error) throw error;
         } else {

@@ -45,9 +45,9 @@ export function FabricCollectionSection({ fabrics }: FabricCollectionSectionProp
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F5A623] mb-2 sm:mb-2.5">
               Premium fabric collection
             </p>
-            <h1 className="text-2xl sm:text-4xl font-semibold text-white uppercase font-black">
+            <h2 className="text-2xl sm:text-4xl font-semibold text-white uppercase font-black">
               Fabrics built for <span className="text-[#F5A623]">performance</span>
-            </h1>
+            </h2>
             <p className="hidden sm:block mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
               Breathable, durable and moisture-wicking fabrics for comfort on the field.
             </p>
