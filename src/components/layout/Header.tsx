@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { CompanySettings } from '@/types/database';
+import { CompanySettings, Category } from '@/types/database';
 import { createClient } from '@/lib/supabase/client';
 import {
   Menu,
@@ -20,6 +20,7 @@ import {
   Tag,
   Loader2,
   MessageCircle,
+  ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
@@ -37,6 +38,7 @@ export type { CartItem };
 
 interface HeaderProps {
   company?: CompanySettings | null;
+  categories?: Category[];
 }
 
 export interface WishlistItem {
@@ -60,7 +62,7 @@ interface SearchProductResult {
   category?: { name: string } | null;
 }
 
-export function Header({ company }: HeaderProps) {
+export function Header({ company, categories }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
@@ -69,6 +71,10 @@ export function Header({ company }: HeaderProps) {
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+
+  const [categoriesList, setCategoriesList] = useState<Category[]>(categories || []);
+  const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchProductResult[]>([]);
@@ -80,6 +86,30 @@ export function Header({ company }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
 
+  // Load active categories from Supabase if not provided as prop
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setCategoriesList(categories);
+      return;
+    }
+    async function loadCategories() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+        if (!error && data && data.length > 0) {
+          setCategoriesList(data as Category[]);
+        }
+      } catch (err) {
+        // Silently use fallbacks
+      }
+    }
+    loadCategories();
+  }, [categories]);
+
   // Dynamic navbar transparency on scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -90,10 +120,22 @@ export function Header({ company }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const displayedCategories =
+    categoriesList.length > 0
+      ? categoriesList
+      : ([
+          { id: '1', name: 'Cricket', slug: 'cricket', is_active: true },
+          { id: '2', name: 'Football', slug: 'football', is_active: true },
+          { id: '3', name: 'Badminton', slug: 'badminton', is_active: true },
+          { id: '4', name: 'Volleyball', slug: 'volleyball', is_active: true },
+          { id: '5', name: 'Basketball', slug: 'basketball', is_active: true },
+          { id: '6', name: 'Athletics & Track', slug: 'athletics-track', is_active: true },
+        ] as Category[]);
+
   // Navigation Links
   const navLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Collections', href: '/collections' },
+    { label: 'Categories', href: '/collections' },
     { label: 'Custom Jerseys', href: '/custom-jerseys' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
@@ -305,131 +347,248 @@ export function Header({ company }: HeaderProps) {
     router.push(`/collections?q=${encodeURIComponent(q)}`);
   };
 
+  const isWhiteNav = isScrolled || pathname !== '/';
+
   return (
     <>
       {/* ===================== MAIN HEADER ===================== */}
       <header
         className={cn(
           'sticky top-0 z-50 w-full transition-all duration-300',
-          pathname === '/' && '-mb-20',
-          isScrolled || mobileMenuOpen
-            ? 'bg-black shadow-lg shadow-black/40'
-            : 'bg-transparent '
+          pathname === '/' && '-mb-[76px]',
+          isWhiteNav
+            ? 'bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm'
+            : 'bg-transparent border-b border-white/10'
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group shrink-0">
-              <div className="relative w-25 h-25">
-                <div className="absolute rounded-full" />
-                <Image
-                  src="/logo.png"
-                  alt={brandName}
-                  fill
-                  sizes="100px"
-                  className="object-contain transition-transform group-hover:scale-105"
-              
-                />
-              </div>
-            </Link>
+        <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="relative flex items-center justify-between h-[76px]">
+            {/* Left: Logo + Vertical Divider */}
+            <div className="flex items-center gap-6 lg:gap-8 shrink-0">
+              <Link href="/" className="flex items-center group shrink-0">
+                <div className="relative w-28 h-10">
+                  <Image
+                    src="/logo.png"
+                    alt={brandName}
+                    fill
+                    sizes="112px"
+                    className="object-contain object-left transition-transform group-hover:scale-105"
+                    priority
+                  />
+                </div>
+              </Link>
+              <div
+                className={cn(
+                  'hidden sm:block h-8 w-[1px] transition-colors',
+                  isWhiteNav ? 'bg-neutral-200' : 'bg-white/20'
+                )}
+              />
+            </div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-7">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
+            {/* Center: Desktop Navigation Links (Title Case, Mohave font) */}
+            <nav className="hidden lg:flex items-center gap-7 xl:gap-9 absolute left-1/2 -translate-x-1/2">
+              {/* Home */}
+              <Link
+                href="/"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                className={cn(
+                  'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
+                  isWhiteNav
+                    ? pathname === '/'
+                      ? 'text-[#FF001E] font-bold'
+                      : 'text-neutral-800 hover:text-[#FF001E]'
+                    : pathname === '/'
+                    ? 'text-white font-semibold'
+                    : 'text-white/80 hover:text-white'
+                )}
+              >
+                Home
+              </Link>
+
+              {/* Categories Navlink with Hover Dropdown */}
+              <div
+                className="relative group py-6"
+                onMouseEnter={() => setCategoriesDropdownOpen(true)}
+                onMouseLeave={() => setCategoriesDropdownOpen(false)}
+              >
+                <Link
+                  href="/collections"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
+                    isWhiteNav
+                      ? pathname.startsWith('/collections')
+                        ? 'text-[#FF001E] font-bold'
+                        : 'text-neutral-800 hover:text-[#FF001E]'
+                      : 'text-white/80 hover:text-white'
+                  )}
+                >
+                  <span>Categories</span>
+                  <ChevronDown
                     className={cn(
-                      'text-sm font-medium tracking-wide transition-colors relative py-1',
-                      isActive ? 'text-white' : 'text-white hover:text-white'
+                      'w-4 h-4 transition-transform duration-200 group-hover:rotate-180',
+                      isWhiteNav
+                        ? 'text-neutral-500 group-hover:text-[#FF001E]'
+                        : 'text-white/60 group-hover:text-white'
                     )}
-                  >
-                    {link.label}
-                    {isActive && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#F5A623] rounded-full" />
-                    )}
-                  </Link>
-                );
-              })}
+                  />
+                </Link>
+
+                {/* Dropdown Menu - Pure White Theme */}
+                <div
+                  className={cn(
+                    'absolute top-full left-1/2 -translate-x-1/2 w-64 pt-2 transition-all duration-200 z-50',
+                    categoriesDropdownOpen
+                      ? 'opacity-100 visible translate-y-0 pointer-events-auto'
+                      : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+                  )}
+                >
+                  <div className="bg-white border border-neutral-200 shadow-2xl p-2 rounded-none">
+                    {/* Top Red Accent Line */}
+                    <div className="h-[2px] w-full bg-[#FF001E] -mt-2 mb-2" />
+
+                    <div className="py-1">
+                      {displayedCategories.map((category) => (
+                        <Link
+                          key={category.id}
+                          href={`/collections?category=${encodeURIComponent(category.slug)}`}
+                          onClick={() => setCategoriesDropdownOpen(false)}
+                          style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                          className="flex items-center justify-between px-3.5 py-2.5 text-[15px] font-medium text-neutral-800 hover:text-[#FF001E] hover:bg-neutral-50 hover:pl-4 transition-all group/item uppercase tracking-wider"
+                        >
+                          <span>{category.name}</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-[#FF001E] opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all" />
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* View All Collections Footer Link */}
+                    <div className="pt-2 mt-1 border-t border-neutral-100">
+                      <Link
+                        href="/collections"
+                        onClick={() => setCategoriesDropdownOpen(false)}
+                        style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                        className="flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-[#FF001E] hover:bg-[#FF001E]/10 transition-colors"
+                      >
+                        <span>View All Collections</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom Jerseys */}
+              <Link
+                href="/custom-jerseys"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                className={cn(
+                  'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
+                  isWhiteNav
+                    ? pathname === '/custom-jerseys'
+                      ? 'text-[#FF001E] font-bold'
+                      : 'text-neutral-800 hover:text-[#FF001E]'
+                    : 'text-white/80 hover:text-white'
+                )}
+              >
+                Custom Jerseys
+              </Link>
+
+              {/* About */}
+              <Link
+                href="/about"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                className={cn(
+                  'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
+                  isWhiteNav
+                    ? pathname === '/about'
+                      ? 'text-[#FF001E] font-bold'
+                      : 'text-neutral-800 hover:text-[#FF001E]'
+                    : 'text-white/80 hover:text-white'
+                )}
+              >
+                About
+              </Link>
+
+              {/* Contact */}
+              <Link
+                href="/contact"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                className={cn(
+                  'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
+                  isWhiteNav
+                    ? pathname === '/contact'
+                      ? 'text-[#FF001E] font-bold'
+                      : 'text-neutral-800 hover:text-[#FF001E]'
+                    : 'text-white/80 hover:text-white'
+                )}
+              >
+                Contact
+              </Link>
             </nav>
 
-            {/* Header Action Icons (Search, Wishlist, Add to Cart) */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Desktop Search Trigger Pill (Modern Luxury Glass Pill) */}
+            {/* Right: Search Icon + Cart Icon */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Search Icon Button */}
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search Catalog"
-                className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-gray-300 hover:text-white transition-all text-xs group shadow-inner"
-                title="Search Products"
-              >
-                <Search className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-                <span className="text-gray-400 group-hover:text-gray-200">Search sports gear, jerseys...</span>
-              </button>
-
-              {/* Mobile & Tablet Search Icon Button */}
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                aria-label="Search Catalog"
-                className="xl:hidden relative p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all"
-                title="Search Products"
-              >
-                <Search className="w-5 h-5 text-amber-400" />
-              </button>
-
-              {/* Wishlist Icon Button - Hidden on mobile, accessible in mobile menu */}
-              <button
-                type="button"
-                onClick={() => setWishlistOpen(true)}
-                aria-label="View Wishlist"
-                className="hidden sm:flex relative p-2.5 rounded-xl text-gray-300 hover:text-[#F5A623] hover:bg-white/10 transition-colors"
-                title="Wishlist"
-              >
-                <Heart className="w-5 h-5" />
-                {totalWishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-black bg-[#F5A623] rounded-full shadow-md">
-                    {totalWishlistCount}
-                  </span>
+                className={cn(
+                  'p-2.5 rounded-none active:scale-95 transition-all cursor-pointer',
+                  isWhiteNav
+                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
+                    : 'text-white/85 hover:text-white hover:bg-white/10'
                 )}
+                title="Search Products"
+              >
+                <Search className="w-5 h-5" />
               </button>
 
-              {/* Add To Cart / Cart Button */}
+              {/* Cart Icon Button with Counter Badge */}
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
                 aria-label="View Cart"
-                className="relative p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                className={cn(
+                  'relative p-2.5 rounded-none active:scale-95 transition-all cursor-pointer',
+                  isWhiteNav
+                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
+                    : 'text-white/85 hover:text-white hover:bg-white/10'
+                )}
                 title="Shopping Cart"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {totalCartCount > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-black bg-[#F5A623] rounded-full shadow-md">
+                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-[#FF001E] rounded-full shadow-md">
                     {totalCartCount}
                   </span>
                 )}
               </button>
 
-              {/* Mobile Menu Hamburger */}
+              {/* Mobile Navigation Menu Toggle */}
               <button
+                type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 focus:outline-none lg:hidden ml-1"
+                className={cn(
+                  'lg:hidden p-2.5 rounded-none active:scale-95 transition-all cursor-pointer ml-1',
+                  isWhiteNav
+                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
+                    : 'text-white/85 hover:text-white hover:bg-white/10'
+                )}
                 aria-label="Open Navigation Menu"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ===================== MOBILE NAVIGATION DRAWER (RIGHT SIDE) ===================== */}
+      {/* ===================== SIDE NAVIGATION DRAWER (DESKTOP & MOBILE) ===================== */}
       <div
         className={cn(
-          'lg:hidden fixed inset-0 z-[85] transition-[opacity,visibility] duration-300',
+          'fixed inset-0 z-[85] transition-[opacity,visibility] duration-300',
           mobileMenuOpen ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'
         )}
         aria-hidden={!mobileMenuOpen}
@@ -437,112 +596,171 @@ export function Header({ company }: HeaderProps) {
         {/* Backdrop overlay */}
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="absolute inset-0 bg-[#080A0F]/75 backdrop-blur-md transition-opacity"
+          className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity"
         />
 
         {/* Sliding Drawer from Right */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-[#0B0E14] shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-white border-l border-neutral-200 shadow-2xl flex flex-col h-full overflow-hidden transition-transform duration-300 ease-in-out',
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Drawer Top Header */}
-          <div>
-            <div className="flex items-center justify-between px-5 py-4 bg-[#0D111A]">
-              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="relative w-28 h-10 block">
-                <div className="absolute inset-0 rounded-full bg-white/[0.08] blur-sm pointer-events-none" />
-                <Image
-                  src="/logo.png"
-                  alt={brandName}
-                  fill
-                  sizes="120px"
-                  className="object-contain object-left"
-                  style={{
-                    filter:
-                      'drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) brightness(1.15)',
-                  }}
-                />
-              </Link>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Navigation Links List */}
-            <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-260px)]">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      'flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all',
-                      isActive
-                        ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-[#F5A623] font-bold'
-                        : 'text-gray-200 hover:bg-white/5 hover:text-white'
-                    )}
-                  >
-                    <span>{link.label}</span>
-                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623]" />}
-                  </Link>
-                );
-              })}
-
-              <div className="pt-2 my-2 space-y-1">
-                {/* Wishlist on Menubar */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setWishlistOpen(true);
-                  }}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold tracking-wide text-gray-200 hover:bg-white/5 hover:text-white transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <Heart className="w-4 h-4 text-[#F5A623] group-hover:scale-110 transition-transform" />
-                    <span>My Wishlist</span>
-                  </div>
-                  {totalWishlistCount > 0 ? (
-                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#F5A623] text-black">
-                      {totalWishlistCount}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-gray-500 font-mono">0</span>
-                  )}
-                </button>
-              </div>
-            </nav>
+          <div className="flex-shrink-0 flex items-center justify-between px-5 py-4 bg-white border-b border-neutral-200">
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="relative w-28 h-10 block">
+              <Image
+                src="/logo.png"
+                alt={brandName}
+                fill
+                sizes="120px"
+                className="object-contain object-left"
+              />
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Full-size Bottom on Menubar */}
-          <div className="p-4 bg-[#0D111A] space-y-2.5">
+          {/* Navigation Links List (Scrollable) */}
+          <nav className="flex-1 min-h-0 overflow-y-auto p-4 space-y-1 overscroll-contain">
+            {navLinks.map((link) => {
+              if (link.label === 'Categories') {
+                const isActive = pathname.startsWith('/collections');
+                return (
+                  <div key={link.label} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href="/collections"
+                        onClick={() => setMobileMenuOpen(false)}
+                        style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                        className={cn(
+                          'flex-1 flex items-center justify-between px-4 py-3 rounded-none text-base font-semibold tracking-wider transition-all uppercase',
+                          isActive
+                            ? 'bg-[#FF001E]/10 text-[#FF001E] font-bold border-l-2 border-[#FF001E]'
+                            : 'text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950'
+                        )}
+                      >
+                        <span>Categories</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
+                        className="p-3 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
+                        aria-label="Toggle categories list"
+                      >
+                        <ChevronDown
+                          className={cn(
+                            'w-4 h-4 transition-transform duration-200',
+                            mobileCategoriesOpen && 'rotate-180 text-[#FF001E]'
+                          )}
+                        />
+                      </button>
+                    </div>
+
+                    {mobileCategoriesOpen && (
+                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-neutral-200 ml-4">
+                        {displayedCategories.map((cat) => (
+                          <Link
+                            key={cat.id}
+                            href={`/collections?category=${encodeURIComponent(cat.slug)}`}
+                            onClick={() => setMobileMenuOpen(false)}
+                            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                            className="block px-3 py-2 text-sm font-medium text-neutral-700 hover:text-[#FF001E] hover:bg-neutral-50 rounded-none transition-all uppercase tracking-wide"
+                          >
+                            {cat.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  className={cn(
+                    'flex items-center justify-between px-4 py-3 rounded-none text-base font-semibold tracking-wider transition-all uppercase',
+                    isActive
+                      ? 'bg-[#FF001E]/10 text-[#FF001E] font-bold border-l-2 border-[#FF001E]'
+                      : 'text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950'
+                  )}
+                >
+                  <span>{link.label}</span>
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FF001E]" />}
+                </Link>
+              );
+            })}
+
+            <div className="pt-3 my-2 space-y-1.5 border-t border-neutral-200">
+              {/* Cart in Drawer */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setCartOpen(true);
+                }}
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-4 h-4 text-[#FF001E] group-hover:scale-110 transition-transform" />
+                  <span>My Cart</span>
+                </div>
+                {totalCartCount > 0 ? (
+                  <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#FF001E] text-white">
+                    {totalCartCount}
+                  </span>
+                ) : (
+                  <span className="text-xs text-neutral-400 font-mono">0</span>
+                )}
+              </button>
+
+              {/* Wishlist in Drawer */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setWishlistOpen(true);
+                }}
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <Heart className="w-4 h-4 text-[#FF001E] group-hover:scale-110 transition-transform" />
+                  <span>My Wishlist</span>
+                </div>
+                {totalWishlistCount > 0 ? (
+                  <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#FF001E] text-white">
+                    {totalWishlistCount}
+                  </span>
+                ) : (
+                  <span className="text-xs text-neutral-400 font-mono">0</span>
+                )}
+              </button>
+            </div>
+          </nav>
+
+          {/* Full-size Bottom on Menubar (Always Visible / Sticky Bottom) */}
+          <div className="flex-shrink-0 p-4 bg-white border-t border-neutral-200">
             {/* WhatsApp Enquiry Button */}
             <a
               href={`https://wa.me/${(company?.whatsapp_number || '919876543210').replace(/\D/g, '')}?text=${encodeURIComponent('Hi DFD Sports, I would like to inquire about your products.')}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition-all active:scale-95 cursor-pointer"
+              className="w-full py-3.5 px-4 rounded-none bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-md"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Enquiry</span>
             </a>
-
-            {/* Contact Footer Details */}
-            {company?.phone && (
-              <div className="pt-1 text-center">
-                <p className="text-[11px] text-gray-400">
-                  Customer Support: <a href={`tel:${company.phone}`} className="text-[#F5A623] hover:underline font-mono font-medium">{company.phone}</a>
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -558,32 +776,34 @@ export function Header({ company }: HeaderProps) {
         {/* Backdrop blur overlay */}
         <div
           onClick={() => setCartOpen(false)}
-          className="absolute inset-0 bg-[#080A0F]/70 backdrop-blur-md transition-opacity"
+          className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity"
         />
 
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-white border-l border-neutral-200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             cartOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 bg-[#0D111A]">
+          <div className="flex items-center justify-between px-6 py-5 bg-white border-b border-neutral-200">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-blue-500/10 text-[#2563EB]">
+              <div className="p-2.5 rounded-none bg-neutral-100 text-[#FF001E]">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white tracking-wide">Your Cart</h2>
-                <p className="text-xs text-gray-400">
+                <h2 className="text-base font-bold text-neutral-950 tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  Your Cart
+                </h2>
+                <p className="text-xs text-neutral-500 font-medium">
                   {totalCartCount} {totalCartCount === 1 ? 'item' : 'items'}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setCartOpen(false)}
-              className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
               aria-label="Close cart"
             >
               <X className="w-5 h-5" />
@@ -591,24 +811,24 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Cart Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#F8F9FA]">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-2xl bg-[#0E121B] border border-white/5 flex gap-3.5 shadow-sm hover:border-white/10 transition-colors"
+                  className="p-3.5 rounded-none bg-white border border-neutral-200 flex gap-3.5 shadow-sm hover:border-neutral-300 transition-all text-neutral-900"
                 >
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
+                      <div className="w-full h-full flex items-center justify-center text-neutral-400">
                         <Tag className="w-6 h-6" />
                       </div>
                     )}
@@ -619,33 +839,35 @@ export function Header({ company }: HeaderProps) {
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={() => setCartOpen(false)}
-                      className="text-sm font-semibold text-white hover:text-[#F5A623] transition-colors line-clamp-2"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                      className="text-sm font-bold text-neutral-900 hover:text-[#FF001E] transition-colors line-clamp-2 uppercase tracking-wide"
                     >
                       {item.name}
                     </Link>
 
                     {item.size ? (
-                      <p className="mt-1 text-xs text-gray-400 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-bold text-[#F5A623] px-1.5 py-0.5 rounded bg-[#F5A623]/10 uppercase text-[11px]">
+                        <span className="font-bold text-neutral-800 px-1.5 py-0.5 rounded-none bg-neutral-100 border border-neutral-200 uppercase text-[11px]">
                           {item.size}
                         </span>
                       </p>
                     ) : (
-                      <p className="mt-1 text-xs text-gray-400 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-medium text-gray-300 px-1.5 py-0.5 rounded bg-white/5 uppercase text-[11px]">
+                        <span className="font-medium text-neutral-700 px-1.5 py-0.5 rounded-none bg-neutral-100 border border-neutral-200 uppercase text-[11px]">
                           Standard
                         </span>
                       </p>
                     )}
 
                     <div className="mt-2.5 flex items-center justify-between">
-                      <div className="flex items-center rounded-lg bg-white/5">
+                      {/* Quantity Controls */}
+                      <div className="flex items-center rounded-none bg-neutral-100 border border-neutral-200">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                          className="p-1 text-neutral-600 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3.5 h-3.5" />
@@ -656,27 +878,28 @@ export function Header({ company }: HeaderProps) {
                           max="999"
                           value={item.quantity}
                           onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 1)}
-                          className="w-10 text-center bg-transparent text-xs font-semibold text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          className="w-10 text-center bg-transparent text-xs font-bold text-neutral-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           aria-label="Quantity"
                         />
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                          className="p-1 text-neutral-600 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
 
+                      {/* Price & Remove */}
                       <div className="flex items-center gap-3">
                         {item.price != null && (
                           <div className="text-right">
-                            <span className="text-sm font-bold text-[#F5A623]">
+                            <span className="text-sm font-bold text-neutral-900" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                               ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                             </span>
                             {item.quantity > 1 && (
-                              <span className="block text-[10px] text-gray-400 font-medium">
+                              <span className="block text-[10px] text-neutral-500 font-medium">
                                 (₹{item.price.toLocaleString('en-IN')} ea)
                               </span>
                             )}
@@ -685,7 +908,7 @@ export function Header({ company }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => removeCartItem(item.id)}
-                          className="p-1 text-gray-500 hover:text-red-400 transition-colors cursor-pointer"
+                          className="p-1 text-neutral-400 hover:text-[#FF001E] hover:bg-red-50 rounded-none transition-colors cursor-pointer"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -696,18 +919,21 @@ export function Header({ company }: HeaderProps) {
                 </div>
               ))
             ) : (
-              <div className="py-16 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-gray-500 mb-4">
+              <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-neutral-200 p-8">
+                <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mb-4">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
-                <h3 className="text-base font-bold text-white mb-1">Your cart is empty</h3>
-                <p className="text-xs text-gray-400 max-w-xs mb-6">
-                  Explore genuine tournament equipment, jerseys, and custom sports gear.
+                <h3 className="text-base font-bold text-neutral-900 mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  Your cart is empty
+                </h3>
+                <p className="text-xs text-neutral-500 max-w-xs mb-6">
+                  Explore tournament equipment, jerseys, and custom sports gear.
                 </p>
                 <Link
                   href="/collections"
                   onClick={() => setCartOpen(false)}
-                  className="px-5 py-2.5 rounded-xl bg-[#F5A623] hover:bg-[#e09418] text-black font-bold text-xs uppercase tracking-wider transition-all"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  className="px-6 py-2.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md"
                 >
                   Explore Collections
                 </Link>
@@ -717,14 +943,25 @@ export function Header({ company }: HeaderProps) {
 
           {/* Cart Footer */}
           {cartItems.length > 0 && (
-            <div className="p-6 bg-[#0D111A]">
+            <div className="p-5 sm:p-6 bg-white border-t border-neutral-200 space-y-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold text-neutral-500 uppercase tracking-wider text-xs">Subtotal</span>
+                  <span className="font-bold text-lg text-neutral-950" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                    ₹{cartSubtotal.toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <p className="text-[11px] text-neutral-400">Shipping, taxes and custom print details finalized via WhatsApp checkout.</p>
+              </div>
+
               <button
                 type="button"
                 onClick={() => {
                   setCartOpen(false);
                   setCheckoutModalOpen(true);
                 }}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#1E3A8A] via-[#2563EB] to-[#F5A623] hover:opacity-95 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-blue-900/30 transition-all hover:scale-[1.02] cursor-pointer"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                className="w-full py-3.5 px-4 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-red-500/20 active:scale-[0.99] transition-all cursor-pointer"
               >
                 <span>Proceed To Checkout</span>
                 <ArrowRight className="w-4 h-4" />
@@ -745,32 +982,34 @@ export function Header({ company }: HeaderProps) {
         {/* Backdrop blur overlay */}
         <div
           onClick={() => setWishlistOpen(false)}
-          className="absolute inset-0 bg-[#080A0F]/70 backdrop-blur-md transition-opacity"
+          className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity"
         />
 
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-[#0B0E14] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-white border-l border-neutral-200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             wishlistOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 bg-[#0D111A]">
+          <div className="flex items-center justify-between px-6 py-5 bg-white border-b border-neutral-200">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-amber-500/10 text-[#F5A623]">
+              <div className="p-2.5 rounded-none bg-amber-50 text-[#F5A623]">
                 <Heart className="w-5 h-5 fill-[#F5A623]" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white tracking-wide">Your Wishlist</h2>
-                <p className="text-xs text-gray-400">
+                <h2 className="text-base font-bold text-neutral-950 tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  Your Wishlist
+                </h2>
+                <p className="text-xs text-neutral-500 font-medium">
                   {totalWishlistCount} {totalWishlistCount === 1 ? 'item' : 'items'}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setWishlistOpen(false)}
-              className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
               aria-label="Close wishlist"
             >
               <X className="w-5 h-5" />
@@ -778,24 +1017,24 @@ export function Header({ company }: HeaderProps) {
           </div>
 
           {/* Wishlist Item List */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#F8F9FA]">
             {wishlistItems.length > 0 ? (
               wishlistItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-2xl bg-[#0E121B] border border-white/5 flex gap-3.5 shadow-sm hover:border-white/10 transition-colors"
+                  className="p-3.5 rounded-none bg-white border border-neutral-200 flex gap-3.5 shadow-sm hover:border-neutral-300 transition-all text-neutral-900"
                 >
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 rounded-xl bg-white/5 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
+                      <div className="w-full h-full flex items-center justify-center text-neutral-400">
                         <Tag className="w-6 h-6" />
                       </div>
                     )}
@@ -806,19 +1045,20 @@ export function Header({ company }: HeaderProps) {
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={() => setWishlistOpen(false)}
-                      className="text-sm font-semibold text-white hover:text-[#F5A623] transition-colors line-clamp-2"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                      className="text-sm font-bold text-neutral-900 hover:text-[#F5A623] transition-colors line-clamp-2 uppercase tracking-wide"
                     >
                       {item.name}
                     </Link>
                     {item.category && (
-                      <span className="inline-block mt-1 text-[11px] font-medium text-gray-400">
+                      <span className="inline-block mt-1 text-[11px] font-medium text-neutral-500">
                         {item.category}
                       </span>
                     )}
 
                     <div className="mt-3 flex items-center justify-between">
                       {item.price != null && (
-                        <span className="text-sm font-bold text-[#F5A623]">
+                        <span className="text-sm font-bold text-neutral-950" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                           ₹{item.price.toLocaleString('en-IN')}
                         </span>
                       )}
@@ -827,7 +1067,8 @@ export function Header({ company }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => moveToCart(item)}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-200 hover:text-white text-xs font-semibold tracking-wider transition-colors flex items-center gap-1.5"
+                          style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                          className="px-3 py-1.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
                           <span>Move to Cart</span>
@@ -835,7 +1076,7 @@ export function Header({ company }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => removeWishlistItem(item.id)}
-                          className="p-1.5 text-gray-500 hover:text-red-400 transition-colors"
+                          className="p-1.5 text-neutral-400 hover:text-[#FF001E] hover:bg-red-50 rounded-none transition-colors"
                           aria-label="Remove from wishlist"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -846,18 +1087,21 @@ export function Header({ company }: HeaderProps) {
                 </div>
               ))
             ) : (
-              <div className="py-16 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-gray-500 mb-4">
+              <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-neutral-200 p-8">
+                <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mb-4">
                   <Heart className="w-8 h-8" />
                 </div>
-                <h3 className="text-base font-bold text-white mb-1">Your wishlist is empty</h3>
-                <p className="text-xs text-gray-400 max-w-xs mb-6">
+                <h3 className="text-base font-bold text-neutral-900 mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  Your wishlist is empty
+                </h3>
+                <p className="text-xs text-neutral-500 max-w-xs mb-6">
                   Save your favorite gear and sports equipment to view or purchase later.
                 </p>
                 <Link
                   href="/collections"
                   onClick={() => setWishlistOpen(false)}
-                  className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider transition-all"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  className="px-5 py-2.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md"
                 >
                   Browse Products
                 </Link>
@@ -878,34 +1122,34 @@ export function Header({ company }: HeaderProps) {
         {/* Blurred background overlay */}
         <div
           onClick={() => setSearchOpen(false)}
-          className="absolute inset-0 bg-[#06080E]/85 backdrop-blur-2xl transition-opacity"
+          className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity"
         />
 
-        {/* Search Dialog Container */}
+        {/* Search Dialog Container - Sharp Corners (Border Radius None) */}
         <div
           role="dialog"
           aria-label="Search catalog"
           className={cn(
-            'relative w-full max-w-2xl bg-[#0B0F19] rounded-2xl sm:rounded-3xl shadow-2xl shadow-black/90 backdrop-blur-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform',
+            'relative w-full max-w-2xl bg-white border border-neutral-200 rounded-none shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform',
             searchOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-2 opacity-0'
           )}
         >
-          {/* Main Search Input Form Header */}
+          {/* Main Search Input Form Header - Pure White BG, Border Radius None */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-[#0E1322] shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-white border-b border-neutral-200 rounded-none shrink-0"
           >
             {searchLoading ? (
-              <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#F5A623]" />
+              <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#FF001E]" />
             ) : (
-              <Search className="h-5 w-5 shrink-0 text-[#F5A623]" />
+              <Search className="h-5 w-5 shrink-0 text-[#FF001E]" />
             )}
             <input
               ref={searchInputRef}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search footballs, custom jerseys, cricket, equipment…"
-              className="w-full bg-transparent text-sm sm:text-base font-semibold text-white placeholder:text-gray-500 focus:outline-none"
+              className="w-full bg-white text-sm sm:text-base font-semibold text-neutral-900 placeholder:text-neutral-400 focus:outline-none rounded-none"
               autoComplete="off"
             />
             {searchQuery && (
@@ -915,7 +1159,7 @@ export function Header({ company }: HeaderProps) {
                   setSearchQuery('');
                   searchInputRef.current?.focus();
                 }}
-                className="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-white/5 hover:bg-white/10 transition-colors shrink-0"
+                className="text-xs text-neutral-600 hover:text-black px-2.5 py-1 rounded-none bg-neutral-100 hover:bg-neutral-200 transition-colors shrink-0 cursor-pointer font-medium"
                 aria-label="Clear query"
               >
                 Clear
@@ -927,7 +1171,7 @@ export function Header({ company }: HeaderProps) {
                 setSearchQuery('');
                 setSearchOpen(false);
               }}
-              className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              className="p-1.5 sm:p-2 rounded-none text-neutral-500 hover:text-black hover:bg-neutral-100 transition-colors shrink-0 cursor-pointer"
               aria-label="Close search"
               title="Close search"
             >
@@ -937,22 +1181,21 @@ export function Header({ company }: HeaderProps) {
 
           {/* Search Content Body (Only displays when user types a query) */}
           {searchQuery.trim().length > 0 && (
-            <div className="max-h-[60vh] overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+            <div className="max-h-[60vh] overflow-y-auto overscroll-contain bg-white animate-in fade-in duration-200">
               {searchLoading ? (
-                <div className="px-5 py-12 flex flex-col items-center justify-center gap-3 text-gray-400 text-sm">
-                  <Loader2 className="w-7 h-7 animate-spin text-[#F5A623]" />
+                <div className="px-5 py-12 flex flex-col items-center justify-center gap-3 text-neutral-500 text-sm bg-white">
+                  <Loader2 className="w-7 h-7 animate-spin text-[#FF001E]" />
                   <span>Searching catalog products…</span>
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="px-5 py-2.5 flex items-center justify-between bg-white/[0.02]">
-                    <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  <div className="px-5 py-2.5 flex items-center justify-between bg-neutral-50 border-b border-neutral-200">
+                    <p className="text-xs font-bold uppercase tracking-wider text-neutral-500" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                       Matching Products ({searchResults.length})
                     </p>
-                    <span className="text-[11px] text-[#F5A623] font-medium hidden sm:inline">Use ↑ ↓ and Enter</span>
                   </div>
 
-                  <ul className="space-y-0.5">
+                  <ul className="divide-y divide-neutral-100">
                     {searchResults.map((p, idx) => {
                       const isSelected = selectedIndex === idx;
                       return (
@@ -962,10 +1205,10 @@ export function Header({ company }: HeaderProps) {
                             onClick={() => setSearchOpen(false)}
                             className={cn(
                               'flex items-center gap-3.5 px-4 sm:px-5 py-3.5 transition-colors group',
-                              isSelected ? 'bg-amber-500/15' : 'hover:bg-white/5'
+                              isSelected ? 'bg-neutral-100' : 'hover:bg-neutral-50'
                             )}
                           >
-                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-xl bg-white/5 overflow-hidden shrink-0">
+                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-none bg-neutral-50 overflow-hidden shrink-0 border border-neutral-200">
                               {p.image_url ? (
                                 <Image
                                   src={p.image_url}
@@ -974,29 +1217,29 @@ export function Header({ company }: HeaderProps) {
                                   className="object-cover group-hover:scale-105 transition-transform"
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-500">
+                                <div className="w-full h-full flex items-center justify-center text-neutral-400">
                                   <Tag className="w-5 h-5" />
                                 </div>
                               )}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm font-bold text-white group-hover:text-[#F5A623] transition-colors truncate">
+                              <p className="text-sm font-bold text-neutral-900 group-hover:text-[#FF001E] transition-colors truncate" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                                 {p.name}
                               </p>
                               <div className="flex items-center gap-2 mt-1">
                                 {p.category?.name && (
-                                  <span className="text-[10px] font-medium text-gray-300 bg-white/5 px-2 py-0.5 rounded-md inline-block">
+                                  <span className="text-[10px] font-semibold text-neutral-600 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded-none inline-block uppercase">
                                     {p.category.name}
                                   </span>
                                 )}
                                 {p.price != null && (
-                                  <span className="text-xs font-bold text-amber-400">
+                                  <span className="text-xs font-bold text-[#FF001E]" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                                     ₹{p.price.toLocaleString('en-IN')}
                                   </span>
                                 )}
                               </div>
                             </div>
-                            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-[#F5A623] group-hover:translate-x-1 transition-all shrink-0" />
+                            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-[#FF001E] group-hover:translate-x-1 transition-all shrink-0" />
                           </Link>
                         </li>
                       );
@@ -1004,20 +1247,21 @@ export function Header({ company }: HeaderProps) {
                   </ul>
                 </>
               ) : (
-                <div className="px-5 py-12 text-center">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-500 mx-auto mb-3">
+                <div className="px-5 py-12 text-center bg-white">
+                  <div className="w-12 h-12 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mx-auto mb-3">
                     <Search className="w-5 h-5" />
                   </div>
-                  <p className="text-sm font-bold text-white mb-1">
+                  <p className="text-sm font-bold text-neutral-900 mb-1" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                     No products found for &ldquo;{searchQuery.trim()}&rdquo;
                   </p>
-                  <p className="text-xs text-gray-400 max-w-xs mx-auto mb-4 leading-relaxed">
+                  <p className="text-xs text-neutral-500 max-w-xs mx-auto mb-4 leading-relaxed">
                     Try searching with keywords like football, jersey, nivia, cricket or badminton.
                   </p>
                   <Link
                     href="/collections"
                     onClick={() => setSearchOpen(false)}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold uppercase tracking-wider transition-all"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
                   >
                     <span>Browse All Collections</span>
                     <ArrowRight className="w-3.5 h-3.5" />

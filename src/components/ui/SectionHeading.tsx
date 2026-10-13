@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 interface SectionHeadingProps {
   eyebrow?: string;
   title: string;
-  highlightWord?: string;
   subtitle?: string;
   className?: string;
   align?: 'left' | 'center' | 'between';
@@ -12,30 +11,12 @@ interface SectionHeadingProps {
 }
 
 export function SectionHeading({
-  eyebrow,
   title,
-  highlightWord,
   subtitle,
   className,
   align = 'left',
   action,
 }: SectionHeadingProps) {
-  let renderedTitle: React.ReactNode = title;
-  if (highlightWord && title.includes(highlightWord)) {
-    const parts = title.split(highlightWord);
-    renderedTitle = (
-      <>
-        {parts[0]}
-        <span className="relative whitespace-nowrap text-[#F5A623]">
-          {highlightWord}
-          {/* soft underline stroke */}
-       
-        </span>
-        {parts.slice(1).join(highlightWord)}
-      </>
-    );
-  }
-
   const centered = align === 'center';
 
   return (
@@ -49,16 +30,14 @@ export function SectionHeading({
       )}
     >
       <div className={cn(centered && 'flex flex-col items-center')}>
-        
-
-        <h2 className="text-2xl sm:text-3xl leading-[1.1] tracking-tight text-white sm:text-4xl uppercase">
-          {renderedTitle}
+        <h2 className="text-2xl sm:text-3xl leading-[1.1] tracking-tight text-black sm:text-4xl uppercase">
+          {title}
         </h2>
 
         {subtitle && (
           <p
             className={cn(
-              'hidden sm:block mt-4 max-w-xl text-xs md:text-sm m-0 leading-relaxed text-gray-400',
+              'hidden sm:block mt-4 max-w-xl text-xs md:text-sm m-0 leading-relaxed text-black',
               centered && 'mx-auto'
             )}
           >

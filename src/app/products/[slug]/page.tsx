@@ -153,7 +153,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
@@ -164,43 +164,49 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       />
       <Header company={company} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 sm:py-10">
         {/* Navigation Breadcrumb */}
-        <div className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap">
-          <Link href="/collections" className="hover:text-white transition-colors">
+        <div
+          className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap"
+          style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+        >
+          <Link href="/collections" className="hover:text-neutral-950 transition-colors">
             Collections
           </Link>
-          <span>/</span>
+          <span className="text-neutral-300">/</span>
           {product.category && (
             <>
               <Link
                 href={`/collections/${product.category.slug}`}
-                className="hover:text-white transition-colors"
+                className="hover:text-neutral-950 transition-colors"
               >
                 {product.category.name}
               </Link>
-              <span>/</span>
+              <span className="text-neutral-300">/</span>
             </>
           )}
-          <span className="text-[#F5A623] truncate max-w-xs">{product.name}</span>
+          <span className="text-[#E8192C] font-bold truncate max-w-xs">{product.name}</span>
         </div>
 
         {/* Product Main Showcase & Interactive Actions */}
         <ProductDetailInteractive product={product} company={company} />
 
         {/* Long Description and Technical Specifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 pt-0 sm:pt-4 lg:pt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 pt-4 sm:pt-6 lg:pt-12 border-t border-neutral-200">
           {/* Long description */}
           <div className="lg:col-span-7">
-            <h3 className="text-xl font-black uppercase font-semibold text-white mb-4">
+            <h3
+              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+            >
               Product Overview
             </h3>
             {product.long_description ? (
-              <div className="prose prose-invert max-w-none text-sm text-gray-300 leading-relaxed whitespace-pre-line">
+              <div className="prose max-w-none text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
                 {product.long_description}
               </div>
             ) : (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-neutral-500">
                 {product.short_description || 'Detailed specifications and batch pricing available upon enquiry.'}
               </p>
             )}
@@ -208,20 +214,23 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
           {/* Technical Specs Key-Value Table */}
           <div className="lg:col-span-5">
-            <h3 className="text-xl font-black uppercase font-semibold tracking-tight text-white mb-4">
+            <h3
+              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+            >
               Specifications
             </h3>
             {product.specifications && Object.keys(product.specifications).length > 0 ? (
-              <div className="rounded-2xl overflow-hidden bg-[#0E121B]">
+              <div className="rounded-none overflow-hidden bg-neutral-50 border border-neutral-200 divide-y divide-neutral-200">
                 {Object.entries(product.specifications).map(([key, val]) => (
                   <div key={key} className="flex items-center justify-between p-3.5 text-xs">
-                    <span className="font-semibold text-gray-400 uppercase tracking-wider">{key}</span>
-                    <span className="font-mono text-gray-200">{val}</span>
+                    <span className="font-semibold text-neutral-500 uppercase tracking-wider">{key}</span>
+                    <span className="font-mono text-neutral-900 font-medium">{val}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-6 rounded-2xl bg-[#0E121B] text-xs text-gray-400">
+              <div className="p-6 rounded-none bg-neutral-50 border border-neutral-200 text-xs text-neutral-500">
                 Detailed technical specifications provided upon quotation request.
               </div>
             )}
@@ -230,8 +239,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
-          <div className="pt-16">
-            <h3 className="text-2xl font-black font-semibold uppercase text-white mb-8">
+          <div className="pt-12 border-t border-neutral-200">
+            <h3
+              className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-neutral-950 mb-8"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+            >
               Related Equipment & Gear
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">

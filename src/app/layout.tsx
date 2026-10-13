@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import { Outfit, Plus_Jakarta_Sans, Barlow_Condensed, Mohave, Barlow } from 'next/font/google';
 import './globals.css';
 import { Preloader } from '@/components/ui/Preloader';
 import { SITE_URL } from '@/lib/seo';
@@ -13,6 +13,27 @@ const outfit = Outfit({
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const mohave = Mohave({
+  subsets: ['latin'],
+  variable: '--font-mohave',
+  weight: ['400', '600', '700'],
+  display: 'swap',
+});
+
+const barlow = Barlow({
+  subsets: ['latin'],
+  variable: '--font-barlow-text',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  variable: '--font-barlow',
+  weight: ['700', '800'],
   display: 'swap',
 });
 
@@ -106,7 +127,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${jakarta.variable} dark scroll-smooth`}
+      className={`${outfit.variable} ${jakarta.variable} ${mohave.variable} ${barlow.variable} ${barlowCondensed.variable} dark scroll-smooth`}
       suppressHydrationWarning
     >
       <head>
@@ -140,7 +161,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-screen bg-[#080A0F] text-[#F3F4F6] font-sans antialiased selection:bg-[#F5A623] selection:text-[#080A0F]"
+        className="min-h-screen bg-white text-neutral-900 font-sans antialiased selection:bg-[#FF001E] selection:text-white"
         suppressHydrationWarning
       >
         <Preloader />

@@ -26,14 +26,18 @@ interface ProductDetailInteractiveProps {
 }
 
 export function ProductDetailInteractive({ product, company }: ProductDetailInteractiveProps) {
-  const allImages = [
-    ...(product.image_url ? [product.image_url] : []),
-    ...(product.images || []),
-  ];
+  const uniqueImages = React.useMemo(() => {
+    const list = [
+      ...(product.image_url ? [product.image_url] : []),
+      ...(product.images || []),
+    ].filter(Boolean);
+    return Array.from(new Set(list));
+  }, [product.image_url, product.images]);
 
   const [activeImage, setActiveImage] = useState<string>(
-    allImages.length > 0 ? allImages[0] : ''
+    uniqueImages.length > 0 ? uniqueImages[0] : ''
   );
+
   const availableSizes = Array.isArray(product.sizes)
     ? product.sizes
     : typeof product.sizes === 'string'
@@ -52,10 +56,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   // Sync active image if product changes
   useEffect(() => {
-    if (allImages.length > 0) {
-      setActiveImage(allImages[0]);
+    if (uniqueImages.length > 0) {
+      setActiveImage(uniqueImages[0]);
     }
-  }, [product.id]);
+  }, [product.id, uniqueImages]);
 
   // Sync wishlist status
   const syncWishlist = useCallback(() => {
@@ -140,117 +144,134 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-6 sm:mb-8 lg:mb-20">
-        {/* Left Column: Full-Section Image Showcase */}
-        <div className="lg:col-span-6 flex flex-col gap-4">
-          {/* Main Hero Image Taking Full Section Area */}
-          <div className="relative aspect-square w-full bg-white rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A0D14] shadow-2xl group flex items-center justify-center">
-            {activeImage ? (
-              <Image
-                src={activeImage}
-                alt={product.name}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-contain "
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center text-gray-600">
-                <Tag className="w-16 h-16 mb-2" />
-                <span className="text-xs uppercase tracking-widest font-bold">No Image Available</span>
-              </div>
-            )}
-
-            {/* Brand Badge */}
-            {product.brand?.name && (
-              <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-200 uppercase tracking-widest shadow-md">
-                {product.brand.name}
-              </div>
-            )}
-
-            {/* Wishlist Button */}
-            <button
-              type="button"
-              onClick={handleToggleWishlist}
-              title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-              aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-              className={cn(
-                'absolute top-4 right-4 sm:top-5 sm:right-5 z-20 w-10 h-10 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md transition-all duration-200 cursor-pointer active:scale-90',
-                isWishlisted
-                  ? 'bg-rose-500/20 text-rose-500'
-                  : 'bg-black/60 text-gray-300 hover:text-rose-500'
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-6 sm:mb-8 lg:mb-16">
+        {/* Left Column: Image Showcase with Large Image + Side/Bottom Thumbnails */}
+        <div className="lg:col-span-6 flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 sm:gap-4 w-full">
+            {/* 1. Main Large Hero Image - Height and Width change together at 1:1 square ratio */}
+            <div className="relative w-full max-w-[380px] sm:max-w-[460px] lg:max-w-[500px] xl:max-w-[520px] aspect-square rounded-none overflow-hidden bg-neutral-100 border border-neutral-200 shadow-sm group shrink-0">
+              {activeImage ? (
+                <Image
+                  src={activeImage}
+                  alt={product.name}
+                  fill
+                  priority
+                  quality={95}
+                  sizes="(min-width: 1024px) 520px, 380px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400">
+                  <Tag className="w-16 h-16 mb-2" />
+                  <span className="text-xs uppercase tracking-widest font-bold">No Image Available</span>
+                </div>
               )}
-            >
-              <Heart className={cn('w-5 h-5', isWishlisted ? 'fill-rose-500 text-rose-500' : '')} />
-            </button>
-          </div>
 
-          {/* Thumbnail Gallery (if multiple images exist) */}
-          {allImages.length > 1 && (
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
-              {allImages.map((img, i) => {
-                const isActive = activeImage === img;
-                return (
-                  <button
-                    type="button"
-                    key={i}
-                    onClick={() => setActiveImage(img)}
-                    className={cn(
-                      'relative w-20 h-20 rounded-xl overflow-hidden bg-[#0A0D14] p-1.5 shrink-0 transition-all cursor-pointer',
-                      isActive
-                        ? 'ring-2 ring-[#F5A623] scale-95'
-                        : 'opacity-70 hover:opacity-100'
-                    )}
-                  >
-                    <Image
-                      src={img}
-                      alt={`${product.name} thumbnail ${i + 1}`}
-                      fill
-                      sizes="80px"
-                      className="object-cover rounded-lg"
-                    />
-                  </button>
-                );
-              })}
+              {/* Brand Badge */}
+              {product.brand?.name && (
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 bg-neutral-950/85 backdrop-blur-md px-3 py-1 rounded-none text-xs font-bold text-white uppercase tracking-widest shadow-sm">
+                  {product.brand.name}
+                </div>
+              )}
+
+              {/* Wishlist Button - Background Removed */}
+              <button
+                type="button"
+                onClick={handleToggleWishlist}
+                title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+                className={cn(
+                  'absolute top-2 right-2 sm:top-3 sm:right-3 z-20 p-2 transition-all duration-200 cursor-pointer active:scale-90 bg-transparent border-0 outline-none drop-shadow-md',
+                  isWishlisted
+                    ? 'text-[#FF001E]'
+                    : 'text-neutral-800 hover:text-[#FF001E]'
+                )}
+              >
+                <Heart
+                  className={cn(
+                    'w-6 h-6 stroke-[2]',
+                    isWishlisted ? 'fill-[#FF001E] text-[#FF001E]' : 'fill-white/60 text-neutral-900 hover:fill-[#FF001E]/20'
+                  )}
+                />
+              </button>
             </div>
-          )}
+
+            {/* 2. Small Thumbnail Images: Mobile Bottom Center / Desktop Right-Side Down-by-Down */}
+            {uniqueImages.length > 0 && (
+              <div className="w-full sm:w-auto flex flex-row justify-center sm:flex-col sm:justify-start items-center sm:items-start gap-2.5 sm:gap-3 shrink-0 sm:self-start">
+                {uniqueImages.map((img, idx) => {
+                  const isActive = activeImage === img;
+                  return (
+                    <button
+                      type="button"
+                      key={idx}
+                      onClick={() => setActiveImage(img)}
+                      title={`View image ${idx + 1}`}
+                      aria-label={`View image ${idx + 1}`}
+                      className={cn(
+                        'relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 aspect-square rounded-none overflow-hidden bg-neutral-100 border transition-all cursor-pointer group text-left p-1 shrink-0',
+                        isActive
+                          ? 'border-[#FF001E] ring-2 ring-[#FF001E]'
+                          : 'border-neutral-200 opacity-75 hover:opacity-100 hover:border-neutral-400'
+                      )}
+                    >
+                      <Image
+                        src={img}
+                        alt={`${product.name} view ${idx + 1}`}
+                        fill
+                        sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 64px"
+                        className="object-contain transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right Column: Product Information & Action Suite */}
         <div className="lg:col-span-6 flex flex-col">
           {/* Category Tag */}
           {product.category && (
-            <p className="text-xs uppercase tracking-[0.25em] font-bold text-[#F5A623] mb-2">
+            <p
+              className="text-xs uppercase tracking-[0.25em] font-semibold text-[#E8192C] mb-2"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+            >
               {product.category.name}
             </p>
           )}
 
           {/* Product Title */}
-          <h1 className="text-2xl sm:text-4xl font-semibold uppercase tracking-tight text-white mb-3">
+          <h1
+            className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-neutral-950 mb-3"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+          >
             {product.name}
           </h1>
 
           {/* Price Display */}
-          <div className="flex items-baseline gap-3 mb-5">
+          {/* <div className="flex items-baseline gap-3 mb-5">
             {price !== null ? (
               <>
-                <span className="text-2xl sm:text-3xl font-black text-white">
+                <span className="text-2xl sm:text-3xl font-black text-neutral-950">
                   ₹{(price * quantity).toLocaleString('en-IN')}
                 </span>
                 {quantity > 1 && (
-                  <span className="text-xs font-semibold text-gray-400">
+                  <span className="text-xs font-semibold text-neutral-500">
                     (₹{price.toLocaleString('en-IN')} each)
                   </span>
                 )}
               </>
             ) : (
-              <span className="text-base font-semibold text-[#F5A623]">Price on Wholesale Inquiry</span>
+              <span className="text-base font-bold text-[#E8192C]">Price on Wholesale Inquiry</span>
             )}
-          </div>
+          </div> */}
 
           {/* Short Description */}
           {product.short_description && (
-            <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-6 font-normal">
+            <p className="text-sm sm:text-base text-neutral-600 leading-relaxed mb-6 font-normal">
               {product.short_description}
             </p>
           )}
@@ -259,11 +280,14 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           {availableSizes.length > 0 && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2.5">
-                <span className="text-xs font-bold uppercase tracking-wider text-gray-300">
+                <span
+                  className="text-xs font-bold uppercase tracking-wider text-neutral-900"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                >
                   Select Size / Specification:
                 </span>
                 {selectedSize && (
-                  <span className="text-xs text-[#F5A623]">Selected: {selectedSize}</span>
+                  <span className="text-xs font-bold text-[#E8192C]">Selected: {selectedSize}</span>
                 )}
               </div>
               <div className="flex flex-wrap gap-2.5">
@@ -275,11 +299,12 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer',
+                        'px-4 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border',
                         isSelected
-                          ? 'bg-[#F5A623] text-black shadow-md shadow-[#F5A623]/20'
-                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                          ? 'bg-[#FF001E] border-[#FF001E] text-white shadow-md'
+                          : 'border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50'
                       )}
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       {size}
                     </button>
@@ -292,13 +317,16 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           {/* Highlights & Features */}
           {product.features && product.features.length > 0 && (
             <div className="mb-8">
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-300 block mb-3">
+              <span
+                className="text-xs font-bold uppercase tracking-wider text-neutral-900 block mb-3"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+              >
                 Highlights & Features:
               </span>
               <ul className="space-y-2">
                 {product.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-300">
-                    <CheckCircle className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
+                  <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                    <CheckCircle className="w-4 h-4 text-[#FF001E] shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -311,12 +339,12 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
             {/* ROW 1: Quantity Stepper + Add to Cart */}
             <div className="flex items-center gap-3">
               {/* Quantity Stepper */}
-              <div className="flex items-center justify-between rounded-xl bg-white/[0.05] hover:bg-white/[0.08] transition-colors h-12 px-2 shrink-0">
+              <div className="flex items-center justify-between rounded-none border border-neutral-300 bg-white h-12 px-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(-1)}
                   disabled={quantity <= 1}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer active:scale-90"
+                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-90"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="w-4 h-4" />
@@ -330,13 +358,13 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                     const val = parseInt(e.target.value, 10);
                     setQuantity(isNaN(val) || val < 1 ? 1 : val);
                   }}
-                  className="w-10 text-center bg-transparent text-white font-bold text-sm focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-10 text-center bg-transparent text-neutral-950 font-bold text-sm focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
 
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(1)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active:scale-90"
+                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer active:scale-90"
                   aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4" />
@@ -348,11 +376,12 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 type="button"
                 onClick={handleAddToCart}
                 className={cn(
-                  'flex-1 h-12 px-6 rounded-xl font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]',
+                  'flex-1 h-12 px-6 rounded-none font-bold text-xs sm:text-sm uppercase tracking-[0.14em] flex items-center justify-center gap-2.5 shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98]',
                   isAdded
                     ? 'bg-emerald-600 text-white shadow-emerald-950/40'
-                    : 'bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B] hover:brightness-110 text-black shadow-[#F5A623]/25'
+                    : 'bg-[#FF001E] hover:bg-[#d6001a] text-white'
                 )}
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 {isAdded ? (
                   <>
@@ -361,8 +390,8 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                   </>
                 ) : (
                   <>
-                    <ShoppingCart className="w-4 h-4 text-black stroke-[2.5]" />
-                    <span className='font-semibold'>Add to Cart</span>
+                    <ShoppingCart className="w-4 h-4 text-white stroke-[2.5]" />
+                    <span>Add to Cart</span>
                   </>
                 )}
               </button>
@@ -372,10 +401,11 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
             <button
               type="button"
               onClick={() => setIsWhatsAppModalOpen(true)}
-              className="w-full h-12 px-6 rounded-xl bg-gradient-to-r from-[#22C55E] to-[#16A34A] hover:from-[#25D366] hover:to-[#22C55E] text-white font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-950/40 transition-all duration-200 active:scale-[0.98] cursor-pointer"
+              className="w-full h-12 px-6 rounded-none bg-[#25D366] hover:bg-[#20ba59] text-white font-bold uppercase tracking-[0.12em] text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-md transition-all duration-200 active:scale-[0.98] cursor-pointer"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
             >
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 fill-white/20" />
-              <span className='font-semibold'>Place Order on WhatsApp</span>
+              <span>Place Order on WhatsApp</span>
             </button>
           </div>
         </div>
