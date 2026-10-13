@@ -33,62 +33,77 @@ export default async function ContactPage() {
   const brandName = company?.company_name || 'DFD SPORTS';
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-10 sm:py-16">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-xs uppercase tracking-[0.3em] font-bold text-[#F5A623] mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+          <p
+            className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#E8192C] mb-2 sm:mb-3"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+          >
             GET IN TOUCH WITH {brandName}
           </p>
-          <h1 className="text-4xl sm:text-4xl font-semibold uppercase tracking-tight text-white mb-4">
-            LET&apos;S TALK SPORTS.
+          <h1
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-neutral-950 mb-3 sm:mb-4"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+          >
+            LET&apos;S TALK <span className="text-[#E8192C]">SPORTS.</span>
           </h1>
-          <p className="text-sm sm:text-base text-gray-400">
+          <p className="text-sm sm:text-base text-neutral-600">
             Have questions about sports equipment supply, brand catalog quotations, or custom team jerseys?
             Connect with us directly.
           </p>
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Direct Contact Details from Supabase */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="p-0 sm:p-8 rounded-sm bg-transparent sm:bg-[#0E121B] shadow-none sm:shadow-xl space-y-6">
-              <h3 className="text-lg font-semibold uppercase tracking-tight text-white mb-4">
+            <div className="p-6 sm:p-8 rounded-none bg-neutral-50 border border-neutral-200 shadow-xs space-y-6 text-neutral-900">
+              <h3
+                className="text-lg sm:text-xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+              >
                 Direct Contact Channels
               </h3>
 
               {company?.whatsapp_number && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-[#25D366]/10 text-[#25D366] flex items-center justify-center shrink-0">
                     <MessageCircle className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <h4
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       WhatsApp Hotline
                     </h4>
-                    <p className="text-sm font-semibold text-white mt-0.5">
+                    <p className="text-sm font-bold text-neutral-950 mt-0.5">
                       {company.whatsapp_number}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">Instant quotation & fabric samples</p>
+                    <p className="text-xs text-neutral-500 mt-0.5">Instant quotation & fabric samples</p>
                   </div>
                 </div>
               )}
 
               {company?.phone && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 text-[#F5A623] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <h4
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       Phone Number
                     </h4>
                     <a
                       href={`tel:${company.phone}`}
-                      className="text-sm font-semibold text-white hover:text-[#F5A623] transition-colors mt-0.5 block"
+                      className="text-sm font-bold text-neutral-950 hover:text-[#FF001E] transition-colors mt-0.5 block"
                     >
                       {company.phone}
                     </a>
@@ -98,16 +113,19 @@ export default async function ContactPage() {
 
               {company?.email && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 text-[#F5A623] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <h4
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       Email Address
                     </h4>
                     <a
                       href={`mailto:${company.email}`}
-                      className="text-sm font-semibold text-white hover:text-[#F5A623] transition-colors mt-0.5 block"
+                      className="text-sm font-bold text-neutral-950 hover:text-[#FF001E] transition-colors mt-0.5 block"
                     >
                       {company.email}
                     </a>
@@ -117,14 +135,17 @@ export default async function ContactPage() {
 
               {company?.address && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 text-[#F5A623] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <h4
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       Registered Address
                     </h4>
-                    <p className="text-sm text-gray-300 mt-0.5 leading-relaxed">
+                    <p className="text-sm text-neutral-700 mt-0.5 leading-relaxed">
                       {company.address}
                     </p>
                   </div>
@@ -133,25 +154,29 @@ export default async function ContactPage() {
 
               {company?.business_hours && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 text-[#F5A623] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <h4
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       Working Hours
                     </h4>
-                    <p className="text-sm text-gray-300 mt-0.5">{company.business_hours}</p>
+                    <p className="text-sm text-neutral-700 mt-0.5">{company.business_hours}</p>
                   </div>
                 </div>
               )}
 
-              <div className="pt-4 border-t border-white/5">
+              <div className="pt-4 border-t border-neutral-200">
                 <WhatsAppButton
                   phoneNumber={company?.whatsapp_number}
                   type="general"
                   variant="whatsapp"
                   size="md"
-                  className="w-full justify-center"
+                  className="w-full justify-center !rounded-none rounded-none font-bold uppercase tracking-[0.12em]"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   Start WhatsApp Chat Now
                 </WhatsAppButton>

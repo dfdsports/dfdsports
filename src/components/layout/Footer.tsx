@@ -27,31 +27,39 @@ function FooterAccordion({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/5 md:border-none">
+    <div className="border-b border-white/20 md:border-none">
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen((p) => !p)}
         className="w-full flex items-center justify-between py-4 md:hidden"
         aria-expanded={open}
       >
-        <span className="text-white font-bold text-xs uppercase tracking-[0.2em]">
+        <span
+          className="text-white font-bold text-xs uppercase tracking-[0.2em]"
+          style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+        >
           {title}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''
-            }`}
+          className={`w-4 h-4 text-white transition-transform duration-300 ${
+            open ? 'rotate-180' : ''
+          }`}
         />
       </button>
 
       {/* Desktop heading */}
-      <h4 className="hidden md:block text-white font-bold text-xs uppercase tracking-[0.2em] mb-5">
+      <h4
+        className="hidden md:block text-white font-bold text-xs uppercase tracking-[0.2em] mb-5"
+        style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+      >
         {title}
       </h4>
 
       {/* Content: always visible on md+, collapsible on mobile */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
-          }`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${
+          open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
+        }`}
       >
         {children}
       </div>
@@ -71,7 +79,7 @@ function FooterLinkList({
         <li key={item.label}>
           <Link
             href={item.href}
-            className="text-gray-400 hover:text-white transition-colors text-sm"
+            className="text-white hover:underline transition-all text-sm font-medium"
           >
             {item.label}
           </Link>
@@ -101,13 +109,12 @@ export function Footer({ company }: FooterProps) {
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Delivery Policy', href: '/delivery-policy' },
     { label: 'Contact Us', href: '/contact' },
- 
   ];
 
   return (
-    <footer className="bg-[#06080C] text-gray-400 text-sm ">
+    <footer className="bg-[#850A15] text-white text-sm w-full">
       {/* ── Upper Footer ──────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 sm:py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
 
           {/* Brand Info — 2 cols on lg */}
@@ -119,12 +126,12 @@ export function Footer({ company }: FooterProps) {
                   alt={brandName}
                   fill
                   sizes="(max-width: 640px) 144px, 176px"
-                  className="object-contain object-left group-hover:opacity-90 transition-opacity"
+                  className="object-contain object-left group-hover:opacity-90 transition-opacity drop-shadow-sm"
                 />
               </div>
             </Link>
 
-            <p className="text-gray-400 text-sm leading-relaxed max-w-sm mb-6">
+            <p className="text-white text-sm leading-relaxed max-w-sm mb-6 font-normal">
               {company?.short_description ||
                 'High-performance sports equipment supplier and custom teamwear provider for schools, clubs, academies and tournaments across India.'}
             </p>
@@ -136,7 +143,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:text-[#F5A623] hover:bg-white/10 transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
                   aria-label="Instagram"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -149,7 +156,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.facebook_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:text-[#F5A623] hover:bg-white/10 transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -162,7 +169,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.youtube_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:text-[#F5A623] hover:bg-white/10 transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
                   aria-label="YouTube"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -175,7 +182,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.twitter_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:text-[#F5A623] hover:bg-white/10 transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
                   aria-label="Twitter / X"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -207,18 +214,18 @@ export function Footer({ company }: FooterProps) {
                 {/* Address */}
                 {company?.address && (
                   <div className="flex items-start gap-2.5">
-                    <MapPin className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                    <span className="leading-relaxed">{company.address}</span>
+                    <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                    <span className="leading-relaxed text-white">{company.address}</span>
                   </div>
                 )}
 
                 {/* Phone */}
                 {company?.phone && (
                   <div className="flex items-center gap-2.5">
-                    <Phone className="w-4 h-4 text-[#F5A623] shrink-0" />
+                    <Phone className="w-4 h-4 text-white shrink-0" />
                     <a
                       href={`tel:${company.phone}`}
-                      className="hover:text-white transition-colors"
+                      className="text-white hover:underline transition-colors"
                     >
                       {company.phone}
                     </a>
@@ -228,10 +235,10 @@ export function Footer({ company }: FooterProps) {
                 {/* Email */}
                 {company?.email && (
                   <div className="flex items-center gap-2.5">
-                    <Mail className="w-4 h-4 text-[#F5A623] shrink-0" />
+                    <Mail className="w-4 h-4 text-white shrink-0" />
                     <a
                       href={`mailto:${company.email}`}
-                      className="hover:text-white transition-colors break-all"
+                      className="text-white hover:underline transition-colors break-all"
                     >
                       {company.email}
                     </a>
@@ -241,9 +248,8 @@ export function Footer({ company }: FooterProps) {
                 {/* WhatsApp */}
                 {company?.whatsapp_number && (
                   <div className="flex items-center gap-2.5">
-                    {/* WhatsApp icon (brand SVG) */}
                     <svg
-                      className="w-4 h-4 fill-[#25D366] shrink-0"
+                      className="w-4 h-4 fill-white shrink-0"
                       viewBox="0 0 24 24"
                       aria-hidden="true"
                     >
@@ -253,7 +259,7 @@ export function Footer({ company }: FooterProps) {
                       href={whatsappHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-white transition-colors"
+                      className="text-white hover:underline transition-colors"
                     >
                       {company.whatsapp_number}
                     </a>
@@ -266,10 +272,11 @@ export function Footer({ company }: FooterProps) {
                     href={`${whatsappHref}?text=Hi%2C%20I%27m%20interested%20in%20your%20sports%20products.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] text-xs font-semibold hover:bg-[#25D366]/20 transition-colors"
+                    className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-none bg-white text-[#850A15] text-xs font-bold uppercase tracking-wider hover:bg-neutral-100 transition-colors shadow-sm"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    Chat on WhatsApp
+                    <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+                    <span>Chat on WhatsApp</span>
                   </a>
                 )}
               </div>
@@ -279,18 +286,18 @@ export function Footer({ company }: FooterProps) {
       </div>
 
       {/* ── Sub Footer ────────────────────────────────────────────────── */}
-      <div className="bg-[#040508] py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>
+      <div className="bg-[#69060F] py-6 border-t border-white/15">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white">
+          <p className="text-white">
             © {currentYear} {brandName} ({fullName}). All rights reserved.
           </p>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 text-white">
             <span>Crafted by</span>
             <a
               href="https://www.ekodrix.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#F5A623] hover:text-white transition-colors font-semibold"
+              className="text-white underline hover:opacity-80 transition-opacity font-bold"
             >
               Ekodrix
             </a>

@@ -256,19 +256,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         </div>
       </div>
 
-      {/* SEO */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">SEO Metadata</h3>
-        <div>
-          <label className={labelCls}>SEO Title</label>
-          <input name="seo_title" value={form.seo_title} onChange={handleChange} className={inputCls} placeholder="Football Sports Equipment | DFD Sports" />
-        </div>
-        <div>
-          <label className={labelCls}>SEO Description</label>
-          <textarea name="seo_description" value={form.seo_description} onChange={handleChange} rows={2} className={inputCls} placeholder="Buy genuine football equipment..." />
-        </div>
-      </div>
-
       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">
         <button
           type="button"

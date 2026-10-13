@@ -277,9 +277,31 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-heading,
   .animate-spin-slow,
-  .animate-pulse-glow {
+  .animate-pulse-glow,
+  .animate-marquee-left {
     animation: none !important;
   }
+}
+
+/* Continuous infinite right-to-left marquee */
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-left:hover {
+  animation-play-state: paused;
 }
 
 

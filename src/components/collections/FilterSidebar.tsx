@@ -62,19 +62,24 @@ export function FilterSidebar({
     <aside
       className={cn(
         'w-full flex flex-col',
-        !isMobileDrawer && 'bg-[#0E121B] rounded-sm p-6 shadow-xl',
+        !isMobileDrawer && 'bg-white border border-neutral-200 rounded-none p-6 shadow-sm',
         className
       )}
     >
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between pb-5">
+      <div className="flex items-center justify-between pb-5 border-b border-neutral-200">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-[#F5A623]/10 text-[#F5A623]">
+          <div className="p-1.5 rounded-none bg-[#FF001E]/10 text-[#FF001E]">
             <Filter className="w-4 h-4" />
           </div>
-          <h2 className="text-sm font-black uppercase tracking-wider text-white">Filters</h2>
+          <h2
+            className="text-base font-bold uppercase tracking-wider text-neutral-950"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+          >
+            Filters
+          </h2>
           {activeFilterCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-[#F5A623] text-[#080A0F] text-[10px] font-black">
+            <span className="px-2 py-0.5 rounded-none bg-[#FF001E] text-white text-[10px] font-bold">
               {activeFilterCount}
             </span>
           )}
@@ -84,7 +89,7 @@ export function FilterSidebar({
           <button
             type="button"
             onClick={onClearAll}
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#F5A623] hover:text-[#FFC86B] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#FF001E] hover:text-[#d6001a] transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Clear All</span>
@@ -98,12 +103,13 @@ export function FilterSidebar({
           <button
             type="button"
             onClick={() => setCategoriesOpen(!categoriesOpen)}
-            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white hover:text-[#F5A623] transition-colors mb-3"
+            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-900 hover:text-[#FF001E] transition-colors mb-3"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
           >
             <span>Categories</span>
-            <div className="flex items-center gap-1.5 text-gray-400">
+            <div className="flex items-center gap-1.5 text-neutral-500">
               {selectedCategories.length > 0 && (
-                <span className="text-[10px] text-[#F5A623] font-bold">
+                <span className="text-[10px] text-[#FF001E] font-bold">
                   ({selectedCategories.length})
                 </span>
               )}
@@ -119,11 +125,11 @@ export function FilterSidebar({
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 text-xs text-white placeholder-gray-500 focus:outline-none"
+                  className="w-full px-3 py-1.5 mb-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#FF001E]"
                 />
               )}
 
-              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#F5A623]">
+              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((cat) => {
                     const isChecked = selectedCategories.includes(cat.slug);
@@ -133,17 +139,17 @@ export function FilterSidebar({
                       <label
                         key={cat.id}
                         className={cn(
-                          'flex items-center justify-between px-2.5 py-2 rounded-xl cursor-pointer select-none transition-all group',
-                          isChecked ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-gray-300'
+                          'flex items-center justify-between px-2.5 py-2 rounded-none cursor-pointer select-none transition-all group',
+                          isChecked ? 'bg-neutral-100 text-neutral-950 font-semibold' : 'hover:bg-neutral-50 text-neutral-700'
                         )}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div
                             className={cn(
-                              'w-4 h-4 rounded-md border flex items-center justify-center transition-all shrink-0',
+                              'w-4 h-4 rounded-none border flex items-center justify-center transition-all shrink-0',
                               isChecked
-                                ? 'bg-[#F5A623] border-[#F5A623] text-[#080A0F]'
-                                : 'border-white/20 bg-white/5 group-hover:border-[#F5A623]/50'
+                                ? 'bg-[#FF001E] border-[#FF001E] text-white'
+                                : 'border-neutral-300 bg-white group-hover:border-[#FF001E]'
                             )}
                           >
                             {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
@@ -158,7 +164,7 @@ export function FilterSidebar({
                         </div>
 
                         {count > 0 && (
-                          <span className="text-[10px] font-mono font-semibold text-gray-500 group-hover:text-gray-400 shrink-0 ml-2">
+                          <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-600 shrink-0 ml-2">
                             {count}
                           </span>
                         )}
@@ -166,7 +172,7 @@ export function FilterSidebar({
                     );
                   })
                 ) : (
-                  <p className="text-xs text-gray-500 py-1">No categories found</p>
+                  <p className="text-xs text-neutral-400 py-1">No categories found</p>
                 )}
               </div>
             </div>
@@ -175,16 +181,17 @@ export function FilterSidebar({
 
         {/* ================= BRAND FILTER ================= */}
         {brands.length > 0 && (
-          <div className="pt-5">
+          <div className="pt-5 border-t border-neutral-200">
             <button
               type="button"
               onClick={() => setBrandsOpen(!brandsOpen)}
-              className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white hover:text-[#F5A623] transition-colors mb-3"
+              className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-900 hover:text-[#FF001E] transition-colors mb-3"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
             >
               <span>Brands</span>
-              <div className="flex items-center gap-1.5 text-gray-400">
+              <div className="flex items-center gap-1.5 text-neutral-500">
                 {selectedBrands.length > 0 && (
-                  <span className="text-[10px] text-[#F5A623] font-bold">
+                  <span className="text-[10px] text-[#FF001E] font-bold">
                     ({selectedBrands.length})
                   </span>
                 )}
@@ -200,11 +207,11 @@ export function FilterSidebar({
                     placeholder="Search brands..."
                     value={brandSearch}
                     onChange={(e) => setBrandSearch(e.target.value)}
-                    className="w-full px-3 py-1.5 mb-2 rounded-xl bg-white/5 text-xs text-white placeholder-gray-500 focus:outline-none"
+                    className="w-full px-3 py-1.5 mb-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#FF001E]"
                   />
                 )}
 
-                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#F5A623]">
+                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
                   {filteredBrands.length > 0 ? (
                     filteredBrands.map((brand) => {
                       const isChecked = selectedBrands.includes(brand.slug);
@@ -214,17 +221,17 @@ export function FilterSidebar({
                         <label
                           key={brand.id}
                           className={cn(
-                            'flex items-center justify-between px-2.5 py-2 rounded-xl cursor-pointer select-none transition-all group',
-                            isChecked ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-gray-300'
+                            'flex items-center justify-between px-2.5 py-2 rounded-none cursor-pointer select-none transition-all group',
+                            isChecked ? 'bg-neutral-100 text-neutral-950 font-semibold' : 'hover:bg-neutral-50 text-neutral-700'
                           )}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
                             <div
                               className={cn(
-                                'w-4 h-4 rounded-md border flex items-center justify-center transition-all shrink-0',
+                                'w-4 h-4 rounded-none border flex items-center justify-center transition-all shrink-0',
                                 isChecked
-                                  ? 'bg-[#F5A623] border-[#F5A623] text-[#080A0F]'
-                                  : 'border-white/20 bg-white/5 group-hover:border-[#F5A623]/50'
+                                  ? 'bg-[#FF001E] border-[#FF001E] text-white'
+                                  : 'border-neutral-300 bg-white group-hover:border-[#FF001E]'
                               )}
                             >
                               {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
@@ -239,7 +246,7 @@ export function FilterSidebar({
                           </div>
 
                           {count > 0 && (
-                            <span className="text-[10px] font-mono font-semibold text-gray-500 group-hover:text-gray-400 shrink-0 ml-2">
+                            <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-600 shrink-0 ml-2">
                               {count}
                             </span>
                           )}
@@ -247,7 +254,7 @@ export function FilterSidebar({
                       );
                     })
                   ) : (
-                    <p className="text-xs text-gray-500 py-1">No brands found</p>
+                    <p className="text-xs text-neutral-400 py-1">No brands found</p>
                   )}
                 </div>
               </div>
@@ -258,13 +265,14 @@ export function FilterSidebar({
 
       {/* Clear Filters CTA Button in Sidebar */}
       {activeFilterCount > 0 && (
-        <div className="mt-6 pt-5">
+        <div className="mt-6 pt-5 border-t border-neutral-200">
           <button
             type="button"
             onClick={onClearAll}
-            className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-2.5 px-4 rounded-none border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 hover:text-black text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 text-[#FF001E]" />
             <span>Clear All Filters</span>
           </button>
         </div>

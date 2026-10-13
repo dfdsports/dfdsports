@@ -48,23 +48,29 @@ export function AboutStats({ stats = defaultStats }: AboutStatsProps) {
           return (
             <div
               key={idx}
-              className="group p-5 sm:p-7 rounded-2xl bg-[#0E121B] hover:bg-[#121722] transition-all duration-300 flex flex-col justify-between shadow-lg"
+              className="group p-5 sm:p-7 rounded-none bg-neutral-50 border border-neutral-200 hover:border-neutral-400 hover:shadow-md transition-all duration-300 flex flex-col justify-between shadow-xs"
             >
               <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[#F5A623]/10 flex items-center justify-center text-[#F5A623] group-hover:bg-[#F5A623] group-hover:text-black transition-all duration-300">
+                <div className="w-10 h-10 rounded-none bg-[#FF001E]/10 flex items-center justify-center text-[#FF001E] group-hover:bg-[#FF001E] group-hover:text-white transition-all duration-300">
                   <Icon className="w-5 h-5" />
                 </div>
               </div>
 
               <div>
-                <span className="block text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#F5A623] mb-1">
+                <span
+                  className="block text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#E8192C] mb-1"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                >
                   {item.value}
                 </span>
-                <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-white mb-1">
+                <h3
+                  className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-950 mb-1"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                >
                   {item.label}
                 </h3>
                 {item.description && (
-                  <p className="text-[11px] sm:text-xs text-gray-400 leading-relaxed hidden sm:block">
+                  <p className="text-[11px] sm:text-xs text-neutral-500 leading-relaxed hidden sm:block">
                     {item.description}
                   </p>
                 )}

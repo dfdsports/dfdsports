@@ -5,7 +5,7 @@ import { getCompanySettings } from '@/services/company';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CustomTeamwearBuilder } from '@/components/teamwear/CustomTeamwearBuilder';
-import { FabricCollectionSection } from '@/components/home/FabricCollectionSection';
+import { FinalCTASection } from '@/components/home/FinalCTASection';
 import { SITE_URL } from '@/lib/seo';
 
 export const revalidate = 60;
@@ -33,17 +33,17 @@ export default async function CustomJerseysPage() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#F5A623] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1 w-full space-y-12 sm:space-y-16">
         {/* Interactive Jersey Builder */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-12">
           <CustomTeamwearBuilder company={company} fabrics={fabrics} />
         </div>
 
-        {/* Premium Fabric Collection (Exact component from Home Page) */}
-        <FabricCollectionSection fabrics={fabrics} />
+        {/* Build Your Team Identity Bottom CTA Section */}
+        <FinalCTASection company={company} />
       </main>
 
       <Footer company={company} />

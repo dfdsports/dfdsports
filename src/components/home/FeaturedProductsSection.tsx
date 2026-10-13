@@ -184,7 +184,6 @@ export function FeaturedProductsSection({
           <SectionHeading
             eyebrow="Equipment & gear"
             title="Featured products"
-            highlightWord="products"
             align="left"
             className="!mb-0 !pb-0 [&_*]:!mb-0 [&_*]:!pb-0"
           />

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 interface WhatsAppButtonProps extends WhatsAppEnquiryParams {
   children?: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   variant?: 'primary' | 'whatsapp' | 'dark' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   showIcon?: boolean;
@@ -24,6 +25,7 @@ export function WhatsAppButton({
   customMessage,
   children = 'Enquire on WhatsApp',
   className,
+  style,
   variant = 'whatsapp',
   size = 'md',
   showIcon = true,
@@ -62,6 +64,7 @@ export function WhatsAppButton({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
+      style={style}
       className={cn(
         'inline-flex items-center justify-center text-center cursor-pointer select-none transition-transform',
         sizeClasses[size],

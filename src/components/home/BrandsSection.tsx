@@ -27,7 +27,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
   const durationSec = Math.max(16, baseList.length * 3);
 
   return (
-    <section className="bg-black py-5 sm:py-20 border-t border-white/5">
+    <section className="bg-white py-5 sm:py-10">
       <style>{`
         @keyframes brands-marquee-left {
           0% {
@@ -55,9 +55,9 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
         }
       `}</style>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full">
         {/* Top Header: identical font size, style and layout to Featured Products */}
-        <div className="mb-10 sm:mb-12">
+        {/* <div className="mb-10 sm:mb-12">
           <SectionHeading
             title="Brands we supply"
             highlightWord="supply"
@@ -67,7 +67,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
           <p className="hidden sm:block mt-2 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
             Trusted sports brands, stocked and sold directly to you.
           </p>
-        </div>
+        </div> */}
 
         {/* Continuous right-to-left marquee without card background color */}
         <div className="brands-marquee-container overflow-hidden py-4 sm:py-8">
@@ -84,7 +84,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
                   title={`View ${brand.name} collection`}
                   aria-hidden={isClone || undefined}
                   tabIndex={isClone ? -1 : undefined}
-                  className="group flex h-12 sm:h-24 w-24 sm:w-52 shrink-0 items-center justify-center bg-transparent transition-all duration-300 cursor-pointer"
+                  className="group flex h-12 sm:h-20 w-24 sm:w-30 shrink-0 items-center justify-center bg-transparent transition-all duration-300 cursor-pointer"
                 >
                   {brand.logo_url ? (
                     <Image
