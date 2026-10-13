@@ -357,8 +357,8 @@ export function Header({ company, categories }: HeaderProps) {
           'sticky top-0 z-50 w-full transition-all duration-300',
           pathname === '/' && '-mb-[76px]',
           isWhiteNav
-            ? 'bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm'
-            : 'bg-transparent border-b border-white/10'
+            ? 'bg-[#080A0F]/95 backdrop-blur-md shadow-lg'
+            : 'bg-transparent'
         )}
       >
         <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-12">
@@ -378,10 +378,7 @@ export function Header({ company, categories }: HeaderProps) {
                 </div>
               </Link>
               <div
-                className={cn(
-                  'hidden sm:block h-8 w-[1px] transition-colors',
-                  isWhiteNav ? 'bg-neutral-200' : 'bg-white/20'
-                )}
+                className="hidden sm:block h-8 w-[1px] bg-white/20 transition-colors"
               />
             </div>
 
@@ -393,13 +390,9 @@ export function Header({ company, categories }: HeaderProps) {
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 className={cn(
                   'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
-                  isWhiteNav
-                    ? pathname === '/'
-                      ? 'text-[#FF001E] font-bold'
-                      : 'text-neutral-800 hover:text-[#FF001E]'
-                    : pathname === '/'
-                    ? 'text-white font-semibold'
-                    : 'text-white/80 hover:text-white'
+                  pathname === '/'
+                    ? 'text-white font-bold'
+                    : 'text-neutral-300 hover:text-white'
                 )}
               >
                 Home
@@ -416,25 +409,18 @@ export function Header({ company, categories }: HeaderProps) {
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   className={cn(
                     'inline-flex items-center gap-1.5 text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
-                    isWhiteNav
-                      ? pathname.startsWith('/collections')
-                        ? 'text-[#FF001E] font-bold'
-                        : 'text-neutral-800 hover:text-[#FF001E]'
-                      : 'text-white/80 hover:text-white'
+                    pathname.startsWith('/collections')
+                      ? 'text-[#FF001E] font-bold'
+                      : 'text-neutral-300 hover:text-white'
                   )}
                 >
                   <span>Categories</span>
                   <ChevronDown
-                    className={cn(
-                      'w-4 h-4 transition-transform duration-200 group-hover:rotate-180',
-                      isWhiteNav
-                        ? 'text-neutral-500 group-hover:text-[#FF001E]'
-                        : 'text-white/60 group-hover:text-white'
-                    )}
+                    className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180 text-white/60 group-hover:text-white"
                   />
                 </Link>
 
-                {/* Dropdown Menu - Pure White Theme */}
+                {/* Dropdown Menu - Sleek Dark Theme */}
                 <div
                   className={cn(
                     'absolute top-full left-1/2 -translate-x-1/2 w-64 pt-2 transition-all duration-200 z-50',
@@ -443,7 +429,7 @@ export function Header({ company, categories }: HeaderProps) {
                       : 'opacity-0 invisible -translate-y-2 pointer-events-none'
                   )}
                 >
-                  <div className="bg-white border border-neutral-200 shadow-2xl p-2 rounded-none">
+                  <div className="bg-[#0E121B] border border-white/15 shadow-2xl p-2 rounded-none text-white">
                     {/* Top Red Accent Line */}
                     <div className="h-[2px] w-full bg-[#FF001E] -mt-2 mb-2" />
 
@@ -454,7 +440,7 @@ export function Header({ company, categories }: HeaderProps) {
                           href={`/collections?category=${encodeURIComponent(category.slug)}`}
                           onClick={() => setCategoriesDropdownOpen(false)}
                           style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                          className="flex items-center justify-between px-3.5 py-2.5 text-[15px] font-medium text-neutral-800 hover:text-[#FF001E] hover:bg-neutral-50 hover:pl-4 transition-all group/item uppercase tracking-wider"
+                          className="flex items-center justify-between px-3.5 py-2.5 text-[15px] font-medium text-neutral-200 hover:text-[#FF001E] hover:bg-white/5 hover:pl-4 transition-all group/item uppercase tracking-wider"
                         >
                           <span>{category.name}</span>
                           <ArrowRight className="w-3.5 h-3.5 text-[#FF001E] opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all" />
@@ -463,7 +449,7 @@ export function Header({ company, categories }: HeaderProps) {
                     </div>
 
                     {/* View All Collections Footer Link */}
-                    <div className="pt-2 mt-1 border-t border-neutral-100">
+                    <div className="pt-2 mt-1 border-t border-white/10">
                       <Link
                         href="/collections"
                         onClick={() => setCategoriesDropdownOpen(false)}
@@ -484,11 +470,9 @@ export function Header({ company, categories }: HeaderProps) {
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 className={cn(
                   'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
-                  isWhiteNav
-                    ? pathname === '/custom-jerseys'
-                      ? 'text-[#FF001E] font-bold'
-                      : 'text-neutral-800 hover:text-[#FF001E]'
-                    : 'text-white/80 hover:text-white'
+                  pathname === '/custom-jerseys'
+                    ? 'text-[#FF001E] font-bold'
+                    : 'text-neutral-300 hover:text-white'
                 )}
               >
                 Custom Jerseys
@@ -500,11 +484,9 @@ export function Header({ company, categories }: HeaderProps) {
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 className={cn(
                   'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
-                  isWhiteNav
-                    ? pathname === '/about'
-                      ? 'text-[#FF001E] font-bold'
-                      : 'text-neutral-800 hover:text-[#FF001E]'
-                    : 'text-white/80 hover:text-white'
+                  pathname === '/about'
+                    ? 'text-[#FF001E] font-bold'
+                    : 'text-neutral-300 hover:text-white'
                 )}
               >
                 About
@@ -516,11 +498,9 @@ export function Header({ company, categories }: HeaderProps) {
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 className={cn(
                   'text-[17px] font-medium tracking-wide transition-colors whitespace-nowrap',
-                  isWhiteNav
-                    ? pathname === '/contact'
-                      ? 'text-[#FF001E] font-bold'
-                      : 'text-neutral-800 hover:text-[#FF001E]'
-                    : 'text-white/80 hover:text-white'
+                  pathname === '/contact'
+                    ? 'text-[#FF001E] font-bold'
+                    : 'text-neutral-300 hover:text-white'
                 )}
               >
                 Contact
@@ -534,12 +514,7 @@ export function Header({ company, categories }: HeaderProps) {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search Catalog"
-                className={cn(
-                  'p-2.5 rounded-none active:scale-95 transition-all cursor-pointer',
-                  isWhiteNav
-                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
-                    : 'text-white/85 hover:text-white hover:bg-white/10'
-                )}
+                className="p-2.5 rounded-none active:scale-95 transition-all cursor-pointer text-white/85 hover:text-white hover:bg-white/10"
                 title="Search Products"
               >
                 <Search className="w-5 h-5" />
@@ -550,12 +525,7 @@ export function Header({ company, categories }: HeaderProps) {
                 type="button"
                 onClick={() => setCartOpen(true)}
                 aria-label="View Cart"
-                className={cn(
-                  'relative p-2.5 rounded-none active:scale-95 transition-all cursor-pointer',
-                  isWhiteNav
-                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
-                    : 'text-white/85 hover:text-white hover:bg-white/10'
-                )}
+                className="relative p-2.5 rounded-none active:scale-95 transition-all cursor-pointer text-white/85 hover:text-white hover:bg-white/10"
                 title="Shopping Cart"
               >
                 <ShoppingBag className="w-5 h-5" />
@@ -570,12 +540,7 @@ export function Header({ company, categories }: HeaderProps) {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className={cn(
-                  'lg:hidden p-2.5 rounded-none active:scale-95 transition-all cursor-pointer ml-1',
-                  isWhiteNav
-                    ? 'text-neutral-800 hover:text-neutral-950 hover:bg-neutral-100'
-                    : 'text-white/85 hover:text-white hover:bg-white/10'
-                )}
+                className="lg:hidden p-2.5 rounded-none active:scale-95 transition-all cursor-pointer ml-1 text-white/85 hover:text-white hover:bg-white/10"
                 aria-label="Open Navigation Menu"
               >
                 <Menu className="w-5 h-5" />
@@ -602,12 +567,12 @@ export function Header({ company, categories }: HeaderProps) {
         {/* Sliding Drawer from Right */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-white border-l border-neutral-200 shadow-2xl flex flex-col h-full overflow-hidden transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-[300px] sm:w-[340px] max-w-[85vw] bg-[#080A0F] border-l border-white/10 shadow-2xl flex flex-col h-full overflow-hidden transition-transform duration-300 ease-in-out',
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Drawer Top Header */}
-          <div className="flex-shrink-0 flex items-center justify-between px-5 py-4 bg-white border-b border-neutral-200">
+          <div className="flex-shrink-0 flex items-center justify-between px-5 py-4 bg-[#080A0F] border-b border-white/10">
             <Link href="/" onClick={() => setMobileMenuOpen(false)} className="relative w-28 h-10 block">
               <Image
                 src="/logo.png"
@@ -619,7 +584,7 @@ export function Header({ company, categories }: HeaderProps) {
             </Link>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
+              className="p-2 rounded-none text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
@@ -642,7 +607,7 @@ export function Header({ company, categories }: HeaderProps) {
                           'flex-1 flex items-center justify-between px-4 py-3 rounded-none text-base font-semibold tracking-wider transition-all uppercase',
                           isActive
                             ? 'bg-[#FF001E]/10 text-[#FF001E] font-bold border-l-2 border-[#FF001E]'
-                            : 'text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950'
+                            : 'text-neutral-200 hover:bg-white/5 hover:text-white'
                         )}
                       >
                         <span>Categories</span>
@@ -650,7 +615,7 @@ export function Header({ company, categories }: HeaderProps) {
                       <button
                         type="button"
                         onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
-                        className="p-3 text-neutral-500 hover:text-neutral-950 transition-colors cursor-pointer"
+                        className="p-3 text-neutral-400 hover:text-white transition-colors cursor-pointer"
                         aria-label="Toggle categories list"
                       >
                         <ChevronDown
@@ -663,14 +628,14 @@ export function Header({ company, categories }: HeaderProps) {
                     </div>
 
                     {mobileCategoriesOpen && (
-                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-neutral-200 ml-4">
+                      <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-white/10 ml-4">
                         {displayedCategories.map((cat) => (
                           <Link
                             key={cat.id}
                             href={`/collections?category=${encodeURIComponent(cat.slug)}`}
                             onClick={() => setMobileMenuOpen(false)}
                             style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                            className="block px-3 py-2 text-sm font-medium text-neutral-700 hover:text-[#FF001E] hover:bg-neutral-50 rounded-none transition-all uppercase tracking-wide"
+                            className="block px-3 py-2 text-sm font-medium text-neutral-300 hover:text-[#FF001E] hover:bg-white/5 rounded-none transition-all uppercase tracking-wide"
                           >
                             {cat.name}
                           </Link>
@@ -692,7 +657,7 @@ export function Header({ company, categories }: HeaderProps) {
                     'flex items-center justify-between px-4 py-3 rounded-none text-base font-semibold tracking-wider transition-all uppercase',
                     isActive
                       ? 'bg-[#FF001E]/10 text-[#FF001E] font-bold border-l-2 border-[#FF001E]'
-                      : 'text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950'
+                      : 'text-neutral-200 hover:bg-white/5 hover:text-white'
                   )}
                 >
                   <span>{link.label}</span>
@@ -701,7 +666,7 @@ export function Header({ company, categories }: HeaderProps) {
               );
             })}
 
-            <div className="pt-3 my-2 space-y-1.5 border-t border-neutral-200">
+            <div className="pt-3 my-2 space-y-1.5 border-t border-white/10">
               {/* Cart in Drawer */}
               <button
                 type="button"
@@ -709,7 +674,7 @@ export function Header({ company, categories }: HeaderProps) {
                   setMobileMenuOpen(false);
                   setCartOpen(true);
                 }}
-                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950 transition-all group"
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-200 hover:bg-white/5 hover:text-white transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <ShoppingBag className="w-4 h-4 text-[#FF001E] group-hover:scale-110 transition-transform" />
@@ -731,7 +696,7 @@ export function Header({ company, categories }: HeaderProps) {
                   setMobileMenuOpen(false);
                   setWishlistOpen(true);
                 }}
-                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-800 hover:bg-neutral-50 hover:text-neutral-950 transition-all group"
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-none text-sm font-semibold tracking-wide text-neutral-200 hover:bg-white/5 hover:text-white transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <Heart className="w-4 h-4 text-[#FF001E] group-hover:scale-110 transition-transform" />
@@ -749,7 +714,7 @@ export function Header({ company, categories }: HeaderProps) {
           </nav>
 
           {/* Full-size Bottom on Menubar (Always Visible / Sticky Bottom) */}
-          <div className="flex-shrink-0 p-4 bg-white border-t border-neutral-200">
+          <div className="flex-shrink-0 p-4 bg-[#080A0F] border-t border-white/10">
             {/* WhatsApp Enquiry Button */}
             <a
               href={`https://wa.me/${(company?.whatsapp_number || '919876543210').replace(/\D/g, '')}?text=${encodeURIComponent('Hi DFD Sports, I would like to inquire about your products.')}`}
@@ -782,28 +747,28 @@ export function Header({ company, categories }: HeaderProps) {
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-white border-l border-neutral-200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-[#080A0F] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             cartOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 bg-white border-b border-neutral-200">
+          <div className="flex items-center justify-between px-6 py-5 bg-[#121622] border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-none bg-neutral-100 text-[#FF001E]">
+              <div className="p-2.5 rounded-none bg-neutral-800 text-[#FF001E]">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-neutral-950 tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                <h2 className="text-base font-bold text-white tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                   Your Cart
                 </h2>
-                <p className="text-xs text-neutral-500 font-medium">
+                <p className="text-xs text-neutral-400 font-medium">
                   {totalCartCount} {totalCartCount === 1 ? 'item' : 'items'}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setCartOpen(false)}
-              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
+              className="p-2 rounded-none text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Close cart"
             >
               <X className="w-5 h-5" />
@@ -811,15 +776,15 @@ export function Header({ company, categories }: HeaderProps) {
           </div>
 
           {/* Cart Item List */}
-          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#F8F9FA]">
+          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#080A0F]">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-none bg-white border border-neutral-200 flex gap-3.5 shadow-sm hover:border-neutral-300 transition-all text-neutral-900"
+                  className="p-3.5 rounded-none bg-[#0E121B] border border-white/10 flex gap-3.5 shadow-sm hover:border-white/20 transition-all text-white"
                 >
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 bg-neutral-900 border border-white/10 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -840,22 +805,22 @@ export function Header({ company, categories }: HeaderProps) {
                       href={`/products/${item.slug}`}
                       onClick={() => setCartOpen(false)}
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                      className="text-sm font-bold text-neutral-900 hover:text-[#FF001E] transition-colors line-clamp-2 uppercase tracking-wide"
+                      className="text-sm font-bold text-white hover:text-[#FF001E] transition-colors line-clamp-2 uppercase tracking-wide"
                     >
                       {item.name}
                     </Link>
 
                     {item.size ? (
-                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-400 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-bold text-neutral-800 px-1.5 py-0.5 rounded-none bg-neutral-100 border border-neutral-200 uppercase text-[11px]">
+                        <span className="font-bold text-white px-1.5 py-0.5 rounded-none bg-white/10 border border-white/15 uppercase text-[11px]">
                           {item.size}
                         </span>
                       </p>
                     ) : (
-                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-400 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-medium text-neutral-700 px-1.5 py-0.5 rounded-none bg-neutral-100 border border-neutral-200 uppercase text-[11px]">
+                        <span className="font-medium text-neutral-300 px-1.5 py-0.5 rounded-none bg-white/10 border border-white/15 uppercase text-[11px]">
                           Standard
                         </span>
                       </p>
@@ -863,11 +828,11 @@ export function Header({ company, categories }: HeaderProps) {
 
                     <div className="mt-2.5 flex items-center justify-between">
                       {/* Quantity Controls */}
-                      <div className="flex items-center rounded-none bg-neutral-100 border border-neutral-200">
+                      <div className="flex items-center rounded-none bg-white/5 border border-white/15">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 text-neutral-600 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
+                          className="p-1 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3.5 h-3.5" />
@@ -878,13 +843,13 @@ export function Header({ company, categories }: HeaderProps) {
                           max="999"
                           value={item.quantity}
                           onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 1)}
-                          className="w-10 text-center bg-transparent text-xs font-bold text-neutral-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          className="w-10 text-center bg-transparent text-xs font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           aria-label="Quantity"
                         />
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 text-neutral-600 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
+                          className="p-1 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -895,11 +860,11 @@ export function Header({ company, categories }: HeaderProps) {
                       <div className="flex items-center gap-3">
                         {item.price != null && (
                           <div className="text-right">
-                            <span className="text-sm font-bold text-neutral-900" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                            <span className="text-sm font-bold text-white" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                               ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                             </span>
                             {item.quantity > 1 && (
-                              <span className="block text-[10px] text-neutral-500 font-medium">
+                              <span className="block text-[10px] text-neutral-400 font-medium">
                                 (₹{item.price.toLocaleString('en-IN')} ea)
                               </span>
                             )}
@@ -908,7 +873,7 @@ export function Header({ company, categories }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => removeCartItem(item.id)}
-                          className="p-1 text-neutral-400 hover:text-[#FF001E] hover:bg-red-50 rounded-none transition-colors cursor-pointer"
+                          className="p-1 text-neutral-400 hover:text-[#FF001E] hover:bg-white/10 rounded-none transition-colors cursor-pointer"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -919,14 +884,14 @@ export function Header({ company, categories }: HeaderProps) {
                 </div>
               ))
             ) : (
-              <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-neutral-200 p-8">
-                <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mb-4">
+              <div className="py-16 flex flex-col items-center justify-center text-center bg-[#0E121B] border border-white/10 p-8">
+                <div className="w-16 h-16 rounded-none bg-neutral-900 flex items-center justify-center text-neutral-400 mb-4">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
-                <h3 className="text-base font-bold text-neutral-900 mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                <h3 className="text-base font-bold text-white mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                   Your cart is empty
                 </h3>
-                <p className="text-xs text-neutral-500 max-w-xs mb-6">
+                <p className="text-xs text-neutral-400 max-w-xs mb-6">
                   Explore tournament equipment, jerseys, and custom sports gear.
                 </p>
                 <Link
@@ -943,11 +908,11 @@ export function Header({ company, categories }: HeaderProps) {
 
           {/* Cart Footer */}
           {cartItems.length > 0 && (
-            <div className="p-5 sm:p-6 bg-white border-t border-neutral-200 space-y-4">
+            <div className="p-5 sm:p-6 bg-[#0E121B] border-t border-white/10 space-y-4">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-semibold text-neutral-500 uppercase tracking-wider text-xs">Subtotal</span>
-                  <span className="font-bold text-lg text-neutral-950" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  <span className="font-semibold text-neutral-400 uppercase tracking-wider text-xs">Subtotal</span>
+                  <span className="font-bold text-lg text-white" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                     ₹{cartSubtotal.toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -988,28 +953,28 @@ export function Header({ company, categories }: HeaderProps) {
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-white border-l border-neutral-200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-[#080A0F] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             wishlistOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 bg-white border-b border-neutral-200">
+          <div className="flex items-center justify-between px-6 py-5 bg-[#121622] border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-none bg-amber-50 text-[#F5A623]">
+              <div className="p-2.5 rounded-none bg-amber-500/10 text-[#F5A623]">
                 <Heart className="w-5 h-5 fill-[#F5A623]" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-neutral-950 tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                <h2 className="text-base font-bold text-white tracking-wider uppercase" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                   Your Wishlist
                 </h2>
-                <p className="text-xs text-neutral-500 font-medium">
+                <p className="text-xs text-neutral-400 font-medium">
                   {totalWishlistCount} {totalWishlistCount === 1 ? 'item' : 'items'}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setWishlistOpen(false)}
-              className="p-2 rounded-none text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
+              className="p-2 rounded-none text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
               aria-label="Close wishlist"
             >
               <X className="w-5 h-5" />
@@ -1017,15 +982,15 @@ export function Header({ company, categories }: HeaderProps) {
           </div>
 
           {/* Wishlist Item List */}
-          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#F8F9FA]">
+          <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-3 bg-[#080A0F]">
             {wishlistItems.length > 0 ? (
               wishlistItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-none bg-white border border-neutral-200 flex gap-3.5 shadow-sm hover:border-neutral-300 transition-all text-neutral-900"
+                  className="p-3.5 rounded-none bg-[#0E121B] border border-white/10 flex gap-3.5 shadow-sm hover:border-white/20 transition-all text-white"
                 >
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 bg-neutral-900 border border-white/10 overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -1046,19 +1011,19 @@ export function Header({ company, categories }: HeaderProps) {
                       href={`/products/${item.slug}`}
                       onClick={() => setWishlistOpen(false)}
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                      className="text-sm font-bold text-neutral-900 hover:text-[#F5A623] transition-colors line-clamp-2 uppercase tracking-wide"
+                      className="text-sm font-bold text-white hover:text-[#F5A623] transition-colors line-clamp-2 uppercase tracking-wide"
                     >
                       {item.name}
                     </Link>
                     {item.category && (
-                      <span className="inline-block mt-1 text-[11px] font-medium text-neutral-500">
+                      <span className="inline-block mt-1 text-[11px] font-medium text-neutral-400">
                         {item.category}
                       </span>
                     )}
 
                     <div className="mt-3 flex items-center justify-between">
                       {item.price != null && (
-                        <span className="text-sm font-bold text-neutral-950" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                        <span className="text-sm font-bold text-white" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                           ₹{item.price.toLocaleString('en-IN')}
                         </span>
                       )}
@@ -1076,7 +1041,7 @@ export function Header({ company, categories }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => removeWishlistItem(item.id)}
-                          className="p-1.5 text-neutral-400 hover:text-[#FF001E] hover:bg-red-50 rounded-none transition-colors"
+                          className="p-1.5 text-neutral-400 hover:text-[#FF001E] hover:bg-white/10 rounded-none transition-colors"
                           aria-label="Remove from wishlist"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1087,14 +1052,14 @@ export function Header({ company, categories }: HeaderProps) {
                 </div>
               ))
             ) : (
-              <div className="py-16 flex flex-col items-center justify-center text-center bg-white border border-neutral-200 p-8">
-                <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mb-4">
+              <div className="py-16 flex flex-col items-center justify-center text-center bg-[#0E121B] border border-white/10 p-8">
+                <div className="w-16 h-16 rounded-none bg-neutral-900 flex items-center justify-center text-neutral-400 mb-4">
                   <Heart className="w-8 h-8" />
                 </div>
-                <h3 className="text-base font-bold text-neutral-900 mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                <h3 className="text-base font-bold text-white mb-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                   Your wishlist is empty
                 </h3>
-                <p className="text-xs text-neutral-500 max-w-xs mb-6">
+                <p className="text-xs text-neutral-400 max-w-xs mb-6">
                   Save your favorite gear and sports equipment to view or purchase later.
                 </p>
                 <Link
@@ -1130,14 +1095,14 @@ export function Header({ company, categories }: HeaderProps) {
           role="dialog"
           aria-label="Search catalog"
           className={cn(
-            'relative w-full max-w-2xl bg-white border border-neutral-200 rounded-none shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform',
+            'relative w-full max-w-2xl bg-[#0E121B] border border-white/15 rounded-none shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform text-white',
             searchOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-2 opacity-0'
           )}
         >
-          {/* Main Search Input Form Header - Pure White BG, Border Radius None */}
+          {/* Main Search Input Form Header - Dark BG, Border Radius None */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-white border-b border-neutral-200 rounded-none shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-[#0E121B] border-b border-white/10 rounded-none shrink-0"
           >
             {searchLoading ? (
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#FF001E]" />
@@ -1149,7 +1114,7 @@ export function Header({ company, categories }: HeaderProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search footballs, custom jerseys, cricket, equipment…"
-              className="w-full bg-white text-sm sm:text-base font-semibold text-neutral-900 placeholder:text-neutral-400 focus:outline-none rounded-none"
+              className="w-full bg-transparent text-sm sm:text-base font-semibold text-white placeholder:text-neutral-500 focus:outline-none rounded-none"
               autoComplete="off"
             />
             {searchQuery && (
@@ -1159,7 +1124,7 @@ export function Header({ company, categories }: HeaderProps) {
                   setSearchQuery('');
                   searchInputRef.current?.focus();
                 }}
-                className="text-xs text-neutral-600 hover:text-black px-2.5 py-1 rounded-none bg-neutral-100 hover:bg-neutral-200 transition-colors shrink-0 cursor-pointer font-medium"
+                className="text-xs text-neutral-300 hover:text-white px-2.5 py-1 rounded-none bg-white/10 hover:bg-white/20 transition-colors shrink-0 cursor-pointer font-medium"
                 aria-label="Clear query"
               >
                 Clear
@@ -1171,7 +1136,7 @@ export function Header({ company, categories }: HeaderProps) {
                 setSearchQuery('');
                 setSearchOpen(false);
               }}
-              className="p-1.5 sm:p-2 rounded-none text-neutral-500 hover:text-black hover:bg-neutral-100 transition-colors shrink-0 cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-none text-neutral-400 hover:text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
               aria-label="Close search"
               title="Close search"
             >
@@ -1181,21 +1146,21 @@ export function Header({ company, categories }: HeaderProps) {
 
           {/* Search Content Body (Only displays when user types a query) */}
           {searchQuery.trim().length > 0 && (
-            <div className="max-h-[60vh] overflow-y-auto overscroll-contain bg-white animate-in fade-in duration-200">
+            <div className="max-h-[60vh] overflow-y-auto overscroll-contain bg-[#0E121B] animate-in fade-in duration-200">
               {searchLoading ? (
-                <div className="px-5 py-12 flex flex-col items-center justify-center gap-3 text-neutral-500 text-sm bg-white">
+                <div className="px-5 py-12 flex flex-col items-center justify-center gap-3 text-neutral-400 text-sm bg-[#0E121B]">
                   <Loader2 className="w-7 h-7 animate-spin text-[#FF001E]" />
                   <span>Searching catalog products…</span>
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="px-5 py-2.5 flex items-center justify-between bg-neutral-50 border-b border-neutral-200">
-                    <p className="text-xs font-bold uppercase tracking-wider text-neutral-500" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  <div className="px-5 py-2.5 flex items-center justify-between bg-white/5 border-b border-white/10">
+                    <p className="text-xs font-bold uppercase tracking-wider text-neutral-400" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                       Matching Products ({searchResults.length})
                     </p>
                   </div>
 
-                  <ul className="divide-y divide-neutral-100">
+                  <ul className="divide-y divide-white/10">
                     {searchResults.map((p, idx) => {
                       const isSelected = selectedIndex === idx;
                       return (
@@ -1205,10 +1170,10 @@ export function Header({ company, categories }: HeaderProps) {
                             onClick={() => setSearchOpen(false)}
                             className={cn(
                               'flex items-center gap-3.5 px-4 sm:px-5 py-3.5 transition-colors group',
-                              isSelected ? 'bg-neutral-100' : 'hover:bg-neutral-50'
+                              isSelected ? 'bg-white/10' : 'hover:bg-white/5'
                             )}
                           >
-                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-none bg-neutral-50 overflow-hidden shrink-0 border border-neutral-200">
+                            <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-none bg-neutral-900 overflow-hidden shrink-0 border border-white/10">
                               {p.image_url ? (
                                 <Image
                                   src={p.image_url}
@@ -1223,12 +1188,12 @@ export function Header({ company, categories }: HeaderProps) {
                               )}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm font-bold text-neutral-900 group-hover:text-[#FF001E] transition-colors truncate" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                              <p className="text-sm font-bold text-white group-hover:text-[#FF001E] transition-colors truncate" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                                 {p.name}
                               </p>
                               <div className="flex items-center gap-2 mt-1">
                                 {p.category?.name && (
-                                  <span className="text-[10px] font-semibold text-neutral-600 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded-none inline-block uppercase">
+                                  <span className="text-[10px] font-semibold text-neutral-300 bg-white/10 border border-white/15 px-2 py-0.5 rounded-none inline-block uppercase">
                                     {p.category.name}
                                   </span>
                                 )}
@@ -1247,14 +1212,14 @@ export function Header({ company, categories }: HeaderProps) {
                   </ul>
                 </>
               ) : (
-                <div className="px-5 py-12 text-center bg-white">
-                  <div className="w-12 h-12 rounded-none bg-neutral-100 flex items-center justify-center text-neutral-400 mx-auto mb-3">
+                <div className="px-5 py-12 text-center bg-[#0E121B]">
+                  <div className="w-12 h-12 rounded-none bg-white/5 flex items-center justify-center text-neutral-400 mx-auto mb-3">
                     <Search className="w-5 h-5" />
                   </div>
-                  <p className="text-sm font-bold text-neutral-900 mb-1" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                  <p className="text-sm font-bold text-white mb-1" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                     No products found for &ldquo;{searchQuery.trim()}&rdquo;
                   </p>
-                  <p className="text-xs text-neutral-500 max-w-xs mx-auto mb-4 leading-relaxed">
+                  <p className="text-xs text-neutral-400 max-w-xs mx-auto mb-4 leading-relaxed">
                     Try searching with keywords like football, jersey, nivia, cricket or badminton.
                   </p>
                   <Link

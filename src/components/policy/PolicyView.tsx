@@ -26,12 +26,12 @@ export function PolicyView({
   company,
 }: PolicyViewProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <div className="relative overflow-hidden border-b border-neutral-200 bg-neutral-50/50 pt-8 pb-10 sm:pt-14 sm:pb-16 w-full">
+        <div className="relative overflow-hidden bg-[#0E121B] pt-8 pb-10 sm:pt-14 sm:pb-16 w-full">
           <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10">
             {/* Header Content */}
             <div className="space-y-3.5 sm:space-y-4">
@@ -44,12 +44,12 @@ export function PolicyView({
 
               <h1
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
-                className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-neutral-950 leading-tight"
+                className="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-white leading-tight"
               >
                 {title} <span className="text-[#E8192C]">{highlightWord}</span>
               </h1>
 
-              <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm lg:text-base text-neutral-400 leading-relaxed max-w-2xl">
                 {description}
               </p>
             </div>
@@ -59,9 +59,9 @@ export function PolicyView({
         {/* Policy Content Sections */}
         <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-10 sm:py-16 space-y-6 sm:space-y-8">
           {sections.length === 0 ? (
-            <div className="p-8 sm:p-12 rounded-none bg-neutral-50 border border-neutral-200 text-center space-y-3">
-              <p className="text-base text-neutral-900 font-semibold">Policy details are being updated.</p>
-              <p className="text-xs sm:text-sm text-neutral-500">
+            <div className="p-8 sm:p-12 rounded-none bg-[#0E121B] text-center space-y-3">
+              <p className="text-base text-white font-semibold">Policy details are being updated.</p>
+              <p className="text-xs sm:text-sm text-neutral-400">
                 Please check back shortly or contact our support team via WhatsApp.
               </p>
             </div>
@@ -69,7 +69,7 @@ export function PolicyView({
             sections.map((section, index) => (
               <article
                 key={section.id}
-                className="relative overflow-hidden rounded-none bg-neutral-50 border border-neutral-200 hover:border-neutral-300 p-5 sm:p-8 lg:p-9 shadow-sm transition-all duration-300 group"
+                className="relative overflow-hidden rounded-none bg-[#0E121B] p-5 sm:p-8 lg:p-9 shadow-sm transition-all duration-300 group"
               >
                 <div className="relative z-10 space-y-3.5 sm:space-y-4">
                   {/* Heading with sequential index pill */}
@@ -82,14 +82,14 @@ export function PolicyView({
                     </span>
                     <h2
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
-                      className="text-lg sm:text-xl lg:text-2xl font-bold uppercase tracking-tight text-neutral-950 leading-snug"
+                      className="text-lg sm:text-xl lg:text-2xl font-bold uppercase tracking-tight text-white leading-snug"
                     >
                       {section.heading}
                     </h2>
                   </div>
 
                   {/* Description Paragraphs */}
-                  <div className="pl-11.5 sm:pl-13 text-xs sm:text-sm lg:text-base text-neutral-700 leading-relaxed whitespace-pre-line space-y-2">
+                  <div className="pl-11.5 sm:pl-13 text-xs sm:text-sm lg:text-base text-neutral-300 leading-relaxed whitespace-pre-line space-y-2">
                     {section.description}
                   </div>
                 </div>

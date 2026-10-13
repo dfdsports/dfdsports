@@ -1,22 +1,22 @@
 {
   "left_banner": {
-    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791876229/dfd-sports/banners/sonralriq2e7hiveqkde.png",
+    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791908377/dfd-sports/banners/twkaeqq1plz1dfxl1vpy.png",
     "title": "",
     "subtitle": "",
-    "link": "/products/Jersey",
-    "category_id": "0b0dac6f-6413-4c89-8b8f-23e4548cdcdf",
-    "category_name": "Jersey",
-    "product_id": "0de2f3f1-a2c0-4429-b5f6-5f03e5017672",
-    "product_name": "Jersey",
+    "link": "/products/cricket-bat",
+    "category_id": "5f9544f1-da6a-46b6-b0dd-aa68ac233f52",
+    "category_name": "CRICKET",
+    "product_id": "d2c900d6-3075-40d4-8ea8-cc0f45420152",
+    "product_name": "Cricket Bat",
     "badge": ""
   },
   "right_banner": {
-    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791876099/dfd-sports/banners/dwhryfbdohu8eb49bubl.png",
+    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791909911/dfd-sports/banners/xfkymxnfeeobxd6l4ogf.png",
     "title": "",
     "subtitle": "",
     "link": "/custom-jerseys",
     "badge": ""
   },
   "is_active": true,
-  "updated_at": "2026-10-13T07:24:00.942Z"
+  "updated_at": "2026-10-13T16:45:17.950Z"
 }

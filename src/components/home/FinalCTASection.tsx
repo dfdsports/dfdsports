@@ -9,7 +9,7 @@ interface FinalCTASectionProps {
 
 export function FinalCTASection({ company }: FinalCTASectionProps) {
   return (
-    <section className="py-6 sm:py-10 lg:py-14 relative overflow-hidden bg-white w-full">
+    <section className="py-6 sm:py-10 lg:py-14 relative overflow-hidden bg-[#080A0F] w-full">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10">
         <div className="rounded-none bg-black p-6 sm:p-10 lg:p-12 relative overflow-hidden w-full">
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-10">
