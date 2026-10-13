@@ -3,14 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { HeroSlide, CompanySettings } from '@/types/database';
-import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
-import { ArrowRight, ChevronLeft, ChevronRight, Shield, Layers, Award, Truck } from 'lucide-react';
+import { HeroSlide } from '@/types/database';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface HeroSectionProps {
   slides: HeroSlide[];
-  company?: CompanySettings | null;
 }
 
 const SLIDE_MS = 6000;
@@ -23,31 +21,17 @@ function renderHeading(heading: string, highlightText?: string | null) {
     return (
       <>
         {parts[0]}
-        <span className="text-[#F5A623]">{trimmedHighlight}</span>
+        <span className="text-[#E8192C]">{trimmedHighlight}</span>
         {parts.slice(1).join(trimmedHighlight)}
       </>
     );
   }
-
-  const words = heading.trim().split(/\s+/);
-  if (words.length <= 1) {
-    return <span className="text-[#F5A623]">{heading}</span>;
-  }
-  const lastWord = words[words.length - 1];
-  const lastIndex = heading.lastIndexOf(lastWord);
-  return (
-    <>
-      {heading.slice(0, lastIndex)}
-      <span className="text-[#F5A623]">{lastWord}</span>
-      {heading.slice(lastIndex + lastWord.length)}
-    </>
-  );
+  return <>{heading}</>;
 }
 
-export function HeroSection({ slides, company }: HeroSectionProps) {
+export function HeroSection({ slides }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
 
-  // Restarts whenever the slide changes (auto or manual), so the progress bar stays in sync
   useEffect(() => {
     if (!slides || slides.length <= 1) return;
     const timer = setTimeout(() => {
@@ -62,22 +46,38 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
   const go = (i: number) => setCurrent((i + slides.length) % slides.length);
 
   return (
-    <section className="relative h-[85vh] h-[85dvh] min-h-[520px] lg:h-screen lg:h-[100dvh] lg:min-h-[100dvh] w-full overflow-hidden bg-[#0A0C12]">
-      <style>{`@keyframes heroProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes heroHeadingIn{
-  0%{opacity:0;transform:translateX(-50px)}
-  100%{opacity:1;transform:translateX(0)}
+    <section
+      className="relative w-full overflow-hidden bg-[#0A0C12] h-[78vh] min-h-[480px] sm:h-[82vh] lg:h-[calc(100vh-73px)] lg:min-h-[520px]"
+    >
+      <style>{`
+@keyframes heroSlideIn {
+  0%  { opacity: 0; transform: translateX(-60px); }
+  100%{ opacity: 1; transform: translateX(0); }
 }
-.animate-hero-heading{
-  animation:heroHeadingIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change:transform, opacity;
+@keyframes heroFadeUp {
+  0%  { opacity: 0; transform: translateY(20px); }
+  100%{ opacity: 1; transform: translateY(0); }
 }
-@media (prefers-reduced-motion:reduce){
-  .hero-progress{animation:none!important;transform:scaleX(1)!important}
-  .animate-hero-heading{animation:none!important}
-}`}</style>
+.hero-heading-anim {
+  animation: heroSlideIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+.hero-sub-anim {
+  animation: heroFadeUp 0.75s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+.hero-cta-anim {
+  animation: heroFadeUp 0.75s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-heading-anim, .hero-sub-anim, .hero-cta-anim {
+    animation: none !important;
+  }
+}
+`}</style>
 
-      {/* Background images — pinned right so the products stay visible, text sits on the dark side */}
+      {/* ── Background Slides ── */}
       {slides.map((slide, i) => (
         <div
           key={slide.id ?? i}
@@ -93,7 +93,7 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                 src={slide.mobile_image_url}
                 alt={slide.heading}
                 fill
-                sizes="(max-width: 1023px) 100vw, 1px"
+                // sizes="(max-width: 1023px) 100vw, 1px"
                 priority={i === 0}
                 className="object-cover object-center lg:hidden"
               />
@@ -102,9 +102,9 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                   src={slide.image_url}
                   alt={slide.heading}
                   fill
-                  sizes="(min-width: 1024px) 100vw, 1px"
+                  // sizes="(min-width: 1024px) 100vw, 1px"
                   priority={i === 0}
-                  className="hidden object-cover lg:block lg:object-right"
+                  className="hidden object-cover lg:block object-top"
                 />
               )}
             </>
@@ -116,127 +116,109 @@ export function HeroSection({ slides, company }: HeroSectionProps) {
                 fill
                 sizes="100vw"
                 priority={i === 0}
-                className="object-cover object-center lg:object-right"
+                className="object-cover object-center"
               />
             )
           )}
+
         </div>
       ))}
 
-      {/* Overlays: desktop only */}
-      {/* <div className="absolute inset-0 hidden bg-gradient-to-r from-[#0A0C12] from-30% via-[#0A0C12]/70 via-45% to-transparent to-65% lg:block" />
-      <div className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0C12]/90 to-transparent lg:block" /> */}
+      {/* ── Left Arrow ── */}
+      {slides.length > 1 && (
+        <button
+          onClick={() => go(current - 1)}
+          aria-label="Previous slide"
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center border border-white/30 text-white hover:bg-white/15 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+        </button>
+      )}
 
-      {/* Content — bottom on mobile, vertically centered on desktop */}
-      <div className="relative z-10 flex h-full items-end pb-10 sm:pb-20 lg:items-center lg:pb-0">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="max-w-xl text-left">
+      {/* ── Right Arrow ── */}
+      {slides.length > 1 && (
+        <button
+          onClick={() => go(current + 1)}
+          aria-label="Next slide"
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center border border-white/30 text-white hover:bg-white/15 transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+        </button>
+      )}
+
+      {/* ── Hero Content (Mobile: bottom center, Desktop: left-aligned vertically centered) ── */}
+      <div className="relative z-10 flex h-full items-end lg:items-center pb-8 sm:pb-12 lg:pb-0">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
+
+            {/* Sub-heading / Eyebrow (Hidden on mobile) */}
             {active.eyebrow && (
-              <p className="mb-2.5 sm:mb-5 flex items-center gap-3 text-xs sm:text-sm font-medium text-[#F5A623]">
+              <p
+                key={`eyebrow-${current}`}
+                className="hero-sub-anim hidden lg:block mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-gray-300"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+              >
                 {active.eyebrow}
               </p>
             )}
 
+            {/* Main Heading (Decreased font size on mobile, bottom center) */}
             <h1
-              key={current}
-              className="mb-4 sm:mb-5 text-[2rem] sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-normal leading-[1.05] tracking-tight text-white font-rowan animate-hero-heading"
-              style={{ fontFamily: "'_Rowan_Variable', 'Rowan', Georgia, serif" }}
+              key={`heading-${current}`}
+              className="hero-heading-anim mb-3 lg:mb-5 text-[1.65rem] sm:text-3xl lg:text-[4rem] xl:text-[5rem] font-bold leading-[1.1] sm:leading-[1.05] tracking-tight text-white uppercase max-w-lg lg:max-w-none"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               {renderHeading(active.heading, active.highlight_text)}
             </h1>
 
+            {/* Description (Hidden on mobile) */}
             {active.description && (
-              <p className="mb-8 hidden max-w-md text-xs leading-relaxed text-gray-300 sm:text-sm lg:block">
+              <p
+                key={`desc-${current}`}
+                className="hero-sub-anim hidden lg:block mb-8 max-w-lg text-sm sm:text-base leading-relaxed text-gray-300 font-normal"
+                style={{ fontFamily: "var(--font-barlow-text), 'Barlow', sans-serif" }}
+              >
                 {active.description}
               </p>
             )}
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* CTA Button directly below heading */}
+            <div
+              key={`cta-${current}`}
+              className="hero-cta-anim flex items-center justify-center lg:justify-start gap-3 sm:gap-4 mt-1 lg:mt-0"
+            >
               {active.primary_cta_text && active.primary_cta_link && (
                 <Link
                   href={active.primary_cta_link}
-                  className="group inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-4 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-base font-bold text-white transition-colors hover:bg-[#FFB83D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white whitespace-nowrap shrink-0"
+                  className="inline-flex items-center justify-center gap-2 bg-[#FF001E] hover:bg-[#d6001a] text-white text-xs sm:text-sm font-bold uppercase tracking-[0.14em] px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-none transition-colors whitespace-nowrap shadow-md"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   {active.primary_cta_text}
                 </Link>
-              )}
-
-              {active.secondary_cta_text && (
-                <>
-                  {/* Mobile: WhatsApp icon button on right side */}
-                  <div className="lg:hidden shrink-0">
-                    <WhatsAppButton
-                      phoneNumber={company?.whatsapp_number}
-                      type="custom_jersey"
-                      variant="whatsapp"
-                      size="lg"
-                      className="!h-[46px] !w-[46px] sm:!h-[48px] sm:!w-[48px] !p-0 !rounded-lg !gap-0"
-                      aria-label={active.secondary_cta_text}
-                    >
-                      <span className="sr-only">{active.secondary_cta_text}</span>
-                    </WhatsAppButton>
-                  </div>
-
-                  {/* Desktop: Full WhatsApp button */}
-                  <div className="hidden lg:block">
-                    <WhatsAppButton
-                      phoneNumber={company?.whatsapp_number}
-                      type="custom_jersey"
-                      variant="whatsapp"
-                      size="lg"
-                    >
-                      {active.secondary_cta_text}
-                    </WhatsAppButton>
-                  </div>
-                </>
-              )}
-              {/* Mobile: Next and Previous slide buttons on the same line */}
-              {slides.length > 1 && (
-                <div className="flex sm:hidden items-center gap-1.5 ml-auto shrink-0">
-                  <button
-                    onClick={() => go(current - 1)}
-                    aria-label="Previous slide"
-                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => go(current + 1)}
-                    aria-label="Next slide"
-                    className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom strip: features + slide controls (Desktop) */}
-      <div className="hidden sm:block absolute inset-x-0 bottom-0 z-20">
-        <div className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
-          {slides.length > 1 && (
-            <div className="flex items-center justify-end gap-1.5">
-              <button
-                onClick={() => go(current - 1)}
-                aria-label="Previous slide"
-                className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => go(current + 1)}
-                aria-label="Next slide"
-                className="rounded-lg border border-white/15 p-2 text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          )}
+      {/* ── Slide Indicator Bars (Hidden on mobile, visible on desktop) ── */}
+      {slides.length > 1 && (
+        <div className="hidden lg:flex absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 items-center gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => go(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={cn(
+                'h-[3px] transition-all duration-300 rounded-none',
+                i === current
+                  ? 'w-12 sm:w-16 bg-[#FF001E]'
+                  : 'w-12 sm:w-16 bg-white/30 hover:bg-white/50'
+              )}
+            />
+          ))}
         </div>
-      </div>
+      )}
     </section>
   );
 }

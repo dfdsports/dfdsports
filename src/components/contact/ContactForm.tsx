@@ -68,14 +68,19 @@ export function ContactForm({ company }: ContactFormProps) {
   });
 
   return (
-    <div className="rounded-sm bg-transparent sm:bg-[#0E121B] p-0 sm:p-10 shadow-none sm:shadow-2xl relative">
+    <div className="rounded-none bg-neutral-50 border border-neutral-200 p-6 sm:p-10 text-neutral-900 shadow-sm relative">
       {submitted ? (
         <div className="text-center py-10">
           <div className="w-16 h-16 rounded-full bg-[#25D366]/20 text-[#25D366] flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-bold text-white mb-2">Enquiry Received!</h3>
-          <p className="text-sm text-gray-400 max-w-md mx-auto mb-8">
+          <h3
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+            className="text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-2"
+          >
+            Enquiry Received!
+          </h3>
+          <p className="text-sm text-neutral-600 max-w-md mx-auto mb-8">
             Thank you, {name}. Our sports consultant has received your inquiry. For immediate response
             and instant discussion, click below to open WhatsApp.
           </p>
@@ -84,7 +89,8 @@ export function ContactForm({ company }: ContactFormProps) {
             href={directWhatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white font-bold text-sm shadow-xl shadow-[#25D366]/25 transition-transform active:scale-95"
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-none bg-[#25D366] hover:bg-[#20BA5A] text-white font-bold text-sm uppercase tracking-[0.14em] shadow-md transition-transform active:scale-95"
           >
             <MessageCircle className="w-5 h-5" />
             <span>Continue on WhatsApp Directly</span>
@@ -92,15 +98,18 @@ export function ContactForm({ company }: ContactFormProps) {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
-          <h3 className="text-xl font-semibold uppercase tracking-tight text-white mb-1">
+          <h3
+            style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+            className="text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-1"
+          >
             Send an Institutional or Bulk Enquiry
           </h3>
-          <p className="text-xs text-gray-400 mb-6">
+          <p className="text-xs text-neutral-600 mb-6">
             Fill in your details and our team will prepare a tailored quotation for you.
           </p>
 
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-red-950/40 border border-red-800 text-red-300 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-none bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -109,28 +118,28 @@ export function ContactForm({ company }: ContactFormProps) {
           {/* Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
-                Your Full Name <span className="text-[#F5A623]">*</span>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+                Your Full Name <span className="text-[#E8192C]">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
-                Phone / WhatsApp Number <span className="text-[#F5A623]">*</span>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+                Phone / WhatsApp Number <span className="text-[#E8192C]">*</span>
               </label>
               <input
                 type="tel"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
           </div>
@@ -138,19 +147,19 @@ export function ContactForm({ company }: ContactFormProps) {
           {/* Email & Enquiry Type */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
                 Email Address (Optional)
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
                 Enquiry Type
               </label>
               <select
@@ -158,7 +167,7 @@ export function ContactForm({ company }: ContactFormProps) {
                 onChange={(e) =>
                   setEnquiryType(e.target.value as 'general' | 'product' | 'custom_jersey')
                 }
-                className="w-full px-4 py-3 rounded-xl bg-[#141824] text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
               >
                 <option value="general">General Sports Equipment Supply</option>
                 <option value="custom_jersey">Custom Sublimation Teamwear / Jerseys</option>
@@ -169,27 +178,27 @@ export function ContactForm({ company }: ContactFormProps) {
 
           {/* Requirement / Quantity */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
               Sports Requirement or Estimated Quantity
             </label>
             <input
               type="text"
               value={requirement}
               onChange={(e) => setRequirement(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
             />
           </div>
 
           {/* Message */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
               Message or Specific Notes
             </label>
             <textarea
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-[#F5A623] text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
             />
           </div>
 
@@ -197,7 +206,8 @@ export function ContactForm({ company }: ContactFormProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#F5A623] hover:bg-[#E09612] text-[#080A0F] font-bold text-sm shadow-xl shadow-[#F5A623]/20 transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-50"
+              style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white font-bold text-sm tracking-[0.14em] uppercase shadow-md transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
               <span>{loading ? 'Submitting...' : 'Submit Enquiry'}</span>

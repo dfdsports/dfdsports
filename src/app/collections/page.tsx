@@ -51,15 +51,15 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 sm:py-10">
         <Suspense
           fallback={
             <div className="py-24 flex flex-col items-center justify-center">
-              <div className="w-8 h-8 rounded-full border-2 border-[#F5A623]/20 border-t-[#F5A623] animate-spin mb-4" />
-              <p className="text-xs uppercase tracking-widest text-gray-400">Loading sports collections...</p>
+              <div className="w-8 h-8 rounded-full border-2 border-[#FF001E]/20 border-t-[#FF001E] animate-spin mb-4" />
+              <p className="text-xs uppercase tracking-widest text-neutral-500">Loading sports collections...</p>
             </div>
           }
         >

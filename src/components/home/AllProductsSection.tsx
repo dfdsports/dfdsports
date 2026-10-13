@@ -41,7 +41,6 @@ export function AllProductsSection({
           <SectionHeading
             eyebrow="DFD Sports Catalog"
             title="All products"
-            highlightWord="products"
             align="left"
             className="!mb-0 !pb-0 [&_*]:!mb-0 [&_*]:!pb-0"
           />

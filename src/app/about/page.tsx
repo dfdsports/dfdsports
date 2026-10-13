@@ -41,11 +41,11 @@ export default async function AboutPage() {
     : 'https://wa.me/919876543210';
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#F5A623] selection:text-[#080A0F]">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 space-y-16 sm:space-y-24">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-12 lg:py-16 space-y-16 sm:space-y-24">
           {/* =========================================================================
             1. HERO / FIRST SECTION
             Left: Heading, Eyebrow, Paragraph & Action CTAs
@@ -54,31 +54,41 @@ export default async function AboutPage() {
           <section className="space-y-10 sm:space-y-14">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Column: Heading & Paragraph */}
-              <div className="lg:col-span-7 space-y-5 sm:space-y-3">
-                <div className="inline-flex items-center gap-2 py-1.5 rounded-full">
-                  <span className="text-[11px] sm:text-xs uppercase font-bold tracking-[0.2em] text-[#F5A623]">
+              <div className="lg:col-span-7 space-y-5 sm:space-y-4">
+                <div className="inline-flex items-center gap-2 py-1">
+                  <span
+                    className="text-[11px] sm:text-xs uppercase font-semibold tracking-[0.25em] text-[#E8192C]"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  >
                     DESTINATION FOR DREAMS
                   </span>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl font-semibold uppercase tracking-tight text-white leading-tight">
+                <h1
+                  className="text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-neutral-950 leading-tight"
+                  style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+                >
                   More Than Sports.{' '}
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
+                  <span className="block text-[#E8192C]">
                     We Support The Dream Behind It.
                   </span>
                 </h1>
 
-                <p className="text-xs sm:text-sm lg:text-base text-gray-300 leading-relaxed max-w-2xl">
-                  DFD – Destination for Dreams is a sports initiative founded by three young sports enthusiasts with a simple vision: to make quality sports products accessible at the right price and help people turn their sporting dreams into reality.              </p>
-                <p>
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+                  DFD – Destination for Dreams is a sports initiative founded by three young sports enthusiasts with a simple vision: to make quality sports products accessible at the right price and help people turn their sporting dreams into reality.
+                </p>
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
                   What started as a new journey in the sports industry has grown into a trusted choice for 100+ satisfied regular customers. Over the past two years, we have built strong relationships with athletes, students, schools, clubs and sports enthusiasts by focusing on what matters most — quality, reliability and customer satisfaction.
                 </p>
-                <p>At DFD, we provide a wide range of quality sports equipment, customised jerseys, medals, sports accessories and sports mats, sourced from leading and trusted brands. We also offer customised solutions to meet the requirements of schools, clubs, academies, tournaments and sporting events.</p>
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+                  At DFD, we provide a wide range of quality sports equipment, customised jerseys, medals, sports accessories and sports mats, sourced from leading and trusted brands. We also offer customised solutions to meet the requirements of schools, clubs, academies, tournaments and sporting events.
+                </p>
 
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
                   <Link
                     href="/collections"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#F5A623] hover:bg-[#d9901a] text-black text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-lg shadow-[#F5A623]/15 active:scale-[0.98]"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white text-xs sm:text-sm font-bold uppercase tracking-[0.14em] transition-all shadow-md active:scale-[0.98]"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     Explore Collections
                     <ArrowRight className="w-4 h-4" />
@@ -86,7 +96,8 @@ export default async function AboutPage() {
 
                   <Link
                     href="/custom-jerseys"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0E121B] hover:bg-[#151B28] text-white text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all active:scale-[0.98]"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-none border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-900 text-xs sm:text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-[0.98]"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     Custom Teamwear
                   </Link>
@@ -95,7 +106,8 @@ export default async function AboutPage() {
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] text-xs sm:text-sm font-bold transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-none bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#16A34A] text-xs sm:text-sm font-bold uppercase tracking-[0.12em] transition-all"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     <MessageCircle className="w-4 h-4" />
                     Chat on WhatsApp
@@ -105,7 +117,7 @@ export default async function AboutPage() {
 
               {/* Right Column: Image Section */}
               <div className="lg:col-span-5">
-                <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl bg-[#0E121B] group">
+                <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-none overflow-hidden shadow-md bg-neutral-100 group">
                   <Image
                     src="/images/about/hero_athletes.jpg"
                     alt="DFD Sports Athletes and Gear"
@@ -116,22 +128,27 @@ export default async function AboutPage() {
                   />
 
                   {/* Subtle Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F]/90 via-transparent to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Corner Floating Highlight Badge */}
-                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 p-3.5 sm:p-4 rounded-2xl bg-[#0E121B]/90 backdrop-blur-md shadow-xl flex items-center justify-between gap-3">
+                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 p-3.5 sm:p-4 rounded-none bg-neutral-950/85 backdrop-blur-md shadow-md flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-
                       <div>
-                        <p className="text-[11px] sm:text-xs font-bold uppercase text-white tracking-wide">
+                        <p
+                          className="text-[11px] sm:text-xs font-bold uppercase text-white tracking-wide"
+                          style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                        >
                           Engineered for Champions
                         </p>
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-neutral-400">
                           Kozhikode, Kerala • Delivering Pan-India
                         </p>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#F5A623] px-2.5 py-1 rounded-full bg-[#F5A623]/10 shrink-0">
+                    <span
+                      className="text-[10px] uppercase font-bold tracking-wider text-[#FF001E] px-2.5 py-1 rounded-none bg-[#FF001E]/10 shrink-0"
+                      style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                    >
                       Est. 2025
                     </span>
                   </div>

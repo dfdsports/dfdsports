@@ -26,7 +26,6 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
         <SectionHeading
           eyebrow="Explore"
           title="Shop the game"
-          highlightWord="game"
           subtitle="Quality equipment for every sport"
         />
         <EmptyState
@@ -50,7 +49,6 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
         <SectionHeading
           eyebrow="Explore"
           title="Shop the game"
-          highlightWord="game"
           subtitle="Quality equipment for every sport"
           align="left"
         />
@@ -61,7 +59,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
             <Link
               key={category.id}
               href={`/collections/${category.slug}`}
-              className="group block focus-visible:outline-none"
+              className="group block focus-visible:outline-none transition-transform duration-300 ease-out hover:scale-105 origin-center will-change-transform"
             >
               {/* Image Card without black gradient and rounded-sm border radius */}
               <div className="relative h-[160px] sm:h-[210px] w-full overflow-hidden rounded-sm bg-black focus-visible:ring-2 focus-visible:ring-[#F5A623]">
@@ -71,7 +69,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                     alt={category.name}
                     fill
                     sizes="(min-width: 1024px) 33vw, 50vw"
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none [backface-visibility:hidden] [transform:translateZ(0)]"
+                    className="object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)]"
                   />
                 ) : (
                   <div className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-[#F5A623]/10 blur-3xl" />

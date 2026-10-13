@@ -9,50 +9,54 @@ interface FinalCTASectionProps {
 
 export function FinalCTASection({ company }: FinalCTASectionProps) {
   return (
-    <section className="py-5 sm:py-10 relative overflow-hidden bg-[#080A0F]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-2xl sm:rounded-md bg-[#0D111A] p-4 sm:p-10 lg:p-12 shadow-2xl relative overflow-hidden">
-          {/* Subtle Ambient Glows */}
-          <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#F5A623]/10 blur-[100px]" />
-          <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-[#1E3A8A]/15 blur-[100px]" />
-
+    <section className="py-6 sm:py-10 lg:py-14 relative overflow-hidden bg-white w-full">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10">
+        <div className="rounded-none bg-black p-6 sm:p-10 lg:p-12 relative overflow-hidden w-full">
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-10">
             {/* Left side: Content */}
             <div className="max-w-2xl text-left">
-              <p className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F5A623] mb-2 sm:mb-2.5">
+              <p
+                className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#E8192C] mb-2 sm:mb-2.5"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+              >
                 Destination for Dreams
               </p>
 
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase tracking-tight text-white leading-tight mb-2.5 sm:mb-3">
+              <h2
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase tracking-tight text-white leading-tight mb-2.5 sm:mb-3"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+              >
                 BUILD YOUR{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5A623] via-[#FBBF24] to-[#F59E0B]">
+                <span className="text-[#E8192C]">
                   TEAM IDENTITY.
                 </span>
               </h2>
 
-              <p className="text-xs sm:text-sm text-gray-300/80 leading-relaxed max-w-xl">
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-xl">
                 Talk to DFD Sports about custom sublimation jerseys, academy kits, and certified sports
                 equipment for your team, school, or club.
               </p>
             </div>
 
-            {/* Right side: Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 shrink-0">
+            {/* Right side: Buttons with border radius none and red custom quote button */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 shrink-0">
               <WhatsAppButton
                 phoneNumber={company?.whatsapp_number}
                 type="custom_jersey"
                 variant="whatsapp"
                 size="md"
-                className="h-11 justify-center shadow-lg shadow-[#25D366]/20"
+                className="h-11 sm:h-12 px-6 sm:px-8 justify-center rounded-none !rounded-none font-bold uppercase tracking-[0.12em] text-xs sm:text-sm shadow-none whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 Enquire on WhatsApp
               </WhatsAppButton>
 
               <Link
                 href="/contact"
-                className="inline-flex h-11 items-center justify-center px-5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm transition-colors hover:border-white/20 text-center"
+                className="inline-flex h-11 sm:h-12 items-center justify-center px-6 sm:px-8 rounded-none bg-[#FF001E] hover:bg-[#d6001a] text-white font-bold uppercase tracking-[0.12em] text-xs sm:text-sm transition-colors shadow-md text-center whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
-                Submit Custom Quote Request
+                Submit Custom Quote
               </Link>
             </div>
           </div>

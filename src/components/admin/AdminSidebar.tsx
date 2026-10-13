@@ -21,6 +21,7 @@ import {
   ChevronRight,
   ExternalLink,
   ShieldCheck,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -69,6 +70,7 @@ const navSections: NavSection[] = [
     title: 'Store Settings',
     items: [
       { label: 'Hero Banners', href: '/admin/hero', icon: ImageIcon },
+      { label: 'Dual Banners', href: '/admin/banners', icon: Sparkles },
       { label: 'Company Details', href: '/admin/company', icon: Building2 },
       { label: 'Policies', href: '/admin/policies', icon: ShieldCheck },
     ],

@@ -1,0 +1,22 @@
+{
+  "left_banner": {
+    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791876229/dfd-sports/banners/sonralriq2e7hiveqkde.png",
+    "title": "",
+    "subtitle": "",
+    "link": "/products/Jersey",
+    "category_id": "0b0dac6f-6413-4c89-8b8f-23e4548cdcdf",
+    "category_name": "Jersey",
+    "product_id": "0de2f3f1-a2c0-4429-b5f6-5f03e5017672",
+    "product_name": "Jersey",
+    "badge": ""
+  },
+  "right_banner": {
+    "image_url": "https://res.cloudinary.com/v9xqdhgw/image/upload/v1791876099/dfd-sports/banners/dwhryfbdohu8eb49bubl.png",
+    "title": "",
+    "subtitle": "",
+    "link": "/custom-jerseys",
+    "badge": ""
+  },
+  "is_active": true,
+  "updated_at": "2026-10-13T07:24:00.942Z"
+}

@@ -39,7 +39,6 @@ export function WhyChooseUsSection({ items }: WhyChooseUsSectionProps) {
         <SectionHeading
           eyebrow="THE DFD ADVANTAGE"
           title="WHY CHOOSE DFD SPORTS"
-          highlightWord="DFD SPORTS"
           subtitle="Precision engineering, authentic gear supply, and bespoke teamwear tailored for performance"
           align="center"
         />
