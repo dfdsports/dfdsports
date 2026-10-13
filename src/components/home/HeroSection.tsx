@@ -129,7 +129,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
         <button
           onClick={() => go(current - 1)}
           aria-label="Previous slide"
-          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center border border-white/30 text-white hover:bg-white/15 transition-colors"
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center bg-black/40 text-white hover:bg-black/70 transition-colors"
         >
           <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
@@ -140,7 +140,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
         <button
           onClick={() => go(current + 1)}
           aria-label="Next slide"
-          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center border border-white/30 text-white hover:bg-white/15 transition-colors"
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center bg-black/40 text-white hover:bg-black/70 transition-colors"
         >
           <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
@@ -148,8 +148,8 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
       {/* ── Hero Content (Mobile: bottom center, Desktop: left-aligned vertically centered) ── */}
       <div className="relative z-10 flex h-full items-end lg:items-center pb-8 sm:pb-12 lg:pb-0">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-12">
-          <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+          <div className="max-w-3xl lg:max-w-4xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
 
             {/* Sub-heading / Eyebrow (Hidden on mobile) */}
             {active.eyebrow && (

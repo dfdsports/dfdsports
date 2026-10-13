@@ -49,7 +49,7 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
   const durationSec = Math.max(28, baseList.length * 3.8);
 
   return (
-    <section id="fabrics" className={cn('bg-white text-neutral-900 py-10 sm:py-16 md:py-20 w-full overflow-hidden', className)}>
+    <section id="fabrics" className={cn('bg-[#080A0F] text-white py-10 sm:py-16 md:py-20 w-full overflow-hidden', className)}>
       <style>{`
         @keyframes fabrics-slide-left {
           0% {
@@ -92,12 +92,12 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
               </p>
             </div>
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-black uppercase leading-tight tracking-[0.04em]"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-white uppercase leading-tight tracking-[0.04em]"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               Fabrics Built For Performance
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400 sm:text-base">
               Breathable, durable and moisture-wicking fabrics engineered for peak comfort and performance on the field.
             </p>
           </div>
@@ -126,10 +126,10 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                 key={`${fabric.id}-${i}`}
                 aria-hidden={isClone || undefined}
                 onClick={() => setSelectedFabric(fabric)}
-                className="group relative flex flex-col w-[260px] sm:w-[280px] md:w-[300px] h-[340px] sm:h-[360px] shrink-0 rounded-none bg-white border border-neutral-200 hover:border-[#E8192C] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden text-left cursor-pointer select-none"
+                className="group relative flex flex-col w-[260px] sm:w-[280px] md:w-[300px] h-[340px] sm:h-[360px] shrink-0 rounded-xl bg-[#0E121B] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden text-left cursor-pointer select-none"
               >
                 {/* Fabric Image Window */}
-                <div className="relative h-[200px] sm:h-[215px] w-full overflow-hidden bg-neutral-100">
+                <div className="relative h-[200px] sm:h-[215px] w-full overflow-hidden bg-neutral-900">
                   {fabric.image_url ? (
                     <Image
                       src={fabric.image_url}
@@ -139,13 +139,13 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-108 motion-reduce:transition-none"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
+                    <div className="flex h-full w-full items-center justify-center bg-neutral-900 text-neutral-500">
                       <Layers className="h-8 w-8" />
                     </div>
                   )}
 
                   {/* Hover Inspect Overlay */}
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-black text-xs font-bold shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       <Eye className="w-3.5 h-3.5 text-[#E8192C]" />
                       Inspect Fabric
@@ -157,29 +157,29 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                 <div className="h-[2px] w-0 group-hover:w-full bg-[#E8192C] transition-all duration-300" />
 
                 {/* Card Content Body */}
-                <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 bg-white">
+                <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 bg-[#0E121B]">
                   <div>
                     <h3
-                      className="text-lg sm:text-xl font-bold uppercase text-neutral-950 group-hover:text-[#E8192C] transition-colors leading-snug line-clamp-1"
+                      className="text-lg sm:text-xl font-bold uppercase text-white group-hover:text-[#E8192C] transition-colors leading-snug line-clamp-1"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
                     >
                       {fabric.name}
                     </h3>
 
                     {fabric.short_description && (
-                      <p className="mt-1 text-xs text-neutral-500 leading-relaxed line-clamp-2">
+                      <p className="mt-1 text-xs text-neutral-400 leading-relaxed line-clamp-2">
                         {fabric.short_description}
                       </p>
                     )}
                   </div>
 
                   {/* Bottom Specification Badge / Feature */}
-                  <div className="pt-2 border-t border-neutral-100 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-600 line-clamp-1">
-                      <span className="w-1 h-1 rounded-full bg-neutral-400" />
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-400 line-clamp-1">
+                      <span className="w-1 h-1 rounded-full bg-neutral-500" />
                       {specs[0] || 'Moisture Wicking'}
                     </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#E8192C] group-hover:translate-x-1 transition-all shrink-0" />
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#E8192C] group-hover:translate-x-1 transition-all shrink-0" />
                   </div>
                 </div>
               </div>
@@ -193,15 +193,15 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setSelectedFabric(null)}
         >
           <div
-            className="relative w-full max-w-2xl bg-white rounded-none border border-neutral-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className="relative w-full max-w-2xl bg-[#0E121B] rounded-none shadow-2xl overflow-hidden flex flex-col max-h-[90vh] text-white"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 bg-neutral-50">
+            <div className="flex items-center justify-between px-5 py-4 bg-[#121622]">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#E8192C]" />
                 <span
@@ -215,7 +215,7 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                 type="button"
                 onClick={() => setSelectedFabric(null)}
                 aria-label="Close modal"
-                className="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-600 hover:text-black hover:border-black transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/20 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -225,7 +225,7 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
             <div className="overflow-y-auto p-5 sm:p-6 space-y-6">
               {/* Full Texture Swatch */}
               {selectedFabric.image_url && (
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-none border border-neutral-200 bg-neutral-100">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-none bg-neutral-900">
                   <Image
                     src={selectedFabric.image_url}
                     alt={selectedFabric.name}
@@ -242,13 +242,13 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
               {/* Title & Description */}
               <div>
                 <h2
-                  className="text-2xl sm:text-3xl font-bold uppercase text-black"
+                  className="text-2xl sm:text-3xl font-bold uppercase text-white"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
                 >
                   {selectedFabric.name}
                 </h2>
                 {selectedFabric.short_description && (
-                  <p className="mt-2 text-sm sm:text-base text-neutral-600 leading-relaxed">
+                  <p className="mt-2 text-sm sm:text-base text-neutral-300 leading-relaxed">
                     {selectedFabric.short_description}
                   </p>
                 )}
@@ -256,12 +256,12 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
 
               {/* Specifications List */}
               {selectedFabric.specifications && (
-                <div className="bg-neutral-50 border border-neutral-100 p-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-800 mb-3 flex items-center gap-1.5">
+                <div className="bg-[#121622] p-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#E8192C]" />
                     Engineered Features & Specifications
                   </h4>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-neutral-700">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-neutral-300">
                     {selectedFabric.specifications
                       .split(/,|\n/)
                       .map((spec: string) => spec.trim())
@@ -278,8 +278,8 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
             </div>
 
             {/* Modal Footer with Actions */}
-            <div className="px-5 py-4 border-t border-neutral-100 bg-neutral-50 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-neutral-500">
+            <div className="px-5 py-4 bg-[#121622] flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs text-neutral-400">
                 Available for custom sublimated jerseys and teamwear orders.
               </span>
               <a

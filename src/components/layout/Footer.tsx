@@ -27,7 +27,7 @@ function FooterAccordion({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/20 md:border-none">
+    <div className="border-b border-white/10 md:border-none">
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen((p) => !p)}
@@ -79,7 +79,7 @@ function FooterLinkList({
         <li key={item.label}>
           <Link
             href={item.href}
-            className="text-white hover:underline transition-all text-sm font-medium"
+            className="text-neutral-300 hover:text-white hover:underline transition-all text-sm font-medium"
           >
             {item.label}
           </Link>
@@ -112,7 +112,7 @@ export function Footer({ company }: FooterProps) {
   ];
 
   return (
-    <footer className="bg-[#850A15] text-white text-sm w-full">
+    <footer className="bg-[#0B1528] text-white text-sm w-full">
       {/* ── Upper Footer ──────────────────────────────────────────────── */}
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 sm:py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
@@ -131,7 +131,7 @@ export function Footer({ company }: FooterProps) {
               </div>
             </Link>
 
-            <p className="text-white text-sm leading-relaxed max-w-sm mb-6 font-normal">
+            <p className="text-neutral-300 text-sm leading-relaxed max-w-sm mb-6 font-normal">
               {company?.short_description ||
                 'High-performance sports equipment supplier and custom teamwear provider for schools, clubs, academies and tournaments across India.'}
             </p>
@@ -143,7 +143,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-white hover:bg-[#FF001E] transition-colors"
                   aria-label="Instagram"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -156,7 +156,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.facebook_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-white hover:bg-[#FF001E] transition-colors"
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -169,7 +169,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.youtube_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-white hover:bg-[#FF001E] transition-colors"
                   aria-label="YouTube"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@ export function Footer({ company }: FooterProps) {
                   href={company.twitter_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:text-[#850A15] hover:bg-white transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-white hover:bg-[#FF001E] transition-colors"
                   aria-label="Twitter / X"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -215,7 +215,7 @@ export function Footer({ company }: FooterProps) {
                 {company?.address && (
                   <div className="flex items-start gap-2.5">
                     <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                    <span className="leading-relaxed text-white">{company.address}</span>
+                    <span className="leading-relaxed text-neutral-300">{company.address}</span>
                   </div>
                 )}
 
@@ -225,7 +225,7 @@ export function Footer({ company }: FooterProps) {
                     <Phone className="w-4 h-4 text-white shrink-0" />
                     <a
                       href={`tel:${company.phone}`}
-                      className="text-white hover:underline transition-colors"
+                      className="text-neutral-300 hover:text-white hover:underline transition-colors"
                     >
                       {company.phone}
                     </a>
@@ -238,7 +238,7 @@ export function Footer({ company }: FooterProps) {
                     <Mail className="w-4 h-4 text-white shrink-0" />
                     <a
                       href={`mailto:${company.email}`}
-                      className="text-white hover:underline transition-colors break-all"
+                      className="text-neutral-300 hover:text-white hover:underline transition-colors break-all"
                     >
                       {company.email}
                     </a>
@@ -259,7 +259,7 @@ export function Footer({ company }: FooterProps) {
                       href={whatsappHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white hover:underline transition-colors"
+                      className="text-neutral-300 hover:text-white hover:underline transition-colors"
                     >
                       {company.whatsapp_number}
                     </a>
@@ -272,7 +272,7 @@ export function Footer({ company }: FooterProps) {
                     href={`${whatsappHref}?text=Hi%2C%20I%27m%20interested%20in%20your%20sports%20products.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-none bg-white text-[#850A15] text-xs font-bold uppercase tracking-wider hover:bg-neutral-100 transition-colors shadow-sm"
+                    className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-none bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
@@ -286,12 +286,12 @@ export function Footer({ company }: FooterProps) {
       </div>
 
       {/* ── Sub Footer ────────────────────────────────────────────────── */}
-      <div className="bg-[#69060F] py-6 border-t border-white/15">
-        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white">
-          <p className="text-white">
+      <div className="bg-[#060D1E] py-6">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
+          <p className="text-neutral-400">
             © {currentYear} {brandName} ({fullName}). All rights reserved.
           </p>
-          <div className="flex items-center gap-1.5 text-white">
+          <div className="flex items-center gap-1.5 text-neutral-400">
             <span>Crafted by</span>
             <a
               href="https://www.ekodrix.com/"

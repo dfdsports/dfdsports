@@ -161,7 +161,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="min-h-screen bg-white text-neutral-900 font-sans antialiased selection:bg-[#FF001E] selection:text-white"
+        className="min-h-screen bg-[#080A0F] text-white font-sans antialiased selection:bg-[#FF001E] selection:text-white"
         suppressHydrationWarning
       >
         <Preloader />

@@ -51,7 +51,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 sm:py-10">

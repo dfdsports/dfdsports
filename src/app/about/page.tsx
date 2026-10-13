@@ -41,7 +41,7 @@ export default async function AboutPage() {
     : 'https://wa.me/919876543210';
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1">
@@ -65,7 +65,7 @@ export default async function AboutPage() {
                 </div>
 
                 <h1
-                  className="text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-neutral-950 leading-tight"
+                  className="text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-white leading-tight"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
                 >
                   More Than Sports.{' '}
@@ -74,13 +74,13 @@ export default async function AboutPage() {
                   </span>
                 </h1>
 
-                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-300 leading-relaxed max-w-2xl">
                   DFD – Destination for Dreams is a sports initiative founded by three young sports enthusiasts with a simple vision: to make quality sports products accessible at the right price and help people turn their sporting dreams into reality.
                 </p>
-                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-300 leading-relaxed max-w-2xl">
                   What started as a new journey in the sports industry has grown into a trusted choice for 100+ satisfied regular customers. Over the past two years, we have built strong relationships with athletes, students, schools, clubs and sports enthusiasts by focusing on what matters most — quality, reliability and customer satisfaction.
                 </p>
-                <p className="text-xs sm:text-sm lg:text-base text-neutral-600 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-sm lg:text-base text-neutral-300 leading-relaxed max-w-2xl">
                   At DFD, we provide a wide range of quality sports equipment, customised jerseys, medals, sports accessories and sports mats, sourced from leading and trusted brands. We also offer customised solutions to meet the requirements of schools, clubs, academies, tournaments and sporting events.
                 </p>
 
@@ -96,7 +96,7 @@ export default async function AboutPage() {
 
                   <Link
                     href="/custom-jerseys"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-none border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-900 text-xs sm:text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-[0.98]"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-none border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs sm:text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-[0.98]"
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     Custom Teamwear

@@ -33,7 +33,7 @@ export default async function CustomJerseysPage() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1 w-full space-y-12 sm:space-y-16">

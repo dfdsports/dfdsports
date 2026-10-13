@@ -46,7 +46,7 @@ function StudioCard({ item }: { item: CategoryShowcaseItem }) {
   return (
     <Link
       href={targetHref}
-      className="group relative block overflow-hidden rounded-none bg-[#09090b] transition-transform duration-300 ease-out hover:scale-[1.04] sm:hover:scale-105 hover:z-30 focus-visible:outline-none cursor-pointer aspect-[3/4] sm:aspect-auto sm:h-[430px] w-full origin-center will-change-transform"
+      className="group relative block overflow-hidden rounded-xl bg-[#09090b] transition-transform duration-300 ease-out hover:scale-[1.04] sm:hover:scale-105 hover:z-30 focus-visible:outline-none cursor-pointer aspect-[3/4] sm:aspect-auto sm:h-[380px] w-full origin-center will-change-transform"
     >
       {/* Skeleton Placeholder while image is loading */}
       {isImageLoading && !imageError && (
@@ -138,13 +138,13 @@ export function CategoryProductShowcase({
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -330, behavior: 'smooth' });
+      scrollRef.current.scrollBy({ left: -280, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 330, behavior: 'smooth' });
+      scrollRef.current.scrollBy({ left: 280, behavior: 'smooth' });
     }
   };
 
@@ -154,20 +154,20 @@ export function CategoryProductShowcase({
   if (items.length === 0) return null;
 
   return (
-    <div className={cn('bg-white text-neutral-900 pt-0 pb-6 sm:pb-14 w-full', className)}>
+    <div className={cn('bg-[#080A0F] text-white pt-0 pb-6 sm:pb-14 w-full', className)}>
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Category Heading Header (Left-aligned, Hero font, reduced bold, no underline) */}
         <div className="relative mb-6 sm:mb-8 flex items-end justify-between">
           <div className="flex flex-col items-start text-left">
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-semibold uppercase tracking-[0.06em] sm:tracking-[0.08em] text-neutral-900 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-semibold uppercase tracking-[0.06em] sm:tracking-[0.08em] text-white leading-tight"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               {categoryName}
             </h2>
 
             {subtitle && (
-              <p className="mt-1 text-xs sm:text-sm text-neutral-500 max-w-xl">
+              <p className="mt-1 text-xs sm:text-sm text-neutral-400 max-w-xl">
                 {subtitle}
               </p>
             )}
@@ -177,11 +177,11 @@ export function CategoryProductShowcase({
           <div className="hidden sm:flex items-center gap-3 sm:gap-4">
             <Link
               href={resolvedViewAll}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.08em] text-neutral-600 hover:text-black group transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.08em] text-neutral-400 hover:text-white group transition-colors"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               <span>View All</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 text-neutral-900" />
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 text-white" />
             </Link>
 
             {showArrows && items.length > 3 && (
@@ -190,7 +190,7 @@ export function CategoryProductShowcase({
                   type="button"
                   onClick={scrollLeft}
                   aria-label="Previous items"
-                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors cursor-pointer"
+                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -198,7 +198,7 @@ export function CategoryProductShowcase({
                   type="button"
                   onClick={scrollRight}
                   aria-label="Next items"
-                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors cursor-pointer"
+                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -215,7 +215,7 @@ export function CategoryProductShowcase({
           {items.map((item) => (
             <div
               key={item.id}
-              className="w-[260px] md:w-[280px] lg:w-[290px] xl:w-[310px] shrink-0 snap-start relative z-10 hover:z-30"
+              className="w-[220px] sm:w-[235px] md:w-[245px] lg:w-[255px] xl:w-[265px] shrink-0 snap-start relative z-10 hover:z-30"
             >
               <StudioCard item={item} />
             </div>
@@ -235,7 +235,7 @@ export function CategoryProductShowcase({
         <div className="mt-5 flex justify-center sm:hidden">
           <Link
             href={resolvedViewAll}
-            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 text-neutral-900 bg-transparent hover:bg-[#E8192C] hover:text-white active:bg-[#E8192C] active:text-white transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-none group border border-[#E8192C]"
+            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 text-white bg-transparent hover:bg-[#E8192C] hover:text-white active:bg-[#E8192C] active:text-white transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-none group border border-[#E8192C]"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             <span>View All</span>
@@ -271,7 +271,7 @@ export function SportCategoriesSection({
   // If groups are explicitly provided, render them
   if (groups && groups.length > 0) {
     return (
-      <section className={cn('bg-white border-0 border-none shadow-none', className)}>
+      <section className={cn('bg-[#080A0F] border-0 border-none shadow-none', className)}>
         {groups.map((group) => (
           <CategoryProductShowcase
             key={group.name}
@@ -300,7 +300,7 @@ export function SportCategoriesSection({
     }
 
     return (
-      <section className={cn('bg-white border-0 border-none shadow-none', className)}>
+      <section className={cn('bg-[#080A0F] border-0 border-none shadow-none', className)}>
         {categoriesWithProducts.map((cat) => {
           const categoryProducts = products.filter(
             (p) => p.category_id === cat.id || p.category?.slug === cat.slug
@@ -328,7 +328,7 @@ export function SportCategoriesSection({
 // =========================================================================
 export function StudioCardSkeleton() {
   return (
-    <div className="relative block overflow-hidden rounded-none bg-neutral-900 aspect-[3/4] sm:aspect-auto sm:h-[430px] w-full animate-pulse border border-neutral-800/60">
+    <div className="relative block overflow-hidden rounded-none bg-neutral-900 aspect-[3/4] sm:aspect-auto sm:h-[380px] w-full animate-pulse">
       <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-900 to-neutral-800" />
       <div className="absolute bottom-4 inset-x-3 flex flex-col items-center gap-2">
         <div className="w-3/4 h-5 bg-neutral-800" />
@@ -339,12 +339,12 @@ export function StudioCardSkeleton() {
 
 export function CategoryProductShowcaseSkeleton() {
   return (
-    <div className="bg-white text-neutral-900 pt-0 pb-6 sm:pb-14 w-full animate-pulse">
+    <div className="bg-[#080A0F] text-white pt-0 pb-6 sm:pb-14 w-full animate-pulse">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Header Skeleton */}
         <div className="mb-6 sm:mb-8 flex items-end justify-between">
-          <div className="w-44 sm:w-60 h-8 sm:h-10 bg-neutral-200" />
-          <div className="hidden sm:block w-24 h-5 bg-neutral-200" />
+          <div className="w-44 sm:w-60 h-8 sm:h-10 bg-neutral-800" />
+          <div className="hidden sm:block w-24 h-5 bg-neutral-800" />
         </div>
 
         {/* Desktop Carousel Skeleton */}
