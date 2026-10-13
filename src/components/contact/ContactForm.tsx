@@ -68,7 +68,7 @@ export function ContactForm({ company }: ContactFormProps) {
   });
 
   return (
-    <div className="rounded-none bg-neutral-50 border border-neutral-200 p-6 sm:p-10 text-neutral-900 shadow-sm relative">
+    <div className="rounded-none bg-[#0E121B] p-6 sm:p-10 text-white shadow-sm relative">
       {submitted ? (
         <div className="text-center py-10">
           <div className="w-16 h-16 rounded-full bg-[#25D366]/20 text-[#25D366] flex items-center justify-center mx-auto mb-4">
@@ -76,11 +76,11 @@ export function ContactForm({ company }: ContactFormProps) {
           </div>
           <h3
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
-            className="text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-2"
+            className="text-2xl font-bold uppercase tracking-tight text-white mb-2"
           >
             Enquiry Received!
           </h3>
-          <p className="text-sm text-neutral-600 max-w-md mx-auto mb-8">
+          <p className="text-sm text-neutral-400 max-w-md mx-auto mb-8">
             Thank you, {name}. Our sports consultant has received your inquiry. For immediate response
             and instant discussion, click below to open WhatsApp.
           </p>
@@ -100,16 +100,16 @@ export function ContactForm({ company }: ContactFormProps) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <h3
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
-            className="text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-1"
+            className="text-2xl font-bold uppercase tracking-tight text-white mb-1"
           >
             Send an Institutional or Bulk Enquiry
           </h3>
-          <p className="text-xs text-neutral-600 mb-6">
+          <p className="text-xs text-neutral-400 mb-6">
             Fill in your details and our team will prepare a tailored quotation for you.
           </p>
 
           {errorMsg && (
-            <div className="p-3 rounded-none bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-none bg-red-950/40 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -118,7 +118,7 @@ export function ContactForm({ company }: ContactFormProps) {
           {/* Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
                 Your Full Name <span className="text-[#E8192C]">*</span>
               </label>
               <input
@@ -126,12 +126,12 @@ export function ContactForm({ company }: ContactFormProps) {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white/5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
                 Phone / WhatsApp Number <span className="text-[#E8192C]">*</span>
               </label>
               <input
@@ -139,7 +139,7 @@ export function ContactForm({ company }: ContactFormProps) {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white/5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
           </div>
@@ -147,19 +147,19 @@ export function ContactForm({ company }: ContactFormProps) {
           {/* Email & Enquiry Type */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
                 Email Address (Optional)
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white/5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
                 Enquiry Type
               </label>
               <select
@@ -167,38 +167,38 @@ export function ContactForm({ company }: ContactFormProps) {
                 onChange={(e) =>
                   setEnquiryType(e.target.value as 'general' | 'product' | 'custom_jersey')
                 }
-                className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+                className="w-full px-4 py-3 rounded-none bg-white/5 text-white focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
               >
-                <option value="general">General Sports Equipment Supply</option>
-                <option value="custom_jersey">Custom Sublimation Teamwear / Jerseys</option>
-                <option value="product">Specific Product & Brand Quotation</option>
+                <option value="general" className="bg-[#0E121B] text-white">General Sports Equipment Supply</option>
+                <option value="custom_jersey" className="bg-[#0E121B] text-white">Custom Sublimation Teamwear / Jerseys</option>
+                <option value="product" className="bg-[#0E121B] text-white">Specific Product & Brand Quotation</option>
               </select>
             </div>
           </div>
 
           {/* Requirement / Quantity */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
               Sports Requirement or Estimated Quantity
             </label>
             <input
               type="text"
               value={requirement}
               onChange={(e) => setRequirement(e.target.value)}
-              className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white/5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
             />
           </div>
 
           {/* Message */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">
               Message or Specific Notes
             </label>
             <textarea
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-4 py-3 rounded-none bg-white border border-neutral-300 text-neutral-900 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white/5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#FF001E] text-sm"
             />
           </div>
 

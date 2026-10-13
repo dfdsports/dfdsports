@@ -322,7 +322,7 @@ export function CollectionsCatalog({
       {/* ================= Header Title Section ================= */}
       <div className="mb-6 sm:mb-8">
         <h1
-          className="text-3xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-tight text-neutral-950"
+          className="text-3xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-tight text-white"
           style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
         >
           Collections
@@ -388,18 +388,18 @@ export function CollectionsCatalog({
         {/* ================= Products Area ================= */}
         <div className="flex-1 min-w-0 w-full">
           {/* Top Bar above Product Grid */}
-          <div className="hidden md:flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6 border-b border-neutral-200">
+          <div className="hidden md:flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 mb-6">
             {/* Left: Product Count */}
             <div className="flex items-center gap-2 shrink-0">
               <span
-                className="text-base font-bold uppercase tracking-wider text-neutral-950"
+                className="text-base font-bold uppercase tracking-wider text-white"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 {filteredProducts.length}{' '}
                 {filteredProducts.length === 1 ? 'Product' : 'Products'}
               </span>
               {filteredProducts.length !== initialProducts.length && (
-                <span className="text-xs text-neutral-500 font-medium">
+                <span className="text-xs text-neutral-400 font-medium">
                   (of {initialProducts.length} total)
                 </span>
               )}
@@ -415,13 +415,13 @@ export function CollectionsCatalog({
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder="Filter catalog products..."
-                  className="w-full pl-9 pr-8 py-2 rounded-none bg-white border border-neutral-300 text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-[#FF001E] transition-colors"
+                  className="w-full pl-9 pr-8 py-2 rounded-none bg-[#0E121B] border border-white/15 text-xs font-medium text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#FF001E] transition-colors"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={handleClearSearch}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-neutral-900 cursor-pointer"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-white cursor-pointer"
                     aria-label="Clear search"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -432,7 +432,7 @@ export function CollectionsCatalog({
               {/* Desktop Custom Sort Dropdown */}
               <div className="hidden md:flex items-center gap-2 shrink-0">
                 <span
-                  className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                  className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   Sort:
@@ -444,10 +444,10 @@ export function CollectionsCatalog({
                     className={cn(
                       'flex items-center gap-2.5 px-3.5 py-2 rounded-none border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs',
                       desktopSortOpen
-                        ? 'border-[#FF001E] bg-neutral-50 text-neutral-950'
+                        ? 'border-[#FF001E] bg-white/10 text-white'
                         : sortBy !== 'featured'
-                        ? 'border-neutral-400 bg-white text-neutral-950'
-                        : 'border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800'
+                        ? 'border-[#FF001E]/50 bg-[#0E121B] text-white'
+                        : 'border-white/20 bg-[#0E121B] hover:bg-white/5 text-white'
                     )}
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
@@ -470,8 +470,8 @@ export function CollectionsCatalog({
                   </button>
 
                   {desktopSortOpen && (
-                    <div className="absolute right-0 top-full mt-1.5 w-72 bg-white border border-neutral-200 rounded-none shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
-                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1 flex items-center justify-between border-b border-neutral-100">
+                    <div className="absolute right-0 top-full mt-1.5 w-72 bg-[#0E121B] border border-white/15 rounded-none shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1 flex items-center justify-between border-b border-white/10">
                         <span>Sort Products By</span>
                         <ArrowUpDown className="w-3 h-3 text-[#FF001E]" />
                       </div>
@@ -490,7 +490,7 @@ export function CollectionsCatalog({
                               'w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-none text-xs transition-all cursor-pointer text-left group',
                               isSelected
                                 ? 'bg-[#FF001E]/10 text-[#FF001E] font-bold'
-                                : 'text-neutral-700 hover:text-neutral-950 hover:bg-neutral-50'
+                                : 'text-neutral-300 hover:text-white hover:bg-white/5'
                             )}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -499,14 +499,14 @@ export function CollectionsCatalog({
                                   'w-7 h-7 rounded-none flex items-center justify-center shrink-0 transition-colors',
                                   isSelected
                                     ? 'bg-[#FF001E]/20 text-[#FF001E]'
-                                    : 'bg-neutral-100 text-neutral-500 group-hover:text-neutral-900 group-hover:bg-neutral-200'
+                                    : 'bg-white/5 text-neutral-400 group-hover:text-white group-hover:bg-white/10'
                                 )}
                               >
                                 <Icon className="w-3.5 h-3.5" />
                               </div>
                               <div className="flex flex-col min-w-0">
                                 <span className="font-semibold leading-tight truncate">{opt.label}</span>
-                                <span className="text-[10px] text-neutral-500 font-normal leading-tight truncate">
+                                <span className="text-[10px] text-neutral-400 font-normal leading-tight truncate">
                                   {opt.subtitle}
                                 </span>
                               </div>
@@ -643,29 +643,29 @@ export function CollectionsCatalog({
         {/* Sliding Bottom Sheet (Bottom to Up, 75% Height) */}
         <div
           className={cn(
-            'absolute bottom-0 inset-x-0 h-[75vh] max-h-[75vh] bg-white text-neutral-900 rounded-none shadow-2xl flex flex-col transition-transform duration-300 ease-out border-t border-neutral-200',
+            'absolute bottom-0 inset-x-0 h-[75vh] max-h-[75vh] bg-[#0E121B] text-white rounded-none shadow-2xl flex flex-col transition-transform duration-300 ease-out border-t border-white/10',
             mobileDrawerOpen ? 'translate-y-0' : 'translate-y-full'
           )}
         >
           {/* Top Handle Drag Pill */}
           <div className="pt-3 pb-1 flex justify-center shrink-0 cursor-pointer" onClick={() => setMobileDrawerOpen(false)}>
-            <div className="w-12 h-1.5 bg-neutral-300 rounded-full" />
+            <div className="w-12 h-1.5 bg-neutral-700 rounded-full" />
           </div>
 
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-neutral-50 border-b border-neutral-200 shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 bg-[#121622] border-b border-white/10 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-none bg-[#FF001E]/10 text-[#FF001E]">
                 <SlidersHorizontal className="w-5 h-5" />
               </div>
               <div>
                 <h2
-                  className="text-base font-bold text-neutral-950 uppercase tracking-wide"
+                  className="text-base font-bold text-white uppercase tracking-wide"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   Filters
                 </h2>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-400">
                   {filteredProducts.length} matching products
                 </p>
               </div>
@@ -673,7 +673,7 @@ export function CollectionsCatalog({
             <button
               type="button"
               onClick={() => setMobileDrawerOpen(false)}
-              className="p-2 rounded-none text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer"
+              className="p-2 rounded-none text-neutral-400 hover:text-white transition-colors cursor-pointer"
               aria-label="Close filters"
             >
               <X className="w-5 h-5" />
@@ -681,7 +681,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 overscroll-contain bg-white">
+          <div className="flex-1 overflow-y-auto px-6 py-4 overscroll-contain bg-[#0E121B]">
             <FilterSidebar
               categories={categories}
               brands={brands}
@@ -702,12 +702,12 @@ export function CollectionsCatalog({
           </div>
 
           {/* Drawer Sticky Footer with CTA */}
-          <div className="p-4 sm:p-5 bg-neutral-50 border-t border-neutral-200 flex items-center gap-3 shrink-0">
+          <div className="p-4 sm:p-5 bg-[#121622] border-t border-white/10 flex items-center gap-3 shrink-0">
             {activeFilterCount > 0 && (
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="py-3 px-4 rounded-none border border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-800 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                className="py-3 px-4 rounded-none border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 Reset
@@ -742,7 +742,7 @@ export function CollectionsCatalog({
         {/* Sliding Bottom Sheet */}
         <div
           className={cn(
-            'absolute bottom-0 inset-x-0 bg-white text-neutral-900 rounded-none shadow-2xl flex flex-col transition-transform duration-300 ease-out pb-8 border-t border-neutral-200',
+            'absolute bottom-0 inset-x-0 bg-[#0E121B] text-white rounded-none shadow-2xl flex flex-col transition-transform duration-300 ease-out pb-8 border-t border-white/10',
             mobileSortOpen ? 'translate-y-0' : 'translate-y-full'
           )}
         >
@@ -751,29 +751,29 @@ export function CollectionsCatalog({
             className="pt-3 pb-1 flex justify-center shrink-0 cursor-pointer"
             onClick={() => setMobileSortOpen(false)}
           >
-            <div className="w-12 h-1.5 bg-neutral-300 rounded-full" />
+            <div className="w-12 h-1.5 bg-neutral-700 rounded-full" />
           </div>
 
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-neutral-50 border-b border-neutral-200 shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 bg-[#121622] border-b border-white/10 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-none bg-[#FF001E]/10 text-[#FF001E]">
                 <ArrowUpDown className="w-5 h-5" />
               </div>
               <div>
                 <h2
-                  className="text-base font-bold text-neutral-950 uppercase tracking-wide"
+                  className="text-base font-bold text-white uppercase tracking-wide"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   Sort Products
                 </h2>
-                <p className="text-xs text-neutral-500">Choose display ordering</p>
+                <p className="text-xs text-neutral-400">Choose display ordering</p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setMobileSortOpen(false)}
-              className="p-2 rounded-none text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer"
+              className="p-2 rounded-none text-neutral-400 hover:text-white transition-colors cursor-pointer"
               aria-label="Close sort menu"
             >
               <X className="w-5 h-5" />
@@ -781,7 +781,7 @@ export function CollectionsCatalog({
           </div>
 
           {/* Sort Options List */}
-          <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh] bg-white">
+          <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh] bg-[#0E121B]">
             {sortOptions.map((opt) => {
               const Icon = opt.icon;
               const isSelected = sortBy === opt.value;
@@ -796,22 +796,22 @@ export function CollectionsCatalog({
                   className={cn(
                     'w-full flex items-center justify-between p-3.5 rounded-none transition-all active:scale-98 cursor-pointer text-left border',
                     isSelected
-                      ? 'border-[#FF001E] bg-[#FF001E]/5 text-[#FF001E]'
-                      : 'border-neutral-200 bg-neutral-50 text-neutral-800 hover:bg-neutral-100'
+                      ? 'border-[#FF001E] bg-[#FF001E]/10 text-[#FF001E]'
+                      : 'border-white/10 bg-white/5 text-neutral-300 hover:bg-white/10 hover:text-white'
                   )}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={cn(
                         'w-10 h-10 rounded-none flex items-center justify-center shrink-0',
-                        isSelected ? 'bg-[#FF001E]/20 text-[#FF001E]' : 'bg-neutral-200/60 text-neutral-600'
+                        isSelected ? 'bg-[#FF001E]/20 text-[#FF001E]' : 'bg-white/10 text-neutral-400'
                       )}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="font-bold text-sm leading-tight text-neutral-950">{opt.label}</span>
-                      <span className="text-xs text-neutral-500 mt-0.5 leading-tight">{opt.subtitle}</span>
+                      <span className="font-bold text-sm leading-tight text-white">{opt.label}</span>
+                      <span className="text-xs text-neutral-400 mt-0.5 leading-tight">{opt.subtitle}</span>
                     </div>
                   </div>
                   {isSelected && (

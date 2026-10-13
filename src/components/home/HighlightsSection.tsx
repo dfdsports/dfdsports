@@ -15,9 +15,9 @@ export function HighlightsSection({ highlights }: HighlightsSectionProps) {
   }
 
   return (
-    <section className="py-16 bg-[#0B0E17] border-y border-white/5 relative">
+    <section className="py-16 bg-[#0B0E17] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {activeHighlights.map((stat) => (
             <div key={stat.id} className="pt-6 md:pt-0 px-4 flex flex-col items-center">
               <p className="text-3xl sm:text-5xl font-black text-white tracking-tight flex items-baseline">

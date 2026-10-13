@@ -127,12 +127,12 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        'group relative rounded-none bg-white border border-neutral-200 hover:border-neutral-400 hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden',
+        'group relative rounded-none bg-[#0E121B] hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden',
         className
       )}
     >
       {/* Top Image Section: Image fills full of card */}
-      <div className="relative aspect-[3/4] w-full bg-neutral-100 flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-[3/4] w-full bg-neutral-900 flex items-center justify-center overflow-hidden">
         {/* Brand Tag (Top Left) */}
         {product.brand?.name && (
           <span className="absolute top-2.5 left-2.5 z-10 px-2 py-0.5 rounded-none bg-neutral-950/85 backdrop-blur-xs text-[9px] sm:text-[10px] font-bold text-white uppercase tracking-wider shadow-xs">
@@ -150,7 +150,7 @@ export function ProductCard({
             'absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-none flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-90',
             isWishlisted
               ? 'text-rose-500 scale-105'
-              : 'text-neutral-600 hover:text-rose-500 hover:scale-110 drop-shadow-xs'
+              : 'text-white/60 hover:text-rose-500 hover:scale-110 drop-shadow-xs'
           )}
         >
           <Heart
@@ -235,7 +235,7 @@ export function ProductCard({
       </div>
 
       {/* Bottom Content Body: Name outside the image at bottom */}
-      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between bg-white border-t border-neutral-100">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between bg-[#0E121B]">
         <div>
           {/* Category Tag */}
           {product.category?.name && (
@@ -250,7 +250,7 @@ export function ProductCard({
           {/* Product Name: Outside the image at bottom */}
           <Link href={`/products/${product.slug}`} className="block">
             <h3
-              className="text-xs sm:text-sm md:text-[15px] font-bold text-neutral-950 group-hover:text-[#FF001E] transition-colors truncate uppercase leading-snug"
+              className="text-xs sm:text-sm md:text-[15px] font-bold text-white group-hover:text-[#FF001E] transition-colors truncate uppercase leading-snug"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
               title={product.name}
             >
@@ -261,9 +261,9 @@ export function ProductCard({
 
         {/* Price */}
         {price !== null && (
-          <div className="mt-3 pt-2.5 border-t border-neutral-100 flex items-center justify-between gap-2">
+          <div className="mt-3 pt-2.5 flex items-center justify-between gap-2">
             <div>
-              <span className="text-xs sm:text-sm font-black text-neutral-950">
+              <span className="text-xs sm:text-sm font-black text-white">
                 ₹{price.toLocaleString('en-IN')}
               </span>
             </div>

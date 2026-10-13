@@ -33,7 +33,7 @@ export function AboutVisionMission() {
           PURPOSE & VALUES
         </p>
         <h2
-          className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-neutral-950 mb-2 sm:mb-3"
+          className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-white mb-2 sm:mb-3"
           style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
         >
           Our Vision &{' '}
@@ -41,7 +41,7 @@ export function AboutVisionMission() {
             Mission
           </span>
         </h2>
-        <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+        <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
           The guiding principles driving DFD – Destination for Dreams to support athletes, clubs, and sports programs at every level.
         </p>
       </div>
@@ -49,7 +49,7 @@ export function AboutVisionMission() {
       {/* Vision & Mission Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {/* Vision Card */}
-        <div className="p-6 sm:p-9 rounded-none bg-neutral-50 border border-neutral-200 flex flex-col justify-between shadow-xs space-y-6 text-neutral-900">
+        <div className="p-6 sm:p-9 rounded-none bg-[#0E121B] flex flex-col justify-between shadow-xs space-y-6 text-white">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-none bg-[#FF001E]/10 flex items-center justify-center text-[#FF001E]">
               <Target className="w-6 h-6" />
@@ -63,24 +63,24 @@ export function AboutVisionMission() {
                 FUTURE OUTLOOK
               </p>
               <h3
-                className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950"
+                className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
               >
                 Our Vision
               </h3>
             </div>
 
-            <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
               Today, DFD is expanding its services across India, taking our products and customised sports solutions to customers beyond our local community.
             </p>
-            <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
               We believe that every player has a dream, every team has a goal, and every sporting journey deserves the right support.
             </p>
           </div>
         </div>
 
         {/* Mission Card */}
-        <div className="p-6 sm:p-9 rounded-none bg-neutral-50 border border-neutral-200 flex flex-col justify-between shadow-xs space-y-6 text-neutral-900">
+        <div className="p-6 sm:p-9 rounded-none bg-[#0E121B] flex flex-col justify-between shadow-xs space-y-6 text-white">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-none bg-[#FF001E]/10 flex items-center justify-center text-[#FF001E]">
               <Compass className="w-6 h-6" />
@@ -94,14 +94,14 @@ export function AboutVisionMission() {
                 DAILY COMMITMENT
               </p>
               <h3
-                className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950"
+                className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
               >
                 Our Mission
               </h3>
             </div>
 
-            <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
               To provide quality sports products at fair and affordable prices, without compromising on performance or reliability.
             </p>
           </div>
@@ -132,18 +132,18 @@ export function AboutVisionMission() {
           return (
             <div
               key={i}
-              className="p-5 sm:p-6 rounded-none bg-neutral-50 border border-neutral-200 space-y-2.5 shadow-xs"
+              className="p-5 sm:p-6 rounded-none bg-[#0E121B] space-y-2.5 shadow-xs"
             >
               <div className="w-9 h-9 rounded-none bg-[#FF001E]/10 flex items-center justify-center text-[#FF001E]">
                 <Icon className="w-4 h-4" />
               </div>
               <h4
-                className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-950"
+                className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 {pillar.title}
               </h4>
-              <p className="text-[11px] sm:text-xs text-neutral-600 leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-neutral-400 leading-relaxed">
                 {pillar.desc}
               </p>
             </div>

@@ -153,7 +153,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
@@ -167,22 +167,22 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 sm:py-10">
         {/* Navigation Breadcrumb */}
         <div
-          className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap"
+          className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap"
           style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
         >
-          <Link href="/collections" className="hover:text-neutral-950 transition-colors">
+          <Link href="/collections" className="hover:text-white transition-colors">
             Collections
           </Link>
-          <span className="text-neutral-300">/</span>
+          <span className="text-neutral-600">/</span>
           {product.category && (
             <>
               <Link
-                href={`/collections/${product.category.slug}`}
-                className="hover:text-neutral-950 transition-colors"
+                href={`/collections?category=${encodeURIComponent(product.category.slug)}`}
+                className="hover:text-white transition-colors"
               >
                 {product.category.name}
               </Link>
-              <span className="text-neutral-300">/</span>
+              <span className="text-neutral-600">/</span>
             </>
           )}
           <span className="text-[#E8192C] font-bold truncate max-w-xs">{product.name}</span>
@@ -192,21 +192,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <ProductDetailInteractive product={product} company={company} />
 
         {/* Long Description and Technical Specifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 pt-4 sm:pt-6 lg:pt-12 border-t border-neutral-200">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 pt-4 sm:pt-6 lg:pt-12 border-t border-white/10">
           {/* Long description */}
           <div className="lg:col-span-7">
             <h3
-              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white mb-4"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               Product Overview
             </h3>
             {product.long_description ? (
-              <div className="prose max-w-none text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
+              <div className="prose max-w-none text-sm text-neutral-300 leading-relaxed whitespace-pre-line">
                 {product.long_description}
               </div>
             ) : (
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-neutral-400">
                 {product.short_description || 'Detailed specifications and batch pricing available upon enquiry.'}
               </p>
             )}
@@ -215,22 +215,22 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           {/* Technical Specs Key-Value Table */}
           <div className="lg:col-span-5">
             <h3
-              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+              className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white mb-4"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               Specifications
             </h3>
             {product.specifications && Object.keys(product.specifications).length > 0 ? (
-              <div className="rounded-none overflow-hidden bg-neutral-50 border border-neutral-200 divide-y divide-neutral-200">
+              <div className="rounded-none overflow-hidden bg-[#0E121B] divide-y divide-white/5">
                 {Object.entries(product.specifications).map(([key, val]) => (
                   <div key={key} className="flex items-center justify-between p-3.5 text-xs">
-                    <span className="font-semibold text-neutral-500 uppercase tracking-wider">{key}</span>
-                    <span className="font-mono text-neutral-900 font-medium">{val}</span>
+                    <span className="font-semibold text-neutral-400 uppercase tracking-wider">{key}</span>
+                    <span className="font-mono text-white font-medium">{val}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-6 rounded-none bg-neutral-50 border border-neutral-200 text-xs text-neutral-500">
+              <div className="p-6 rounded-none bg-[#0E121B] text-xs text-neutral-400">
                 Detailed technical specifications provided upon quotation request.
               </div>
             )}
@@ -239,9 +239,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
-          <div className="pt-12 border-t border-neutral-200">
+          <div className="pt-12">
             <h3
-              className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-neutral-950 mb-8"
+              className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white mb-8"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
             >
               Related Equipment & Gear

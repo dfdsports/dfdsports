@@ -33,7 +33,7 @@ export default async function ContactPage() {
   const brandName = company?.company_name || 'DFD SPORTS';
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 selection:bg-[#FF001E] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080A0F] text-white selection:bg-[#FF001E] selection:text-white">
       <Header company={company} />
 
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-10 sm:py-16">
@@ -46,12 +46,12 @@ export default async function ContactPage() {
             GET IN TOUCH WITH {brandName}
           </p>
           <h1
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-neutral-950 mb-3 sm:mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-white mb-3 sm:mb-4"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             LET&apos;S TALK <span className="text-[#E8192C]">SPORTS.</span>
           </h1>
-          <p className="text-sm sm:text-base text-neutral-600">
+          <p className="text-sm sm:text-base text-neutral-400">
             Have questions about sports equipment supply, brand catalog quotations, or custom team jerseys?
             Connect with us directly.
           </p>
@@ -61,9 +61,9 @@ export default async function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Direct Contact Details from Supabase */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="p-6 sm:p-8 rounded-none bg-neutral-50 border border-neutral-200 shadow-xs space-y-6 text-neutral-900">
+            <div className="p-6 sm:p-8 rounded-none bg-[#0E121B] shadow-xs space-y-6 text-white">
               <h3
-                className="text-lg sm:text-xl font-bold uppercase tracking-tight text-neutral-950 mb-4"
+                className="text-lg sm:text-xl font-bold uppercase tracking-tight text-white mb-4"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
               >
                 Direct Contact Channels
@@ -76,34 +76,34 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <h4
-                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       WhatsApp Hotline
                     </h4>
-                    <p className="text-sm font-bold text-neutral-950 mt-0.5">
+                    <p className="text-sm font-bold text-white mt-0.5">
                       {company.whatsapp_number}
                     </p>
-                    <p className="text-xs text-neutral-500 mt-0.5">Instant quotation & fabric samples</p>
+                    <p className="text-xs text-neutral-400 mt-0.5">Instant quotation & fabric samples</p>
                   </div>
                 </div>
               )}
 
               {company?.phone && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-white/5 border border-white/10 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <h4
-                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       Phone Number
                     </h4>
                     <a
                       href={`tel:${company.phone}`}
-                      className="text-sm font-bold text-neutral-950 hover:text-[#FF001E] transition-colors mt-0.5 block"
+                      className="text-sm font-bold text-white hover:text-[#FF001E] transition-colors mt-0.5 block"
                     >
                       {company.phone}
                     </a>
@@ -113,19 +113,19 @@ export default async function ContactPage() {
 
               {company?.email && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-white/5 border border-white/10 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <h4
-                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       Email Address
                     </h4>
                     <a
                       href={`mailto:${company.email}`}
-                      className="text-sm font-bold text-neutral-950 hover:text-[#FF001E] transition-colors mt-0.5 block"
+                      className="text-sm font-bold text-white hover:text-[#FF001E] transition-colors mt-0.5 block"
                     >
                       {company.email}
                     </a>
@@ -135,17 +135,17 @@ export default async function ContactPage() {
 
               {company?.address && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-white/5 border border-white/10 text-[#FF001E] flex items-center justify-center shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
                     <h4
-                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       Registered Address
                     </h4>
-                    <p className="text-sm text-neutral-700 mt-0.5 leading-relaxed">
+                    <p className="text-sm text-neutral-300 mt-0.5 leading-relaxed">
                       {company.address}
                     </p>
                   </div>
@@ -154,22 +154,22 @@ export default async function ContactPage() {
 
               {company?.business_hours && (
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-none bg-neutral-100 text-[#FF001E] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-none bg-white/5 border border-white/10 text-[#FF001E] flex items-center justify-center shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
                     <h4
-                      className="text-xs font-bold uppercase tracking-wider text-neutral-500"
+                      className="text-xs font-bold uppercase tracking-wider text-neutral-400"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
                       Working Hours
                     </h4>
-                    <p className="text-sm text-neutral-700 mt-0.5">{company.business_hours}</p>
+                    <p className="text-sm text-neutral-300 mt-0.5">{company.business_hours}</p>
                   </div>
                 </div>
               )}
 
-              <div className="pt-4 border-t border-neutral-200">
+              <div className="pt-4">
                 <WhatsAppButton
                   phoneNumber={company?.whatsapp_number}
                   type="general"

@@ -62,18 +62,18 @@ export function FilterSidebar({
     <aside
       className={cn(
         'w-full flex flex-col',
-        !isMobileDrawer && 'bg-white border border-neutral-200 rounded-none p-6 shadow-sm',
+        !isMobileDrawer && 'bg-[#0E121B] rounded-none p-6 shadow-sm',
         className
       )}
     >
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between pb-5 border-b border-neutral-200">
+      <div className="flex items-center justify-between pb-5">
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 rounded-none bg-[#FF001E]/10 text-[#FF001E]">
             <Filter className="w-4 h-4" />
           </div>
           <h2
-            className="text-base font-bold uppercase tracking-wider text-neutral-950"
+            className="text-base font-bold uppercase tracking-wider text-white"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
           >
             Filters
@@ -103,11 +103,11 @@ export function FilterSidebar({
           <button
             type="button"
             onClick={() => setCategoriesOpen(!categoriesOpen)}
-            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-900 hover:text-[#FF001E] transition-colors mb-3"
+            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white hover:text-[#FF001E] transition-colors mb-3"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
           >
             <span>Categories</span>
-            <div className="flex items-center gap-1.5 text-neutral-500">
+            <div className="flex items-center gap-1.5 text-neutral-400">
               {selectedCategories.length > 0 && (
                 <span className="text-[10px] text-[#FF001E] font-bold">
                   ({selectedCategories.length})
@@ -125,11 +125,11 @@ export function FilterSidebar({
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="w-full px-3 py-1.5 mb-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#FF001E]"
+                  className="w-full px-3 py-1.5 mb-2 rounded-none bg-white/5 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF001E]"
                 />
               )}
 
-              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
+              <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((cat) => {
                     const isChecked = selectedCategories.includes(cat.slug);
@@ -140,7 +140,7 @@ export function FilterSidebar({
                         key={cat.id}
                         className={cn(
                           'flex items-center justify-between px-2.5 py-2 rounded-none cursor-pointer select-none transition-all group',
-                          isChecked ? 'bg-neutral-100 text-neutral-950 font-semibold' : 'hover:bg-neutral-50 text-neutral-700'
+                          isChecked ? 'bg-white/10 text-white font-semibold' : 'hover:bg-white/5 text-neutral-300'
                         )}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
@@ -149,7 +149,7 @@ export function FilterSidebar({
                               'w-4 h-4 rounded-none border flex items-center justify-center transition-all shrink-0',
                               isChecked
                                 ? 'bg-[#FF001E] border-[#FF001E] text-white'
-                                : 'border-neutral-300 bg-white group-hover:border-[#FF001E]'
+                                : 'border-white/20 bg-black/40 group-hover:border-[#FF001E]'
                             )}
                           >
                             {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
@@ -164,7 +164,7 @@ export function FilterSidebar({
                         </div>
 
                         {count > 0 && (
-                          <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-600 shrink-0 ml-2">
+                          <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-300 shrink-0 ml-2">
                             {count}
                           </span>
                         )}
@@ -181,15 +181,15 @@ export function FilterSidebar({
 
         {/* ================= BRAND FILTER ================= */}
         {brands.length > 0 && (
-          <div className="pt-5 border-t border-neutral-200">
+          <div className="pt-5">
             <button
               type="button"
               onClick={() => setBrandsOpen(!brandsOpen)}
-              className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-900 hover:text-[#FF001E] transition-colors mb-3"
+              className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white hover:text-[#FF001E] transition-colors mb-3"
               style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
             >
               <span>Brands</span>
-              <div className="flex items-center gap-1.5 text-neutral-500">
+              <div className="flex items-center gap-1.5 text-neutral-400">
                 {selectedBrands.length > 0 && (
                   <span className="text-[10px] text-[#FF001E] font-bold">
                     ({selectedBrands.length})
@@ -207,11 +207,11 @@ export function FilterSidebar({
                     placeholder="Search brands..."
                     value={brandSearch}
                     onChange={(e) => setBrandSearch(e.target.value)}
-                    className="w-full px-3 py-1.5 mb-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-[#FF001E]"
+                    className="w-full px-3 py-1.5 mb-2 rounded-none bg-white/5 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF001E]"
                   />
                 )}
 
-                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
+                <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1.5 custom-scrollbar [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-[#FF001E]">
                   {filteredBrands.length > 0 ? (
                     filteredBrands.map((brand) => {
                       const isChecked = selectedBrands.includes(brand.slug);
@@ -222,7 +222,7 @@ export function FilterSidebar({
                           key={brand.id}
                           className={cn(
                             'flex items-center justify-between px-2.5 py-2 rounded-none cursor-pointer select-none transition-all group',
-                            isChecked ? 'bg-neutral-100 text-neutral-950 font-semibold' : 'hover:bg-neutral-50 text-neutral-700'
+                            isChecked ? 'bg-white/10 text-white font-semibold' : 'hover:bg-white/5 text-neutral-300'
                           )}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
@@ -231,7 +231,7 @@ export function FilterSidebar({
                                 'w-4 h-4 rounded-none border flex items-center justify-center transition-all shrink-0',
                                 isChecked
                                   ? 'bg-[#FF001E] border-[#FF001E] text-white'
-                                  : 'border-neutral-300 bg-white group-hover:border-[#FF001E]'
+                                  : 'border-white/20 bg-black/40 group-hover:border-[#FF001E]'
                               )}
                             >
                               {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
@@ -246,7 +246,7 @@ export function FilterSidebar({
                           </div>
 
                           {count > 0 && (
-                            <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-600 shrink-0 ml-2">
+                            <span className="text-[10px] font-mono font-semibold text-neutral-400 group-hover:text-neutral-300 shrink-0 ml-2">
                               {count}
                             </span>
                           )}
@@ -265,11 +265,11 @@ export function FilterSidebar({
 
       {/* Clear Filters CTA Button in Sidebar */}
       {activeFilterCount > 0 && (
-        <div className="mt-6 pt-5 border-t border-neutral-200">
+        <div className="mt-6 pt-5">
           <button
             type="button"
             onClick={onClearAll}
-            className="w-full py-2.5 px-4 rounded-none border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 hover:text-black text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-none border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
           >
             <RotateCcw className="w-3.5 h-3.5 text-[#FF001E]" />

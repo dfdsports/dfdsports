@@ -209,10 +209,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       title={`View image ${idx + 1}`}
                       aria-label={`View image ${idx + 1}`}
                       className={cn(
-                        'relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 aspect-square rounded-none overflow-hidden bg-neutral-100 border transition-all cursor-pointer group text-left p-1 shrink-0',
+                        'relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 aspect-square rounded-none overflow-hidden bg-[#0E121B] border transition-all cursor-pointer group text-left p-1 shrink-0',
                         isActive
                           ? 'border-[#FF001E] ring-2 ring-[#FF001E]'
-                          : 'border-neutral-200 opacity-75 hover:opacity-100 hover:border-neutral-400'
+                          : 'border-white/10 opacity-75 hover:opacity-100 hover:border-white/30'
                       )}
                     >
                       <Image
@@ -222,7 +222,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                         sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 64px"
                         className="object-contain transition-transform duration-300 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
                     </button>
                   );
                 })}
@@ -245,33 +245,15 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
           {/* Product Title */}
           <h1
-            className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-neutral-950 mb-3"
+            className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white mb-3"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             {product.name}
           </h1>
 
-          {/* Price Display */}
-          {/* <div className="flex items-baseline gap-3 mb-5">
-            {price !== null ? (
-              <>
-                <span className="text-2xl sm:text-3xl font-black text-neutral-950">
-                  ₹{(price * quantity).toLocaleString('en-IN')}
-                </span>
-                {quantity > 1 && (
-                  <span className="text-xs font-semibold text-neutral-500">
-                    (₹{price.toLocaleString('en-IN')} each)
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-base font-bold text-[#E8192C]">Price on Wholesale Inquiry</span>
-            )}
-          </div> */}
-
           {/* Short Description */}
           {product.short_description && (
-            <p className="text-sm sm:text-base text-neutral-600 leading-relaxed mb-6 font-normal">
+            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-6 font-normal">
               {product.short_description}
             </p>
           )}
@@ -281,7 +263,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2.5">
                 <span
-                  className="text-xs font-bold uppercase tracking-wider text-neutral-900"
+                  className="text-xs font-bold uppercase tracking-wider text-white"
                   style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                 >
                   Select Size / Specification:
@@ -302,7 +284,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                         'px-4 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border',
                         isSelected
                           ? 'bg-[#FF001E] border-[#FF001E] text-white shadow-md'
-                          : 'border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50'
+                          : 'border-white/15 bg-white/5 text-neutral-300 hover:bg-white/10 hover:text-white'
                       )}
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                     >
@@ -318,14 +300,14 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
           {product.features && product.features.length > 0 && (
             <div className="mb-8">
               <span
-                className="text-xs font-bold uppercase tracking-wider text-neutral-900 block mb-3"
+                className="text-xs font-bold uppercase tracking-wider text-white block mb-3"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 Highlights & Features:
               </span>
               <ul className="space-y-2">
                 {product.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                  <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-300">
                     <CheckCircle className="w-4 h-4 text-[#FF001E] shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
@@ -339,12 +321,12 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
             {/* ROW 1: Quantity Stepper + Add to Cart */}
             <div className="flex items-center gap-3">
               {/* Quantity Stepper */}
-              <div className="flex items-center justify-between rounded-none border border-neutral-300 bg-white h-12 px-2 shrink-0">
+              <div className="flex items-center justify-between rounded-none border border-white/15 bg-[#0E121B] h-12 px-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(-1)}
                   disabled={quantity <= 1}
-                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-90"
+                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-90"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="w-4 h-4" />
@@ -358,13 +340,13 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                     const val = parseInt(e.target.value, 10);
                     setQuantity(isNaN(val) || val < 1 ? 1 : val);
                   }}
-                  className="w-10 text-center bg-transparent text-neutral-950 font-bold text-sm focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-10 text-center bg-transparent text-white font-bold text-sm focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
 
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(1)}
-                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer active:scale-90"
+                  className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active:scale-90"
                   aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4" />

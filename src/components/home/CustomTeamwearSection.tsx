@@ -32,7 +32,7 @@ export async function CustomTeamwearSection({
   const rightHref = rightBanner.link?.trim() || '/custom-jerseys';
 
   return (
-    <section className={cn('bg-white text-neutral-900 py-10 sm:py-16 md:py-20 w-full border-0 border-none shadow-none', className)}>
+    <section className={cn('bg-[#080A0F] text-white py-10 sm:py-16 md:py-20 w-full border-0 border-none shadow-none', className)}>
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Two Banners Grid: Left and Right Side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
@@ -41,7 +41,7 @@ export async function CustomTeamwearSection({
           {/* ========================================================================= */}
           <Link
             href={leftHref}
-            className="group relative block overflow-hidden rounded-none bg-[#09090b] cursor-pointer h-[260px] sm:h-[340px] md:h-[380px] lg:h-[420px] w-full"
+            className="group relative block overflow-hidden rounded-xl bg-[#09090b] cursor-pointer h-[260px] sm:h-[340px] md:h-[380px] lg:h-[420px] w-full"
           >
             {leftBanner.image_url ? (
               <Image
@@ -57,7 +57,7 @@ export async function CustomTeamwearSection({
               /* Fallback container if admin hasn't uploaded image yet */
               <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 bg-gradient-to-br from-[#12141c] via-[#0b0c10] to-[#040405] text-white">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400">
                     <Package className="w-3.5 h-3.5" />
                     <span>Featured Product</span>
                   </span>
@@ -103,7 +103,7 @@ export async function CustomTeamwearSection({
                     </p>
                   )}
                 </div>
-                <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+                <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
                   <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
@@ -115,7 +115,7 @@ export async function CustomTeamwearSection({
           {/* ========================================================================= */}
           <Link
             href={rightHref}
-            className="group relative block overflow-hidden rounded-none bg-[#09090b] cursor-pointer h-[260px] sm:h-[340px] md:h-[380px] lg:h-[420px] w-full"
+            className="group relative block overflow-hidden rounded-xl bg-[#09090b] cursor-pointer h-[260px] sm:h-[340px] md:h-[380px] lg:h-[420px] w-full"
           >
             {rightBanner.image_url ? (
               <>
@@ -143,7 +143,7 @@ export async function CustomTeamwearSection({
               /* Fallback container if admin hasn't uploaded image yet */
               <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 bg-gradient-to-br from-[#1b150f] via-[#120e0a] to-[#080604] text-white">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400">
                     <Shirt className="w-3.5 h-3.5" />
                     <span>Custom Teamwear</span>
                   </span>

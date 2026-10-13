@@ -291,10 +291,10 @@ export function WhatsAppOrderModal({
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-          <div className="relative z-10 w-full max-w-md bg-white rounded-none shadow-2xl overflow-hidden max-h-[90vh] flex flex-col text-neutral-900">
+          <div className="relative z-10 w-full max-w-md bg-[#0E121B] border border-white/15 rounded-none shadow-2xl overflow-hidden max-h-[90vh] flex flex-col text-white">
 
             {/* Header */}
-            <div className="bg-black text-white px-6 pt-6 pb-5 shrink-0">
+            <div className="bg-[#121622] text-white px-6 pt-6 pb-5 shrink-0 border-b border-white/10">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-none bg-[#25D366]/20 flex items-center justify-center shrink-0">
@@ -314,13 +314,13 @@ export function WhatsAppOrderModal({
                       {productName}
                     </h2>
                     {productCategory && (
-                      <p className="text-[11px] text-gray-400 mt-0.5">{productCategory}</p>
+                      <p className="text-[11px] text-neutral-400 mt-0.5">{productCategory}</p>
                     )}
                   </div>
                 </div>
                 <button
                   onClick={closeModal}
-                  className="ml-3 shrink-0 w-8 h-8 rounded-none bg-white/10 hover:bg-white/20 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  className="ml-3 shrink-0 w-8 h-8 rounded-none bg-white/10 hover:bg-white/20 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
                   aria-label="Close"
                 >
                   <X className="w-4 h-4" />
@@ -335,15 +335,15 @@ export function WhatsAppOrderModal({
                   <CheckCircle2 className="w-12 h-12 text-[#25D366]" />
                   <p
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                    className="text-neutral-950 font-bold uppercase text-lg tracking-wider"
+                    className="text-white font-bold uppercase text-lg tracking-wider"
                   >
                     Opening WhatsApp…
                   </p>
-                  <p className="text-xs text-neutral-600">Your order has been saved. Complete it on WhatsApp.</p>
+                  <p className="text-xs text-neutral-400">Your order has been saved. Complete it on WhatsApp.</p>
                 </div>
               ) : (
                 <>
-                  <p className="text-xs text-neutral-600 leading-relaxed">
+                  <p className="text-xs text-neutral-400 leading-relaxed">
                     Fill in your details. Your order will be saved and sent to our team via WhatsApp instantly.
                   </p>
 
@@ -388,7 +388,7 @@ export function WhatsAppOrderModal({
                         onClick={(e) => e.currentTarget.showPicker?.()}
                         className={cn(
                           inputCls(!!errors.expectedDate),
-                          'w-full max-w-full min-w-0 box-border block [appearance:none] [-webkit-appearance:none] cursor-pointer [&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:min-h-[1.25rem]',
+                          'w-full max-w-full min-w-0 box-border block [appearance:none] [-webkit-appearance:none] cursor-pointer [&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:min-h-[1.25rem] [color-scheme:dark]',
                           !form.expectedDate && 'text-neutral-400'
                         )}
                       />
@@ -428,7 +428,7 @@ export function WhatsAppOrderModal({
                     )}
                   </button>
 
-                  <p className="text-center text-[11px] text-neutral-500">
+                  <p className="text-center text-[11px] text-neutral-400">
                     Your order details will be pre-filled in WhatsApp.
                   </p>
                 </>
@@ -444,7 +444,7 @@ export function WhatsAppOrderModal({
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function inputCls(hasError?: boolean) {
   return cn(
-    'w-full bg-neutral-50 rounded-none pl-9 pr-4 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 border border-neutral-300 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] transition-colors',
+    'w-full bg-white/5 rounded-none pl-9 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 border border-white/15 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] transition-colors',
     hasError && 'border-red-500 focus:border-red-500 focus:ring-red-500'
   );
 }
@@ -462,11 +462,11 @@ function Field({
   }) {
   return (
     <div>
-      <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+      <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wider">
         {label} {required && <span className="text-[#E8192C]">*</span>}
       </label>
       {children}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 }
