@@ -32,7 +32,7 @@ export async function CustomTeamwearSection({
   const rightHref = rightBanner.link?.trim() || '/custom-jerseys';
 
   return (
-    <section className={cn('bg-white text-neutral-900 py-10 sm:py-16 md:py-20 w-full', className)}>
+    <section className={cn('bg-white text-neutral-900 py-10 sm:py-16 md:py-20 w-full border-0 border-none shadow-none', className)}>
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Two Banners Grid: Left and Right Side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">

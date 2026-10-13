@@ -9,7 +9,7 @@ import { Plus, Edit2, Trash2, Save, X, Upload, CheckCircle2, Layers, AlertCircle
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
-import { deleteImageFromCloudinary } from '@/lib/media';
+import { deleteImageFromCloudinary, compressImageIfNeeded } from '@/lib/media';
 
 interface FabricsAdminClientProps {
   fabrics: Fabric[];
@@ -99,13 +99,15 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
     setError('');
 
     try {
+      file = await compressImageIfNeeded(file);
+
       const supabase = createClient();
       const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
       const fileName = `fabrics/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;

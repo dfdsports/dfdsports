@@ -40,6 +40,7 @@ export interface CategoryProductShowcaseProps {
 // =========================================================================
 function StudioCard({ item }: { item: CategoryShowcaseItem }) {
   const [imageError, setImageError] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const targetHref = item.href || (item.slug ? `/products/${item.slug}` : '#');
 
   return (
@@ -47,6 +48,14 @@ function StudioCard({ item }: { item: CategoryShowcaseItem }) {
       href={targetHref}
       className="group relative block overflow-hidden rounded-none bg-[#09090b] transition-transform duration-300 ease-out hover:scale-[1.04] sm:hover:scale-105 hover:z-30 focus-visible:outline-none cursor-pointer aspect-[3/4] sm:aspect-auto sm:h-[430px] w-full origin-center will-change-transform"
     >
+      {/* Skeleton Placeholder while image is loading */}
+      {isImageLoading && !imageError && (
+        <div className="absolute inset-0 z-10 bg-neutral-900 animate-pulse flex flex-col justify-between p-4">
+          <div className="w-16 h-4 bg-neutral-800 rounded-none animate-pulse" />
+          <div className="w-3/4 h-5 mx-auto bg-neutral-800 rounded-none animate-pulse" />
+        </div>
+      )}
+
       {/* 1. Full Image - Fills 100% of the entire card */}
       <div className="absolute inset-0 w-full h-full bg-black">
         {item.image_url && !imageError ? (
@@ -56,8 +65,15 @@ function StudioCard({ item }: { item: CategoryShowcaseItem }) {
             fill
             quality={95}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover object-center"
-            onError={() => setImageError(true)}
+            className={cn(
+              "object-cover object-center transition-opacity duration-300",
+              isImageLoading ? "opacity-0" : "opacity-100"
+            )}
+            onLoad={() => setIsImageLoading(false)}
+            onError={() => {
+              setIsImageLoading(false);
+              setImageError(true);
+            }}
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center text-white/30 text-xs p-4">
@@ -138,7 +154,7 @@ export function CategoryProductShowcase({
   if (items.length === 0) return null;
 
   return (
-    <div className={cn('bg-white text-neutral-900 py-10 sm:py-14 md:py-16 w-full', className)}>
+    <div className={cn('bg-white text-neutral-900 pt-0 pb-6 sm:pb-14 w-full', className)}>
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Category Heading Header (Left-aligned, Hero font, reduced bold, no underline) */}
         <div className="relative mb-6 sm:mb-8 flex items-end justify-between">
@@ -219,7 +235,7 @@ export function CategoryProductShowcase({
         <div className="mt-5 flex justify-center sm:hidden">
           <Link
             href={resolvedViewAll}
-            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 border border-[#E8192C] text-neutral-900 bg-transparent hover:bg-[#E8192C] hover:text-white active:bg-[#E8192C] active:text-white transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-none group"
+            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 text-neutral-900 bg-transparent hover:bg-[#E8192C] hover:text-white active:bg-[#E8192C] active:text-white transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-none group border border-[#E8192C]"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             <span>View All</span>
@@ -255,7 +271,7 @@ export function SportCategoriesSection({
   // If groups are explicitly provided, render them
   if (groups && groups.length > 0) {
     return (
-      <section className={cn('bg-white divide-y divide-neutral-100', className)}>
+      <section className={cn('bg-white border-0 border-none shadow-none', className)}>
         {groups.map((group) => (
           <CategoryProductShowcase
             key={group.name}
@@ -284,7 +300,7 @@ export function SportCategoriesSection({
     }
 
     return (
-      <section className={cn('bg-white divide-y divide-neutral-100', className)}>
+      <section className={cn('bg-white border-0 border-none shadow-none', className)}>
         {categoriesWithProducts.map((cat) => {
           const categoryProducts = products.filter(
             (p) => p.category_id === cat.id || p.category?.slug === cat.slug
@@ -305,4 +321,50 @@ export function SportCategoriesSection({
   }
 
   return null;
+}
+
+// =========================================================================
+// Skeleton Components for Loading States
+// =========================================================================
+export function StudioCardSkeleton() {
+  return (
+    <div className="relative block overflow-hidden rounded-none bg-neutral-900 aspect-[3/4] sm:aspect-auto sm:h-[430px] w-full animate-pulse border border-neutral-800/60">
+      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-900 to-neutral-800" />
+      <div className="absolute bottom-4 inset-x-3 flex flex-col items-center gap-2">
+        <div className="w-3/4 h-5 bg-neutral-800" />
+      </div>
+    </div>
+  );
+}
+
+export function CategoryProductShowcaseSkeleton() {
+  return (
+    <div className="bg-white text-neutral-900 pt-0 pb-6 sm:pb-14 w-full animate-pulse">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        {/* Header Skeleton */}
+        <div className="mb-6 sm:mb-8 flex items-end justify-between">
+          <div className="w-44 sm:w-60 h-8 sm:h-10 bg-neutral-200" />
+          <div className="hidden sm:block w-24 h-5 bg-neutral-200" />
+        </div>
+
+        {/* Desktop Carousel Skeleton */}
+        <div className="hidden sm:flex gap-4 sm:gap-5 lg:gap-6 overflow-hidden pt-3 pb-6 px-1">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="w-[260px] md:w-[280px] lg:w-[290px] xl:w-[310px] shrink-0">
+              <StudioCardSkeleton />
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile Grid Skeleton */}
+        <div className="grid grid-cols-2 gap-3 pt-1 pb-2 sm:hidden">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="w-full">
+              <StudioCardSkeleton />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

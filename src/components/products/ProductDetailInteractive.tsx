@@ -198,7 +198,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
 
             {/* 2. Small Thumbnail Images: Mobile Bottom Center / Desktop Right-Side Down-by-Down */}
             {uniqueImages.length > 0 && (
-              <div className="w-full sm:w-20 md:w-24 lg:w-28 flex flex-row justify-center sm:flex-col sm:justify-start items-center sm:items-start gap-2.5 sm:gap-3 shrink-0 sm:self-start">
+              <div className="w-full sm:w-auto flex flex-row justify-center sm:flex-col sm:justify-start items-center sm:items-start gap-2.5 sm:gap-3 shrink-0 sm:self-start">
                 {uniqueImages.map((img, idx) => {
                   const isActive = activeImage === img;
                   return (
@@ -209,7 +209,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                       title={`View image ${idx + 1}`}
                       aria-label={`View image ${idx + 1}`}
                       className={cn(
-                        'relative w-16 h-16 sm:w-full sm:aspect-square rounded-none overflow-hidden bg-neutral-100 border transition-all cursor-pointer group text-left p-0 shrink-0',
+                        'relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 aspect-square rounded-none overflow-hidden bg-neutral-100 border transition-all cursor-pointer group text-left p-1 shrink-0',
                         isActive
                           ? 'border-[#FF001E] ring-2 ring-[#FF001E]'
                           : 'border-neutral-200 opacity-75 hover:opacity-100 hover:border-neutral-400'
@@ -219,10 +219,10 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                         src={img}
                         alt={`${product.name} view ${idx + 1}`}
                         fill
-                        sizes="(min-width: 1024px) 120px, 64px"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 64px"
+                        className="object-contain transition-transform duration-300 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
                     </button>
                   );
                 })}
