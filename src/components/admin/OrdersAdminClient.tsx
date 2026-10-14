@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { formatPhoneNumber } from '@/lib/whatsapp';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface OrdersAdminClientProps {
   orders: Order[];
@@ -45,15 +46,23 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
   const [filterStatus, setFilterStatus] = useState('all');
   const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
   const handleStatusUpdate = async (id: string, status: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('orders')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', id);
-    startTransition(() => router.refresh());
+    setUpdatingId(id);
+    try {
+      const supabase = createClient();
+      await supabase
+        .from('orders')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+      startTransition(() => router.refresh());
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   const confirmDelete = async () => {
@@ -87,61 +96,66 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
-            <ShoppingBag className="w-7 h-7 text-amber-600" />
-            WhatsApp Orders
-          </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            {orders.length} total customer orders • {counts.new} pending actions
-          </p>
-        </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="WhatsApp Orders"
+        icon={ShoppingBag}
+        description={`${orders.length} total customer orders • ${counts.new} pending actions`}
+      />
 
-        {/* Summary pills */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {ALL_STATUSES.map((s) => (
-            <div
-              key={s}
+      {/* Box Type Status KPI Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        {[
+          { key: 'all', label: 'All Orders', count: counts.all, dot: 'bg-slate-400' },
+          { key: 'new', label: 'New', count: counts.new, dot: 'bg-red-500', badge: counts.new > 0 ? `${counts.new} Action` : undefined },
+          { key: 'confirmed', label: 'Confirmed', count: counts.confirmed, dot: 'bg-blue-500' },
+          { key: 'shipped', label: 'Shipped', count: counts.shipped, dot: 'bg-purple-500' },
+          { key: 'delivered', label: 'Delivered', count: counts.delivered, dot: 'bg-emerald-500' },
+          { key: 'cancelled', label: 'Cancelled', count: counts.cancelled, dot: 'bg-rose-500' },
+        ].map((card) => {
+          const isSelected = filterStatus === card.key;
+          return (
+            <button
+              key={card.key}
+              type="button"
+              onClick={() => setFilterStatus(card.key)}
               className={cn(
-                'flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold border shadow-xs',
-                STATUS_CONFIG[s].color
+                'p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer relative overflow-hidden flex flex-col shadow-md justify-between group border-0',
+                isSelected
+                  ? 'bg-red-600 text-white shadow-md -translate-y-0.5'
+                  : 'bg-white text-black hover:shadow-xs'
               )}
             >
-              <span className={cn('w-2 h-2 rounded-full', STATUS_CONFIG[s].dot)} />
-              {STATUS_CONFIG[s].label}: {counts[s]}
-            </div>
-          ))}
-        </div>
-      </div>
+              <div className="flex items-center justify-between gap-1.5 mb-2">
+                <span className={cn('text-[11px] sm:text-xs font-bold uppercase tracking-wider truncate', isSelected ? 'text-white/80' : 'text-black/60')}>
+                  {card.label}
+                </span>
+                <span className={cn('w-2.5 h-2.5 rounded-full shrink-0', isSelected ? 'bg-white' : card.dot)} />
+              </div>
 
-      {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {(['all', ...ALL_STATUSES] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setFilterStatus(s)}
-            className={cn(
-              'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border shadow-xs',
-              filterStatus === s
-                ? 'bg-amber-500 text-black border-amber-500 font-bold shadow-sm'
-                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-50 border-slate-200'
-            )}
-          >
-            {s === 'all' ? 'All Orders' : STATUS_CONFIG[s].label} ({s === 'all' ? counts.all : counts[s]})
-          </button>
-        ))}
+              <div className="flex items-baseline justify-between mt-1">
+                <span className={cn('text-2xl sm:text-3xl font-extrabold tracking-tight', isSelected ? 'text-white' : 'text-black')}>
+                  {card.count}
+                </span>
+                {card.badge && (
+                  <span className={cn('text-[10px] font-bold px-1.5 py-0.5 rounded-xl shrink-0', isSelected ? 'bg-white/20 text-white' : 'text-red-600 bg-red-50')}>
+                    {card.badge}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {/* Orders List */}
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
-          <ShoppingBag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-1">
+        <div className="rounded-xl bg-white p-16 text-center shadow-sm border-0">
+          <ShoppingBag className="w-14 h-14 text-black/20 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-black mb-1">
             No {filterStatus !== 'all' ? STATUS_CONFIG[filterStatus]?.label : ''} Orders Found
           </h3>
-          <p className="text-sm text-slate-500 max-w-md mx-auto">
+          <p className="text-sm text-black/60 max-w-md mx-auto">
             Orders placed via WhatsApp from the product pages will automatically show up here.
           </p>
         </div>
@@ -158,12 +172,7 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
             return (
               <div
                 key={order.id}
-                className={cn(
-                  'rounded-2xl bg-white border transition-all shadow-xs overflow-hidden',
-                  order.status === 'new'
-                    ? 'border-amber-400/80 ring-1 ring-amber-400/20'
-                    : 'border-slate-200 hover:border-slate-300'
-                )}
+                className="rounded-xl bg-white shadow-xs overflow-hidden border-0"
               >
                 {/* Row Header */}
                 <div
@@ -176,33 +185,57 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
                       <span className="font-bold text-black text-sm truncate">{order.name}</span>
-                      <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border', cfg.color)}>
+                      <span className={cn('px-2.5 py-0.5 rounded-xl text-[11px] font-bold border-0', cfg.color)}>
                         {cfg.label}
                       </span>
                       {order.status === 'new' && (
-                        <span className="text-[10px] bg-amber-500/20 text-amber-900 border border-amber-400/40 px-2 py-0.5 rounded-full font-bold animate-pulse">
+                        <span className="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 rounded-xl font-bold animate-pulse">
                           ACTION NEEDED
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5 truncate">
-                      <span className="font-medium text-slate-700">{order.product_name}</span>
-                      {order.category && <span className="text-slate-400"> • {order.category}</span>}
+                    <p className="text-xs text-black/60 mt-0.5 truncate">
+                      <span className="font-medium text-black">{order.product_name}</span>
+                      {order.category && <span className="text-black/40"> • {order.category}</span>}
                       {order.quantity && (
-                        <span className="text-slate-500"> • Qty: <strong className="text-slate-700">{order.quantity}</strong></span>
+                        <span className="text-black/60"> • Qty: <strong className="text-black">{order.quantity}</strong></span>
                       )}
                     </p>
                   </div>
 
-                  <div className="shrink-0 flex items-center gap-2 sm:gap-3">
-                    <span className="text-xs text-slate-400 font-mono hidden sm:block">
+                  <div className="shrink-0 flex items-center gap-2.5 sm:gap-3">
+                    {/* Status Update Dropdown at End */}
+                    <div
+                      className="relative inline-flex items-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <select
+                        value={order.status}
+                        disabled={updatingId === order.id}
+                        onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                        className={cn(
+                          'appearance-none text-xs font-bold pl-3 pr-7 py-1.5 rounded-xl border-0 bg-slate-100 hover:bg-slate-200 text-black cursor-pointer transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-red-500/20',
+                          updatingId === order.id && 'opacity-60 cursor-not-allowed'
+                        )}
+                        title="Update Status"
+                      >
+                        {ALL_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {STATUS_CONFIG[s].label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 absolute right-2 pointer-events-none text-black/40" />
+                    </div>
+
+                    <span className="text-xs text-black/40 font-mono hidden sm:block">
                       {new Date(order.created_at).toLocaleDateString('en-IN', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </span>
-                    <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                    <div className="w-7 h-7 rounded-xl bg-slate-100 flex items-center justify-center text-black/60">
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </div>
                   </div>
@@ -210,29 +243,29 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 border-t border-slate-100 bg-slate-50/60 pt-4 sm:pt-5 space-y-4 sm:space-y-5">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 bg-slate-50/60 pt-4 sm:pt-5 space-y-4 sm:space-y-5">
                     {/* Info Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
-                      <InfoRow icon={<Package className="w-4 h-4 text-amber-600" />} label="Product Name">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 bg-white p-3.5 sm:p-4 rounded-xl shadow-xs border-0">
+                      <InfoRow icon={<Package className="w-4 h-4 text-black" />} label="Product Name">
                         {order.product_name}
                       </InfoRow>
                       {order.category && (
-                        <InfoRow icon={<Tag className="w-4 h-4 text-amber-600" />} label="Category">
+                        <InfoRow icon={<Tag className="w-4 h-4 text-black" />} label="Category">
                           {order.category}
                         </InfoRow>
                       )}
-                      <InfoRow icon={<Hash className="w-4 h-4 text-amber-600" />} label="Quantity Requested">
+                      <InfoRow icon={<Hash className="w-4 h-4 text-black" />} label="Quantity Requested">
                         {order.quantity ?? '1'}
                       </InfoRow>
-                      <InfoRow icon={<Phone className="w-4 h-4 text-amber-600" />} label="Customer Phone">
-                        <a href={`tel:${order.phone}`} className="text-blue-600 hover:underline font-mono font-medium">
+                      <InfoRow icon={<Phone className="w-4 h-4 text-black" />} label="Customer Phone">
+                        <a href={`tel:${order.phone}`} className="text-red-600 hover:underline font-mono font-medium">
                           {order.phone}
                         </a>
                       </InfoRow>
-                      <InfoRow icon={<MapPin className="w-4 h-4 text-amber-600" />} label="Shipping Address" span>
+                      <InfoRow icon={<MapPin className="w-4 h-4 text-black" />} label="Shipping Address" span>
                         {order.shipping_address}
                       </InfoRow>
-                      <InfoRow icon={<Clock className="w-4 h-4 text-slate-400" />} label="Order Timestamp" span>
+                      <InfoRow icon={<Clock className="w-4 h-4 text-black/40" />} label="Order Timestamp" span>
                         {new Date(order.created_at).toLocaleString('en-IN', {
                           day: '2-digit',
                           month: 'long',
@@ -245,40 +278,43 @@ export function OrdersAdminClient({ orders }: OrdersAdminClientProps) {
 
                     {/* Status Actions + Reply */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1 w-full sm:w-auto">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-black/60">
                           Update Status:
                         </span>
-                        {ALL_STATUSES.map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => handleStatusUpdate(order.id, s)}
-                            disabled={order.status === s}
+                        <div className="relative inline-flex items-center">
+                          <select
+                            value={order.status}
+                            disabled={updatingId === order.id}
+                            onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                             className={cn(
-                              'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs cursor-pointer',
-                              order.status === s
-                                ? cn(STATUS_CONFIG[s].color, 'cursor-default ring-1 ring-black/5 font-bold')
-                                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
+                              'appearance-none text-xs font-bold pl-3 pr-7 py-1.5 rounded-xl border-0 cursor-pointer transition-all bg-slate-100 hover:bg-slate-200 text-black shadow-2xs focus:outline-none focus:ring-2 focus:ring-red-500/30',
+                              updatingId === order.id && 'opacity-60 cursor-not-allowed'
                             )}
                           >
-                            {STATUS_CONFIG[s].label}
-                          </button>
-                        ))}
+                            {ALL_STATUSES.map((s) => (
+                              <option key={s} value={s} className="bg-white text-black font-medium">
+                                {STATUS_CONFIG[s].label}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="w-3.5 h-3.5 absolute right-2 pointer-events-none text-black/40" />
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-t-0">
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 sm:border-t-0">
                         <a
                           href={waReplyUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Reply on WhatsApp</span>
                         </a>
                         <button
                           onClick={() => setOrderToDelete(order)}
-                          className="p-2.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer shrink-0"
+                          className="p-2.5 rounded-xl text-black/40 hover:text-red-600 hover:bg-red-50 bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
                           title="Delete order record"
                         >
                           <Trash2 className="w-4 h-4" />

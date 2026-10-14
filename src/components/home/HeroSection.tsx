@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { HeroSlide } from '@/types/database';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface HeroSectionProps {
@@ -148,7 +149,12 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
       {/* ── Hero Content (Mobile: bottom center, Desktop: left-aligned vertically centered) ── */}
       <div className="relative z-10 flex h-full items-end lg:items-center pb-8 sm:pb-12 lg:pb-0">
-        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 36 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full px-4 sm:px-6 lg:px-10 xl:px-12"
+        >
           <div className="max-w-3xl lg:max-w-4xl mx-auto lg:mx-0 text-center lg:text-left flex flex-col items-center lg:items-start">
 
             {/* Sub-heading / Eyebrow (Hidden on mobile) */}
@@ -198,7 +204,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Slide Indicator Bars (Hidden on mobile, visible on desktop) ── */}

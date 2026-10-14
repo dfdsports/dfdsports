@@ -149,7 +149,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
         <div className="lg:col-span-6 flex flex-col gap-3">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 sm:gap-4 w-full">
             {/* 1. Main Large Hero Image - Height and Width change together at 1:1 square ratio */}
-            <div className="relative w-full max-w-[380px] sm:max-w-[460px] lg:max-w-[500px] xl:max-w-[520px] aspect-square rounded-none overflow-hidden bg-neutral-100 border border-neutral-200 shadow-sm group shrink-0">
+            <div className="relative w-full max-w-[380px] sm:max-w-[460px] lg:max-w-[500px] xl:max-w-[520px] aspect-square rounded-none overflow-hidden bg-neutral-100 shadow-sm group shrink-0">
               {activeImage ? (
                 <Image
                   src={activeImage}
@@ -174,26 +174,7 @@ export function ProductDetailInteractive({ product, company }: ProductDetailInte
                 </div>
               )}
 
-              {/* Wishlist Button - Background Removed */}
-              <button
-                type="button"
-                onClick={handleToggleWishlist}
-                title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                className={cn(
-                  'absolute top-2 right-2 sm:top-3 sm:right-3 z-20 p-2 transition-all duration-200 cursor-pointer active:scale-90 bg-transparent border-0 outline-none drop-shadow-md',
-                  isWishlisted
-                    ? 'text-[#FF001E]'
-                    : 'text-neutral-800 hover:text-[#FF001E]'
-                )}
-              >
-                <Heart
-                  className={cn(
-                    'w-6 h-6 stroke-[2]',
-                    isWishlisted ? 'fill-[#FF001E] text-[#FF001E]' : 'fill-white/60 text-neutral-900 hover:fill-[#FF001E]/20'
-                  )}
-                />
-              </button>
+
             </div>
 
             {/* 2. Small Thumbnail Images: Mobile Bottom Center / Desktop Right-Side Down-by-Down */}

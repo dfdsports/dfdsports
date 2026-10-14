@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CompanySettings, Fabric } from '@/types/database';
 import { ChevronDown, Check, MessageCircle } from 'lucide-react';
 import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
@@ -8,15 +8,29 @@ import { WhatsAppOrderModal } from '@/components/ui/WhatsAppOrderModal';
 interface CustomTeamwearBuilderProps {
   company?: CompanySettings | null;
   fabrics: Fabric[];
+  initialFabric?: string;
 }
 
-export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilderProps) {
+export function CustomTeamwearBuilder({ company, fabrics, initialFabric }: CustomTeamwearBuilderProps) {
+  const resolveFabricName = (nameOrId?: string | null) => {
+    if (!nameOrId) return null;
+    const clean = decodeURIComponent(nameOrId).trim().toLowerCase();
+    const found = (fabrics || []).find(
+      (f) =>
+        f.name.trim().toLowerCase() === clean ||
+        f.id.trim().toLowerCase() === clean
+    );
+    return found ? found.name : decodeURIComponent(nameOrId).trim();
+  };
+
   const [teamName, setTeamName] = useState('');
   const [sport, setSport] = useState('Football');
   const [quantity, setQuantity] = useState('1-10 sets');
-  const [selectedFabric, setSelectedFabric] = useState(
-    fabrics.length > 0 ? fabrics[0].name : 'Drynet'
-  );
+  const [selectedFabric, setSelectedFabric] = useState<string>(() => {
+    const matched = resolveFabricName(initialFabric);
+    if (matched) return matched;
+    return fabrics && fabrics.length > 0 ? fabrics[0].name : 'Drynet';
+  });
   const [neckType, setNeckType] = useState('Round Neck');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([
     'Team Logo / Crest',
@@ -25,6 +39,21 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
   ]);
   const [notes, setNotes] = useState('');
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+
+  // Sync selectedFabric when initialFabric prop or URL parameter changes
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlFabric = params.get('fabric');
+      const target = urlFabric || initialFabric;
+      if (target) {
+        const matched = resolveFabricName(target);
+        if (matched) {
+          setSelectedFabric(matched);
+        }
+      }
+    } catch {}
+  }, [initialFabric, fabrics]);
 
   const sportsList = [
     'Football',
@@ -77,7 +106,7 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
   };
 
   return (
-    <section className="relative w-full pb-24 lg:pb-0">
+    <section id="builder" className="relative w-full pb-24 lg:pb-0 scroll-mt-24">
       <div className="relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-8 sm:mb-10">
@@ -146,16 +175,28 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                     <select
                       value={selectedFabric}
                       onChange={(e) => setSelectedFabric(e.target.value)}
-                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-none bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer"
+                      className="w-full appearance-none px-4 py-3 sm:py-3.5 pr-10 rounded-none bg-[#0E121B] text-white font-medium text-xs sm:text-sm focus:outline-none transition-all cursor-pointer ring-1 ring-white/10 focus:ring-[#E8192C]"
                     >
                       {fabrics && fabrics.length > 0 ? (
-                        fabrics.map((f) => (
-                          <option key={f.id} value={f.name} className="bg-[#0E121B] text-white py-2">
-                            {f.name}
-                          </option>
-                        ))
+                        <>
+                          {fabrics.map((f) => (
+                            <option key={f.id} value={f.name} className="bg-[#0E121B] text-white py-2">
+                              {f.name}
+                            </option>
+                          ))}
+                          {selectedFabric && !fabrics.some((f) => f.name.toLowerCase() === selectedFabric.toLowerCase()) && (
+                            <option value={selectedFabric} className="bg-[#0E121B] text-white py-2">
+                              {selectedFabric}
+                            </option>
+                          )}
+                        </>
                       ) : (
                         <>
+                          {selectedFabric && !['Drynet', 'Sublena', 'Foxnet', 'Jacaband'].includes(selectedFabric) && (
+                            <option value={selectedFabric} className="bg-[#0E121B] text-white py-2">
+                              {selectedFabric}
+                            </option>
+                          )}
                           <option value="Drynet" className="bg-[#0E121B] text-white py-2">
                             Drynet
                           </option>
@@ -173,6 +214,20 @@ export function CustomTeamwearBuilder({ company, fabrics }: CustomTeamwearBuilde
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   </div>
+                  {(() => {
+                    const activeFab = (fabrics || []).find(
+                      (f) => f.name.toLowerCase() === selectedFabric.toLowerCase()
+                    );
+                    if (activeFab && activeFab.short_description) {
+                      return (
+                        <p className="text-[11px] text-neutral-400 flex items-center gap-1.5 pt-0.5 line-clamp-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E8192C] shrink-0" />
+                          <span className="truncate">{activeFab.short_description}</span>
+                        </p>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
               </div>
 

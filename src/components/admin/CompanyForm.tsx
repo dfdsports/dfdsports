@@ -92,7 +92,7 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       )}
 
       {/* Basic Info */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
+      <section className="rounded-xl bg-white p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm border-0">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Brand Identity</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
@@ -108,18 +108,10 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
           <label className={labelCls}>Tagline</label>
           <input name="tagline" value={form.tagline} onChange={handleChange} className={inputCls} placeholder="Custom Teamwear & Premium Sports Equipment" />
         </div>
-        <div>
-          <label className={labelCls}>Short Description (used in Footer & Meta)</label>
-          <textarea name="short_description" value={form.short_description} onChange={handleChange} rows={2} className={inputCls} placeholder="2–3 sentence overview of your business" />
-        </div>
-        <div>
-          <label className={labelCls}>About Description (used on About page)</label>
-          <textarea name="about_description" value={form.about_description} onChange={handleChange} rows={4} className={inputCls} placeholder="Full brand story and mission" />
-        </div>
       </section>
 
       {/* Contact Details */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
+      <section className="rounded-xl bg-white p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm border-0">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Contact Information</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
@@ -127,9 +119,9 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
             <input name="phone" value={form.phone} onChange={handleChange} className={inputCls} placeholder="+91 99999 99999" />
           </div>
           <div>
-            <label className={labelCls}>WhatsApp Number <span className="text-amber-600">*</span></label>
+            <label className={labelCls}>WhatsApp Number <span className="text-red-600">*</span></label>
             <input name="whatsapp_number" value={form.whatsapp_number} onChange={handleChange} className={inputCls} placeholder="919999999999 (without + sign, with country code)" />
-            <p className="text-[11px] text-slate-500 mt-1">Format: 91XXXXXXXXXX (no +, no spaces). This number receives all WhatsApp orders & leads.</p>
+            <p className="text-[11px] text-black/60 mt-1">Format: 91XXXXXXXXXX (no +, no spaces). This number receives all WhatsApp orders & leads.</p>
           </div>
           <div>
             <label className={labelCls}>Email Address</label>
@@ -151,7 +143,7 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
       </section>
 
       {/* Social Media */}
-      <section className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
+      <section className="rounded-xl bg-white p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm border-0">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Social Media Links</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
@@ -178,7 +170,7 @@ export function CompanyForm({ initialData }: CompanyFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{isPending ? 'Saving...' : 'Save Company Details'}</span>

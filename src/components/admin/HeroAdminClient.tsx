@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useTransition } from 'react';
+import React, { useState, useRef, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface HeroAdminClientProps {
   slides: HeroSlide[];
@@ -47,6 +48,12 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
   const mobileFileRef = useRef<HTMLInputElement>(null);
 
   const openCreate = () => { setEditing(null); setForm({ ...emptySlide, display_order: slides.length }); setShowForm(true); setError(''); };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('action=new')) {
+      openCreate();
+    }
+  }, []);
   const openEdit = (slide: HeroSlide) => {
     setEditing(slide);
     setForm({
@@ -187,18 +194,19 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Hero Banners</h1>
-          <p className="text-sm text-slate-600 mt-0.5">{slides.length} slides configured for homepage</p>
-        </div>
-        <button
-          onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Add Hero Slide
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Hero Banners"
+        description={`${slides.length} slides configured for homepage`}
+        actions={
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> Add Hero Slide
+          </button>
+        }
+      />
 
       {error && <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-xs">{error}</div>}
 
@@ -311,22 +319,22 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
             </div>
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-3">
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 text-sm font-bold text-black hover:bg-slate-200 transition-colors text-center justify-center cursor-pointer border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || uploading || uploadingMobile}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
-                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
                   <span>Saving...</span>
                 </>
               ) : (
@@ -341,18 +349,18 @@ export function HeroAdminClient({ slides }: HeroAdminClientProps) {
       </AdminModal>
 
       {slides.length === 0 && !showForm ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
-          <ImageIcon className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-2">No Hero Slides Yet</h3>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">Create your first hero slide to appear at the top of the homepage.</p>
-          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm shadow-sm w-full sm:w-auto cursor-pointer">
+        <div className="rounded-xl bg-white p-10 sm:p-16 text-center shadow-sm border-0">
+          <ImageIcon className="w-14 h-14 text-black/20 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-black mb-2">No Hero Slides Yet</h3>
+          <p className="text-sm text-black/60 mb-6 max-w-sm mx-auto">Create your first hero slide to appear at the top of the homepage.</p>
+          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-sm w-full sm:w-auto cursor-pointer">
             <Plus className="w-4 h-4" /> Create First Slide
           </button>
         </div>
       ) : (
         <div className="space-y-3">
           {slides.map((slide) => (
-            <div key={slide.id} className={cn('rounded-2xl bg-white border shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 p-4 sm:p-5 hover:shadow-md transition-shadow', slide.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60')}>
+            <div key={slide.id} className={cn('rounded-xl bg-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 p-4 sm:p-5 hover:shadow-md transition-shadow border-0', !slide.is_active && 'opacity-60')}>
               <div className="relative w-full sm:w-28 h-36 sm:h-18 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                 {slide.image_url ? (
                   <Image src={slide.image_url} alt={slide.heading} fill className="object-cover" />

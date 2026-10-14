@@ -11,13 +11,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await getAdminUser();
 
   // No user — render children as-is (login page handles its own UI)
-  // proxy.ts already redirects unauthenticated requests away from protected routes
+  // middleware.ts redirects unauthenticated requests away from protected routes
   if (!user) {
     return <>{children}</>;
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased w-full">
+    <div className="min-h-screen bg-white text-black antialiased w-full">
       <AdminSidebar userEmail={user.email} />
 
       <div className="lg:pl-64 flex flex-col min-h-screen w-full min-w-0">

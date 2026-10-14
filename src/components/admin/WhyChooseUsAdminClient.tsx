@@ -8,6 +8,7 @@ import { Plus, Edit2, Trash2, Save, X, ShieldCheck, CheckCircle2, AlertCircle } 
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface WhyChooseUsAdminClientProps {
   items: WhyChooseUs[];
@@ -116,18 +117,19 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Why Choose Us</h1>
-          <p className="text-sm text-slate-600 mt-0.5">Manage trust and competitive advantages displayed on the storefront.</p>
-        </div>
-        <button
-          onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Add Item
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Why Choose Us"
+        description="Manage trust and competitive advantages displayed on the storefront."
+        actions={
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> Add Item
+          </button>
+        }
+      />
 
       {error && <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-xs">{error}</div>}
 
@@ -214,27 +216,27 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
             </label>
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 text-black font-bold text-sm hover:bg-slate-200 transition-colors text-center justify-center cursor-pointer border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
-                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
                   <span>Saving...</span>
                 </>
               ) : savedSuccess ? (
                 <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-950" /> Saved!
+                  <CheckCircle2 className="w-4 h-4 text-white" /> Saved!
                 </>
               ) : (
                 <>
@@ -247,7 +249,7 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
       </AdminModal>
 
       {/* Items List */}
-      <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden shadow-sm">
+      <div className="rounded-xl bg-white border-0 divide-y divide-slate-100 overflow-hidden shadow-sm">
         {items.length === 0 ? (
           <div className="p-10 sm:p-12 text-center text-slate-400 text-sm">
             No features added yet. Click &quot;Add Item&quot; to highlight your advantages.
@@ -259,18 +261,18 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
               className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 hover:bg-slate-50/70 transition-colors"
             >
               <div className="flex items-start gap-3.5 min-w-0 flex-1">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-5 h-5 text-amber-700" />
+                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0 border-0">
+                  <ShieldCheck className="w-5 h-5 text-red-600" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-                    <h4 className="text-base font-bold text-slate-900 truncate">{item.title}</h4>
+                    <h4 className="text-base font-bold text-black truncate">{item.title}</h4>
                     <span
                       className={cn(
-                        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border',
+                        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-xl',
                         item.is_active
-                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                          : 'bg-slate-100 text-slate-500 border-slate-200'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-100 text-slate-500'
                       )}
                     >
                       {item.is_active ? 'Active' : 'Hidden'}
@@ -283,26 +285,26 @@ export function WhyChooseUsAdminClient({ items }: WhyChooseUsAdminClientProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center pt-2 sm:pt-0 border-t border-slate-100 sm:border-t-0 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center pt-2 sm:pt-0 sm:border-t-0 w-full sm:w-auto justify-end">
                 <button
                   onClick={() => handleToggle(item)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl border-0 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-black transition-colors cursor-pointer"
                 >
                   {item.is_active ? 'Hide' : 'Show'}
                 </button>
                 <button
                   onClick={() => openEdit(item)}
-                  className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl border-0 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-black transition-colors cursor-pointer"
                   title="Edit item"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <Edit2 className="w-4 h-4 text-blue-600" />
                 </button>
                 <button
                   onClick={() => setItemToDelete(item)}
-                  className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl border-0 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
                   title="Delete item"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 text-rose-600" />
                 </button>
               </div>
             </div>

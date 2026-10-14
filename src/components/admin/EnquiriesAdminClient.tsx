@@ -4,21 +4,27 @@ import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Enquiry } from '@/types/database';
-import { Mail, MessageCircle, Trash2, ChevronDown, ChevronUp, Phone, User } from 'lucide-react';
+import { Mail, MessageCircle, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface EnquiriesAdminClientProps {
   enquiries: Enquiry[];
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  new: 'bg-amber-100 text-amber-900 border-amber-300',
-  contacted: 'bg-blue-100 text-blue-900 border-blue-300',
-  completed: 'bg-emerald-100 text-emerald-900 border-emerald-300',
-  archived: 'bg-slate-100 text-slate-700 border-slate-300',
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; color: string; dot: string }
+> = {
+  new: { label: 'New', color: 'bg-amber-100 text-amber-900 border-amber-300', dot: 'bg-amber-500' },
+  contacted: { label: 'Contacted', color: 'bg-blue-100 text-blue-900 border-blue-300', dot: 'bg-blue-500' },
+  completed: { label: 'Completed', color: 'bg-emerald-100 text-emerald-900 border-emerald-300', dot: 'bg-emerald-500' },
+  archived: { label: 'Archived', color: 'bg-slate-100 text-slate-700 border-slate-300', dot: 'bg-slate-400' },
 };
+
+const ALL_STATUSES = ['new', 'contacted', 'completed', 'archived'] as const;
 
 export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
   const router = useRouter();
@@ -26,12 +32,23 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [enquiryToDelete, setEnquiryToDelete] = useState<Enquiry | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
   const handleStatusUpdate = async (id: string, status: string) => {
-    const supabase = createClient();
-    await supabase.from('enquiries').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-    startTransition(() => router.refresh());
+    setUpdatingId(id);
+    try {
+      const supabase = createClient();
+      await supabase
+        .from('enquiries')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+      startTransition(() => router.refresh());
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   const confirmDelete = async () => {
@@ -61,44 +78,64 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black flex items-center gap-3">
-            <Mail className="w-7 h-7 text-emerald-600" />
-            Customer Enquiries
-          </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            {enquiries.length} total website inquiries • {counts.new} new
-          </p>
-        </div>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Customer Enquiries"
+        icon={Mail}
+        description={`${enquiries.length} total website inquiries • ${counts.new} pending actions`}
+      />
 
-      {/* Status Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {Object.entries(counts).map(([status, count]) => (
-          <button
-            key={status}
-            onClick={() => setFilterStatus(status)}
-            className={cn(
-              'px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border shadow-xs',
-              filterStatus === status
-                ? 'bg-amber-500 text-black border-amber-500 font-bold shadow-sm'
-                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-50 border-slate-200'
-            )}
-          >
-            {status === 'all' ? 'All Enquiries' : status} ({count})
-          </button>
-        ))}
+      {/* Box Type Status KPI Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {[
+          { key: 'all', label: 'All Enquiries', count: counts.all, dot: 'bg-slate-400' },
+          { key: 'new', label: 'New', count: counts.new, dot: 'bg-red-500', badge: counts.new > 0 ? `${counts.new} Action` : undefined },
+          { key: 'contacted', label: 'Contacted', count: counts.contacted, dot: 'bg-blue-500' },
+          { key: 'completed', label: 'Completed', count: counts.completed, dot: 'bg-emerald-500' },
+          { key: 'archived', label: 'Archived', count: counts.archived, dot: 'bg-slate-400' },
+        ].map((card) => {
+          const isSelected = filterStatus === card.key;
+          return (
+            <button
+              key={card.key}
+              type="button"
+              onClick={() => setFilterStatus(card.key)}
+              className={cn(
+                'p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between group border-0',
+                isSelected
+                  ? 'bg-red-600 text-white shadow-md -translate-y-0.5'
+                  : 'bg-white text-black hover:shadow-xs'
+              )}
+            >
+              <div className="flex items-center justify-between gap-1.5 mb-2">
+                <span className={cn('text-[11px] sm:text-xs font-bold uppercase tracking-wider truncate', isSelected ? 'text-white/80' : 'text-black/60')}>
+                  {card.label}
+                </span>
+                <span className={cn('w-2.5 h-2.5 rounded-full shrink-0', isSelected ? 'bg-white' : card.dot)} />
+              </div>
+
+              <div className="flex items-baseline justify-between mt-1">
+                <span className={cn('text-2xl sm:text-3xl font-extrabold tracking-tight', isSelected ? 'text-white' : 'text-black')}>
+                  {card.count}
+                </span>
+                {card.badge && (
+                  <span className={cn('text-[10px] font-bold px-1.5 py-0.5 rounded-xl shrink-0', isSelected ? 'bg-white/20 text-white' : 'text-red-600 bg-red-50')}>
+                    {card.badge}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-16 text-center shadow-sm">
-          <Mail className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-slate-800 mb-1">
-            No {filterStatus !== 'all' ? filterStatus : ''} Enquiries Found
+        <div className="rounded-xl bg-white p-16 text-center shadow-sm border-0">
+          <Mail className="w-14 h-14 text-black/20 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-black mb-1">
+            No {filterStatus !== 'all' ? STATUS_CONFIG[filterStatus]?.label : ''} Enquiries Found
           </h3>
-          <p className="text-sm text-slate-500 max-w-md mx-auto">
+          <p className="text-sm text-black/60 max-w-md mx-auto">
             Customer questions submitted from contact forms will appear here.
           </p>
         </div>
@@ -106,6 +143,7 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
         <div className="space-y-3">
           {filtered.map((enq) => {
             const isExpanded = expandedId === enq.id;
+            const cfg = STATUS_CONFIG[enq.status] ?? STATUS_CONFIG.new;
             const waUrl = generateWhatsAppLink({
               phoneNumber: enq.phone,
               customMessage: `Hi ${enq.name}, this is DFD Sports. Following up on your enquiry about ${enq.product_name || enq.enquiry_type}. How can we help you?`,
@@ -114,42 +152,82 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
             return (
               <div
                 key={enq.id}
-                className={cn(
-                  'rounded-2xl bg-white border transition-all shadow-xs overflow-hidden',
-                  enq.status === 'new'
-                    ? 'border-amber-400/80 ring-1 ring-amber-400/20'
-                    : 'border-slate-200 hover:border-slate-300'
-                )}
+                className="rounded-xl bg-white shadow-xs overflow-hidden border-0"
               >
                 {/* Row Header */}
                 <div
                   className="flex items-center gap-3 sm:gap-4 px-4 py-3.5 sm:px-5 sm:py-4 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : enq.id)}
                 >
+                  {/* Status dot */}
+                  <div className={cn('w-2.5 h-2.5 rounded-full shrink-0', cfg.dot)} />
+
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                      <span className="font-bold text-slate-900 text-sm">{enq.name}</span>
-                      <span className={cn('px-2.5 py-0.5 rounded-md text-[11px] font-bold border uppercase', STATUS_COLORS[enq.status] || 'bg-slate-100 text-slate-700 border-slate-200')}>
-                        {enq.status}
+                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                      <span className="font-bold text-black text-sm truncate">{enq.name}</span>
+                      <span className={cn('px-2.5 py-0.5 rounded-xl text-[11px] font-bold border-0', cfg.color)}>
+                        {cfg.label}
                       </span>
-                      <span className="text-xs text-slate-500 font-medium capitalize bg-slate-100 px-2 py-0.5 rounded-md">
-                        {enq.enquiry_type?.replace('_', ' ')}
-                      </span>
+                      {enq.enquiry_type && (
+                        <span className="text-xs text-black/60 font-medium capitalize bg-slate-100 px-2 py-0.5 rounded-xl">
+                          {enq.enquiry_type.replace('_', ' ')}
+                        </span>
+                      )}
+                      {enq.status === 'new' && (
+                        <span className="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 rounded-xl font-bold animate-pulse">
+                          ACTION NEEDED
+                        </span>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5 font-mono">{enq.phone}</p>
+                    <p className="text-xs text-black/60 mt-0.5 truncate">
+                      <span className="font-mono text-black">{enq.phone}</span>
+                      {enq.email && <span className="text-black/40"> • {enq.email}</span>}
+                      {enq.product_name && <span className="text-black/60"> • {enq.product_name}</span>}
+                    </p>
                   </div>
-                  <div className="text-xs text-slate-400 font-mono hidden sm:block shrink-0">
-                    {new Date(enq.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </div>
-                  <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
-                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+
+                  <div className="shrink-0 flex items-center gap-2.5 sm:gap-3">
+                    {/* Status Update Dropdown at End */}
+                    <div
+                      className="relative inline-flex items-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <select
+                        value={enq.status}
+                        disabled={updatingId === enq.id}
+                        onChange={(e) => handleStatusUpdate(enq.id, e.target.value)}
+                        className={cn(
+                          'appearance-none text-xs font-bold pl-3 pr-7 py-1.5 rounded-xl border-0 bg-slate-100 hover:bg-slate-200 text-black cursor-pointer transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-red-500/20',
+                          updatingId === enq.id && 'opacity-60 cursor-not-allowed'
+                        )}
+                        title="Update Status"
+                      >
+                        {ALL_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {STATUS_CONFIG[s].label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 absolute right-2 pointer-events-none text-black/40" />
+                    </div>
+
+                    <span className="text-xs text-black/40 font-mono hidden sm:block">
+                      {new Date(enq.created_at).toLocaleDateString('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </span>
+                    <div className="w-7 h-7 rounded-xl bg-slate-100 flex items-center justify-center text-black/60">
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
                   </div>
                 </div>
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 border-t border-slate-100 bg-slate-50/60 pt-4 sm:pt-5 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 bg-slate-50/60 pt-4 sm:pt-5 space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm bg-white p-3.5 sm:p-4 rounded-xl shadow-xs border-0">
                       {enq.email && (
                         <div>
                           <p className="text-[11px] font-semibold uppercase tracking-wider text-black mb-0.5">Email Address</p>
@@ -190,40 +268,43 @@ export function EnquiriesAdminClient({ enquiries }: EnquiriesAdminClientProps) {
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-black mr-1 w-full sm:w-auto">
-                          Mark status:
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-black/60">
+                          Update Status:
                         </span>
-                        {(['new', 'contacted', 'completed', 'archived'] as const).map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => handleStatusUpdate(enq.id, s)}
-                            disabled={enq.status === s}
+                        <div className="relative inline-flex items-center">
+                          <select
+                            value={enq.status}
+                            disabled={updatingId === enq.id}
+                            onChange={(e) => handleStatusUpdate(enq.id, e.target.value)}
                             className={cn(
-                              'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-xs cursor-pointer',
-                              enq.status === s
-                                ? cn(STATUS_COLORS[s], 'cursor-default ring-1 ring-black/5 font-bold')
-                                : 'bg-white text-slate-700 hover:text-black hover:bg-slate-100 border-slate-200'
+                              'appearance-none text-xs font-bold pl-3 pr-7 py-1.5 rounded-xl border-0 cursor-pointer transition-all bg-slate-100 hover:bg-slate-200 text-black shadow-2xs focus:outline-none focus:ring-2 focus:ring-red-500/30',
+                              updatingId === enq.id && 'opacity-60 cursor-not-allowed'
                             )}
                           >
-                            Mark {s}
-                          </button>
-                        ))}
+                            {ALL_STATUSES.map((s) => (
+                              <option key={s} value={s} className="bg-white text-black font-medium">
+                                {STATUS_CONFIG[s].label}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="w-3.5 h-3.5 absolute right-2 pointer-events-none text-black/40" />
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-t-0">
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 sm:border-t-0">
                         <a
                           href={waUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Reply on WhatsApp</span>
                         </a>
                         <button
                           onClick={() => setEnquiryToDelete(enq)}
-                          className="p-2.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer shrink-0"
+                          className="p-2.5 rounded-xl text-black/40 hover:text-red-600 hover:bg-red-50 bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
                           title="Delete enquiry"
                         >
                           <Trash2 className="w-4 h-4" />

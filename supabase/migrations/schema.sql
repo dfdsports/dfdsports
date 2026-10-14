@@ -176,6 +176,33 @@ CREATE TABLE IF NOT EXISTS public.enquiries (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- 11. ORDERS (WhatsApp Checkout and Quick Direct Orders)
+CREATE TABLE IF NOT EXISTS public.orders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  product_name TEXT NOT NULL,
+  category TEXT,
+  quantity TEXT NOT NULL DEFAULT '1',
+  shipping_address TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new', -- 'new', 'confirmed', 'shipped', 'delivered', 'cancelled'
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+
+-- 12. POLICIES (Privacy, Terms & Delivery Policies)
+CREATE TABLE IF NOT EXISTS public.policies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  policy_type TEXT NOT NULL, -- 'privacy_policy', 'delivery_policy'
+  heading TEXT NOT NULL,
+  description TEXT NOT NULL,
+  display_order INT NOT NULL DEFAULT 0,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- ==========================================================
 -- INDEXES
 -- ==========================================================
@@ -201,6 +228,12 @@ CREATE INDEX IF NOT EXISTS idx_highlights_order ON public.highlights(display_ord
 CREATE INDEX IF NOT EXISTS idx_enquiries_status ON public.enquiries(status);
 CREATE INDEX IF NOT EXISTS idx_enquiries_created ON public.enquiries(created_at DESC);
 
+CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_created ON public.orders(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_policies_type ON public.policies(policy_type);
+CREATE INDEX IF NOT EXISTS idx_policies_order ON public.policies(display_order);
+
 -- ==========================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==========================================================
@@ -214,6 +247,8 @@ ALTER TABLE public.fabrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.why_choose_us ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.highlights ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enquiries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.policies ENABLE ROW LEVEL SECURITY;
 
 -- 1. PUBLIC READ POLICIES (Active items for storefront)
 CREATE POLICY "Public read company settings" ON public.company_settings FOR SELECT USING (true);
@@ -225,9 +260,11 @@ CREATE POLICY "Public read active teamwear" ON public.teamwear FOR SELECT USING 
 CREATE POLICY "Public read active fabrics" ON public.fabrics FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read active why_choose_us" ON public.why_choose_us FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read active highlights" ON public.highlights FOR SELECT USING (is_active = true);
+CREATE POLICY "Public read active policies" ON public.policies FOR SELECT USING (is_active = true);
 
--- 2. PUBLIC INSERT ENQUIRIES (Lead submission from storefront)
+-- 2. PUBLIC INSERT ENQUIRIES & ORDERS (Lead and order submission from storefront)
 CREATE POLICY "Public insert enquiries" ON public.enquiries FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert orders" ON public.orders FOR INSERT WITH CHECK (true);
 
 -- 3. ADMIN POLICIES (Authenticated users manage everything)
 CREATE POLICY "Admin full access company settings" ON public.company_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
@@ -240,6 +277,8 @@ CREATE POLICY "Admin full access fabrics" ON public.fabrics FOR ALL TO authentic
 CREATE POLICY "Admin full access why_choose_us" ON public.why_choose_us FOR ALL TO authenticated USING (true) WITH CHECK (true);
 CREATE POLICY "Admin full access highlights" ON public.highlights FOR ALL TO authenticated USING (true) WITH CHECK (true);
 CREATE POLICY "Admin full access enquiries" ON public.enquiries FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin full access orders" ON public.orders FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin full access policies" ON public.policies FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 -- ==========================================================
 -- STORAGE BUCKET CONFIGURATION

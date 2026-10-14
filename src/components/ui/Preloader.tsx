@@ -77,20 +77,20 @@ export function Preloader() {
       )}
     >
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-sm w-full">
-        {/* Big Crisp Animated Logo from public/logo.png */}
-        <div className="relative w-52 h-52 sm:w-72 sm:h-72 mb-0 transition-all duration-700 ease-out animate-pulse">
+        {/* Compact Crisp Animated Logo from public/logo.png */}
+        <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-0 transition-all duration-700 ease-out animate-pulse">
           <Image
             src="/logo.png"
             alt="DFD SPORTS"
             fill
             priority
-            sizes="(min-width: 640px) 288px, 208px"
+            sizes="(min-width: 640px) 192px, 144px"
             className="object-contain drop-shadow-2xl"
           />
         </div>
 
         {/* Medium-Speed Animated Loading Bar pulled right against the logo */}
-        <div className="w-52 sm:w-64 -mt-4 sm:-mt-6 space-y-1.5 z-20">
+        <div className="w-44 sm:w-52 -mt-2 sm:-mt-3 space-y-1.5 z-20">
           {/* Progress track */}
           <div className="relative h-1.5 w-full bg-white/10 rounded-full overflow-hidden p-0.5 backdrop-blur-sm">
             <div

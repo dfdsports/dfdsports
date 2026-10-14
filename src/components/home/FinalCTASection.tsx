@@ -1,6 +1,7 @@
 import React from 'react';
 import { CompanySettings } from '@/types/database';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
+import { MotionDiv } from '@/components/ui/MotionDiv';
 import Link from 'next/link';
 
 interface FinalCTASectionProps {
@@ -9,9 +10,9 @@ interface FinalCTASectionProps {
 
 export function FinalCTASection({ company }: FinalCTASectionProps) {
   return (
-    <section className="py-6 sm:py-10 lg:py-14 relative overflow-hidden bg-[#080A0F] w-full">
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10">
-        <div className="rounded-none bg-black p-6 sm:p-10 lg:p-12 relative overflow-hidden w-full">
+    <section className="py-0 sm:py-10 lg:py-14 relative overflow-hidden bg-[#080A0F] w-full">
+      <MotionDiv className="w-full px-0 sm:px-6 lg:px-10 xl:px-12 relative z-10">
+        <div className="rounded-none bg-[#0E121B] px-4 py-8 sm:p-10 lg:p-12 relative overflow-hidden w-full shadow-lg">
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-10">
             {/* Left side: Content */}
             <div className="max-w-2xl text-left">
@@ -61,7 +62,7 @@ export function FinalCTASection({ company }: FinalCTASectionProps) {
             </div>
           </div>
         </div>
-      </div>
+      </MotionDiv>
     </section>
   );
 }
