@@ -261,7 +261,7 @@ export function ProductForm({
       )}
 
       {/* Core Info */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
+      <div className="space-y-4 sm:space-y-5 pb-6 border-b border-slate-100">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Product Information</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
@@ -309,7 +309,7 @@ export function ProductForm({
       </div>
 
       {/* Main Image */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
+      <div className="space-y-4 pb-6 border-b border-slate-100">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-2 border-b border-slate-100">
           <h3 className="text-sm font-bold uppercase tracking-wider text-black">Main Product Image (Cloudinary)</h3>
           <span className="text-[11px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 self-start sm:self-auto">Auto-syncs with Cloudinary</span>
@@ -351,7 +351,7 @@ export function ProductForm({
       </div>
 
       {/* Additional Gallery Images */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
+      <div className="space-y-4 pb-6 border-b border-slate-100">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100">
           <h3 className="text-sm font-bold uppercase tracking-wider text-black">Product Gallery Images</h3>
           <span className="text-[11px] text-slate-600 font-medium">{form.images.length} images uploaded</span>
@@ -392,7 +392,7 @@ export function ProductForm({
       </div>
 
       {/* Specs & Sizes */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-sm">
+      <div className="space-y-4 sm:space-y-5 pb-6 border-b border-slate-100">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Specifications & Sizes</h3>
 
         <div>
@@ -430,9 +430,9 @@ export function ProductForm({
       </div>
 
       {/* Settings */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
+      <div className="space-y-4 pb-2">
         <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Display Settings</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Display Order</label>
             <input type="number" name="display_order" value={form.display_order} onChange={handleChange} className={inputCls} min={0} />
@@ -443,12 +443,6 @@ export function ProductForm({
               <span className="text-sm font-bold text-black">Active (visible in store)</span>
             </label>
           </div>
-          <div className="flex items-center sm:items-end pb-1 sm:pb-2">
-            <label className="flex items-center gap-3 cursor-pointer select-none">
-              <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={handleChange} className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
-              <span className="text-sm font-bold text-black">Featured on Homepage</span>
-            </label>
-          </div>
         </div>
       </div>
 
@@ -456,17 +450,17 @@ export function ProductForm({
         <button
           type="button"
           onClick={() => (onCancel ? onCancel() : router.back())}
-          className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+          className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-100 text-sm font-bold text-black hover:bg-slate-200 transition-colors text-center justify-center cursor-pointer border-0"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending || uploading}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           {isPending ? (
-            <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+            <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
           ) : (
             <Save className="w-4 h-4" />
           )}

@@ -2,6 +2,8 @@ import React from 'react';
 import { getCompanySettings } from '@/services/company';
 import { CompanyForm } from '@/components/admin/CompanyForm';
 
+import { AdminHeader } from '@/components/admin/AdminHeader';
+
 export const revalidate = 0;
 
 export default async function AdminCompanyPage() {
@@ -9,12 +11,10 @@ export default async function AdminCompanyPage() {
 
   return (
     <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-2xl font-bold uppercase tracking-tight text-black">Company Details</h1>
-        <p className="text-sm text-slate-600 mt-1">
-          Central CMS for all business information. Changes reflect site-wide instantly.
-        </p>
-      </div>
+      <AdminHeader
+        title="Company Details"
+        description="Central CMS for all business information. Changes reflect site-wide instantly."
+      />
 
       <CompanyForm initialData={company} />
     </div>

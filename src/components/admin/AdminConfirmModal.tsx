@@ -81,9 +81,9 @@ export function AdminConfirmModal({
   const { Icon, bg } = iconConfig;
 
   const buttonStyle = {
-    danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20 focus:ring-rose-500',
-    warning: 'bg-amber-500 hover:bg-amber-600 text-black shadow-md shadow-amber-500/20 focus:ring-amber-500',
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20 focus:ring-blue-500',
+    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-md focus:ring-red-500',
+    warning: 'bg-red-600 hover:bg-red-700 text-white shadow-md focus:ring-red-500',
+    primary: 'bg-red-600 hover:bg-red-700 text-white shadow-md focus:ring-red-500',
   }[variant];
 
   return (
@@ -105,13 +105,13 @@ export function AdminConfirmModal({
       {/* Modal Card */}
       <div
         ref={modalRef}
-        className="relative z-10 w-full max-w-md bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+        className="relative z-10 w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
       >
         <div className="p-5 sm:p-6 space-y-4">
           <div className="flex items-start gap-3.5 sm:gap-4">
             <div
               className={cn(
-                'w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border flex items-center justify-center shrink-0 shadow-xs',
+                'w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 shadow-xs',
                 bg
               )}
             >
@@ -146,7 +146,7 @@ export function AdminConfirmModal({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs sm:text-sm font-bold text-slate-800 transition-colors text-center justify-center cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs sm:text-sm font-bold text-black transition-colors text-center justify-center cursor-pointer disabled:opacity-50 border-0"
             >
               {cancelText}
             </button>

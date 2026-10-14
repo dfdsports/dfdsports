@@ -9,6 +9,7 @@ import { Plus, Edit2, Trash2, Save, X, Upload, CheckCircle2, Layers, AlertCircle
 import { cn } from '@/lib/utils';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 import { deleteImageFromCloudinary, compressImageIfNeeded } from '@/lib/media';
 
 interface FabricsAdminClientProps {
@@ -196,20 +197,21 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Custom Fabrics & Tech</h1>
-          <p className="text-sm text-slate-600 mt-0.5">Manage breathable fabrics and GSM specifications for team jersey production.</p>
-        </div>
-        <button
-          onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Add Fabric
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Custom Fabrics & Tech"
+        description="Manage breathable fabrics and GSM specifications for team jersey production."
+        actions={
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> Add Fabric
+          </button>
+        }
+      />
 
-      {error && <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-xs">{error}</div>}
+      {error && <div className="p-4 rounded-xl bg-rose-50 border-0 text-rose-800 text-sm shadow-xs">{error}</div>}
 
       {/* Create/Edit Modal */}
       <AdminModal
@@ -374,23 +376,23 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-black font-bold text-sm hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border-0 text-black font-bold text-sm transition-colors text-center justify-center cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || uploading}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {isPending ? (
                 <>
-                  <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                  <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
                   <span>Saving...</span>
                 </>
               ) : savedSuccess ? (
                 <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-950" /> Saved!
+                  <CheckCircle2 className="w-4 h-4 text-white" /> Saved!
                 </>
               ) : (
                 <>
@@ -405,16 +407,16 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
       {/* Fabrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
         {fabrics.length === 0 ? (
-          <div className="col-span-2 p-10 sm:p-12 text-center text-slate-400 text-sm rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <div className="col-span-2 p-10 sm:p-12 text-center text-slate-400 text-sm rounded-xl bg-white border-0 shadow-sm">
             No fabrics added yet. Click &quot;Add Fabric&quot; to configure swatches.
           </div>
         ) : (
           fabrics.map((fabric) => (
             <div
               key={fabric.id}
-              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3.5 sm:gap-4 hover:shadow-md transition-shadow"
+              className="p-4 rounded-xl bg-white border-0 shadow-sm flex flex-col sm:flex-row gap-3.5 sm:gap-4 hover:shadow-md transition-shadow"
             >
-              <div className="relative w-full sm:w-24 h-36 sm:h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-xs">
+              <div className="relative w-full sm:w-24 h-36 sm:h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0 border-0 shadow-xs">
                 {fabric.image_url ? (
                   <Image
                     src={fabric.image_url}
@@ -435,17 +437,17 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
                     <h4 className="text-base font-bold text-black truncate">{fabric.name}</h4>
                     <span
                       className={cn(
-                        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border shrink-0',
+                        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-xl shrink-0',
                         fabric.is_active
-                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                          : 'bg-slate-100 text-slate-500 border-slate-200'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-100 text-slate-500'
                       )}
                     >
                       {fabric.is_active ? 'Active' : 'Hidden'}
                     </span>
                   </div>
                   {fabric.specifications && (
-                    <p className="text-xs text-amber-600 font-bold font-mono mt-0.5">{fabric.specifications}</p>
+                    <p className="text-xs text-red-600 font-bold font-mono mt-0.5">{fabric.specifications}</p>
                   )}
                   {fabric.short_description && (
                     <p className="text-xs text-slate-500 mt-1 line-clamp-2">{fabric.short_description}</p>
@@ -457,23 +459,23 @@ export function FabricsAdminClient({ fabrics }: FabricsAdminClientProps) {
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleToggle(fabric)}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
+                      className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border-0 text-xs font-bold text-black transition-colors cursor-pointer"
                     >
                       {fabric.is_active ? 'Hide' : 'Show'}
                     </button>
                     <button
                       onClick={() => openEdit(fabric)}
-                      className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border-0 text-slate-700 hover:text-black transition-colors cursor-pointer"
                       title="Edit fabric"
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
+                      <Edit2 className="w-3.5 h-3.5 text-blue-600" />
                     </button>
                     <button
                       onClick={() => setFabricToDelete(fabric)}
-                      className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 border-0 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
                       title="Delete fabric"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3.5 h-3.5 text-rose-600" />
                     </button>
                   </div>
                 </div>

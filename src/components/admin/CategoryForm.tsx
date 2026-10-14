@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useState, useTransition, useRef } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Save, Upload, X, AlertCircle, CheckCircle2, ImageIcon } from 'lucide-react';
-import Image from 'next/image';
+import { Save, AlertCircle } from 'lucide-react';
 import { slugify } from '@/lib/utils';
-import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
 
 import { Category } from '@/types/database';
 
@@ -34,8 +32,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
   const [isSlugTouched, setIsSlugTouched] = useState(mode === 'edit' && Boolean(initialData?.slug));
 
   const [form, setForm] = useState<CategoryFormData>({
@@ -79,33 +75,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
     setIsSlugTouched(false);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      if (form.image_url) {
-        await deleteImageFromCloudinary(form.image_url);
-      }
-      const url = await uploadImageToCloudinary(file, 'dfd-sports/categories');
-      setForm((prev) => ({ ...prev, image_url: url }));
-    } catch (err: any) {
-      setErrorMsg('Image upload failed: ' + (err?.message || 'Unknown error'));
-      setSaveStatus('error');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleRemoveImage = async () => {
-    const oldUrl = form.image_url;
-    setForm((prev) => ({ ...prev, image_url: '' }));
-    if (oldUrl) {
-      await deleteImageFromCloudinary(oldUrl);
-    }
-  };
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveStatus('idle');
@@ -116,11 +85,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         const supabase = createClient();
 
         if (mode === 'edit' && initialData?.id) {
-          // Cleanup replaced or removed category image from Cloudinary
-          if (initialData.image_url && initialData.image_url !== form.image_url) {
-            deleteImageFromCloudinary(initialData.image_url).catch(console.warn);
-          }
-
           const { error } = await supabase
             .from('categories')
             .update({ ...form, updated_at: new Date().toISOString() })
@@ -182,11 +146,6 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
           </div>
         </div>
 
-        <div>
-          <label className={labelCls}>Short Description</label>
-          <textarea name="short_description" value={form.short_description} onChange={handleChange} rows={2} className={inputCls} placeholder="e.g. Match & Training Equipment" />
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           <div>
             <label className={labelCls}>Display Order</label>
@@ -207,70 +166,21 @@ export function CategoryForm({ initialData, mode, onSuccess, onCancel }: Categor
         </div>
       </div>
 
-      {/* Image Upload */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-black pb-2 border-b border-slate-100">Category Image</h3>
-
-        {form.image_url ? (
-          <div className="relative w-full max-w-sm aspect-video rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-xs">
-            <Image src={form.image_url} alt="Category preview" fill className="object-cover" />
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              title="Delete from Cloudinary"
-              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 flex items-center justify-center text-white shadow-sm transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="w-full max-w-sm aspect-video rounded-xl bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 flex flex-col items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shadow-xs p-4 text-center"
-          >
-            {uploading ? (
-              <div className="w-6 h-6 rounded-full border-2 border-amber-300 border-t-amber-600 animate-spin" />
-            ) : (
-              <>
-                <Upload className="w-8 h-8 mb-2 text-amber-600" />
-                <span className="text-xs font-bold text-black">Click to upload category image</span>
-                <span className="text-[11px] text-slate-500 mt-1">JPG, PNG, WebP (max 5MB)</span>
-              </>
-            )}
-          </button>
-        )}
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageUpload}
-        />
-
-        <div>
-          <label className={labelCls}>Or paste Image URL directly</label>
-          <input name="image_url" value={form.image_url} onChange={handleChange} className={inputCls} placeholder="https://..." />
-        </div>
-      </div>
-
       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">
         <button
           type="button"
           onClick={() => (onCancel ? onCancel() : router.back())}
-          className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+          className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-100 text-sm font-bold text-black hover:bg-slate-200 transition-colors text-center justify-center cursor-pointer border-0"
         >
           Cancel
         </button>
         <button
           type="submit"
-          disabled={isPending || uploading}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+          disabled={isPending}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           {isPending ? (
-            <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+            <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
           ) : (
             <Save className="w-4 h-4" />
           )}

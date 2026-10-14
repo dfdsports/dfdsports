@@ -68,7 +68,7 @@ export function ContactForm({ company }: ContactFormProps) {
   });
 
   return (
-    <div className="rounded-none bg-[#0E121B] p-6 sm:p-10 text-white shadow-sm relative">
+    <div className="rounded-none bg-transparent sm:bg-[#0E121B] p-0 sm:p-10 text-white shadow-none sm:shadow-sm relative">
       {submitted ? (
         <div className="text-center py-10">
           <div className="w-16 h-16 rounded-full bg-[#25D366]/20 text-[#25D366] flex items-center justify-center mx-auto mb-4">

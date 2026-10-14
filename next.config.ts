@@ -39,17 +39,6 @@ const nextConfig: NextConfig = {
         destination: '/collections',
         permanent: true,
       },
-      // Redirect removed admin sections to /admin
-      {
-        source: '/admin/why-choose-us',
-        destination: '/admin',
-        permanent: false,
-      },
-      {
-        source: '/admin/highlights',
-        destination: '/admin',
-        permanent: false,
-      },
     ];
   },
 };

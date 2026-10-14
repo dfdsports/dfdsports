@@ -5,6 +5,7 @@ import { CompanySettings } from '@/types/database';
 import { DualBannersSettings } from '@/types/dualBanners';
 import { getDualBannersSettings } from '@/services/dualBanners';
 import { ArrowRight, Shirt, Package, Sparkles } from 'lucide-react';
+import { MotionDiv } from '@/components/ui/MotionDiv';
 import { cn } from '@/lib/utils';
 
 interface CustomTeamwearSectionProps {
@@ -33,7 +34,7 @@ export async function CustomTeamwearSection({
 
   return (
     <section className={cn('bg-[#080A0F] text-white py-10 sm:py-16 md:py-20 w-full border-0 border-none shadow-none', className)}>
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+      <MotionDiv className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Two Banners Grid: Left and Right Side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
           {/* ========================================================================= */}
@@ -44,15 +45,27 @@ export async function CustomTeamwearSection({
             className="group relative block overflow-hidden rounded-xl bg-[#09090b] cursor-pointer h-[260px] sm:h-[340px] md:h-[380px] lg:h-[420px] w-full"
           >
             {leftBanner.image_url ? (
-              <Image
-                src={leftBanner.image_url}
-                alt={leftBanner.title || leftBanner.product_name || 'Featured Product Banner'}
-                fill
-                priority
-                quality={95}
-                sizes="(min-width: 1024px) 60vw, 100vw"
-                className="object-cover object-center"
-              />
+              <>
+                <Image
+                  src={leftBanner.image_url}
+                  alt={leftBanner.title || leftBanner.product_name || 'Featured Product Banner'}
+                  fill
+                  priority
+                  quality={95}
+                  sizes="(min-width: 1024px) 60vw, 100vw"
+                  className="object-cover object-center"
+                />
+
+                {/* Bottom Center "Shop Now" Button */}
+                <div className="absolute inset-x-0 bottom-6 sm:bottom-8 z-20 flex justify-center items-center pointer-events-none">
+                  <span
+                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] w-[180px] sm:w-[220px] md:w-[240px] py-2.5 sm:py-3.5 rounded-none transition-all shadow-md pointer-events-auto"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
+                  >
+                    Shop Now
+                  </span>
+                </div>
+              </>
             ) : (
               /* Fallback container if admin hasn't uploaded image yet */
               <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 bg-gradient-to-br from-[#12141c] via-[#0b0c10] to-[#040405] text-white">
@@ -78,33 +91,13 @@ export async function CustomTeamwearSection({
                   )}
                 </div>
 
-                <div className="pt-2">
-                  <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-400 group-hover:text-blue-300 transition-colors">
-                    <span>Shop Now</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* If image is present and title exists, display subtle bottom overlay */}
-            {leftBanner.image_url && leftBanner.title && (
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex items-end justify-between">
-                <div>
-                  <h3
-                    className="text-lg sm:text-2xl font-semibold uppercase tracking-wide text-white drop-shadow-md"
-                    style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
+                <div className="flex justify-center pt-2">
+                  <span
+                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] w-[180px] sm:w-[220px] md:w-[240px] py-2.5 sm:py-3.5 rounded-none transition-all shadow-md"
+                    style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
-                    {leftBanner.title}
-                  </h3>
-                  {leftBanner.product_name && (
-                    <p className="text-xs text-neutral-300 drop-shadow">
-                      {leftBanner.product_name}
-                    </p>
-                  )}
-                </div>
-                <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
-                  <ArrowRight className="w-4 h-4" />
+                    Shop Now
+                  </span>
                 </div>
               </div>
             )}
@@ -132,10 +125,10 @@ export async function CustomTeamwearSection({
                 {/* Bottom Center "Custom Jerseys" Button */}
                 <div className="absolute inset-x-0 bottom-6 sm:bottom-8 z-20 flex justify-center items-center pointer-events-none">
                   <span
-                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-none transition-colors shadow-md pointer-events-auto"
+                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] w-[180px] sm:w-[220px] md:w-[240px] py-2.5 sm:py-3.5 rounded-none transition-all shadow-md pointer-events-auto"
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
-                    Custom Jerseys
+                    Order Now
                   </span>
                 </div>
               </>
@@ -164,7 +157,7 @@ export async function CustomTeamwearSection({
 
                 <div className="flex justify-center pt-2">
                   <span
-                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-none transition-colors shadow-md"
+                    className="inline-flex items-center justify-center bg-[#FF001E] group-hover:bg-[#d6001a] text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.14em] w-[180px] sm:w-[220px] md:w-[240px] py-2.5 sm:py-3.5 rounded-none transition-all shadow-md"
                     style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
                   >
                     Custom Jerseys
@@ -174,7 +167,7 @@ export async function CustomTeamwearSection({
             )}
           </Link>
         </div>
-      </div>
+      </MotionDiv>
     </section>
   );
 }

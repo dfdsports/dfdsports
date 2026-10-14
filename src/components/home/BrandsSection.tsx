@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Brand } from '@/types/database';
+import { motion } from 'framer-motion';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
 interface BrandsSectionProps {
@@ -55,7 +56,13 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
         }
       `}</style>
 
-      <div className="mx-auto w-full">
+      <motion.div
+        initial={{ opacity: 0, y: 36 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="mx-auto w-full"
+      >
         {/* Top Header: identical font size, style and layout to Featured Products */}
         {/* <div className="mb-10 sm:mb-12">
           <SectionHeading
@@ -104,7 +111,7 @@ export function BrandsSection({ brands }: BrandsSectionProps) {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -361,7 +361,7 @@ export function Header({ company, categories }: HeaderProps) {
             : 'bg-transparent'
         )}
       >
-        <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
           <div className="relative flex items-center justify-between h-[76px]">
             {/* Left: Logo + Vertical Divider */}
             <div className="flex items-center gap-6 lg:gap-8 shrink-0">
@@ -747,12 +747,12 @@ export function Header({ company, categories }: HeaderProps) {
         {/* Sliding Panel */}
         <div
           className={cn(
-            'absolute inset-y-0 right-0 w-full max-w-md bg-[#080A0F] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+            'absolute inset-y-0 right-0 w-full max-w-md bg-[#080A0F] border-none shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
             cartOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-5 bg-[#121622] border-b border-white/10">
+          <div className="flex items-center justify-between px-6 py-5 bg-[#121622] border-none">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-none bg-neutral-800 text-[#FF001E]">
                 <ShoppingBag className="w-5 h-5" />
@@ -781,10 +781,10 @@ export function Header({ company, categories }: HeaderProps) {
               cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-none bg-[#0E121B] border border-white/10 flex gap-3.5 shadow-sm hover:border-white/20 transition-all text-white"
+                  className="p-3.5 rounded-none bg-white border-none flex gap-3.5 shadow-md transition-all text-neutral-900"
                 >
                   {/* Thumbnail */}
-                  <div className="relative w-16 h-16 bg-neutral-900 border border-white/10 overflow-hidden shrink-0">
+                  <div className="relative w-16 h-16 bg-neutral-100 border-none overflow-hidden shrink-0">
                     {item.image ? (
                       <Image
                         src={item.image}
@@ -805,22 +805,22 @@ export function Header({ company, categories }: HeaderProps) {
                       href={`/products/${item.slug}`}
                       onClick={() => setCartOpen(false)}
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
-                      className="text-sm font-bold text-white hover:text-[#FF001E] transition-colors line-clamp-2 uppercase tracking-wide"
+                      className="text-sm font-bold text-neutral-900 hover:text-[#FF001E] transition-colors line-clamp-2 uppercase tracking-wide"
                     >
                       {item.name}
                     </Link>
 
                     {item.size ? (
-                      <p className="mt-1 text-xs text-neutral-400 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-bold text-white px-1.5 py-0.5 rounded-none bg-white/10 border border-white/15 uppercase text-[11px]">
+                        <span className="font-bold text-neutral-900 px-1.5 py-0.5 rounded-none bg-neutral-100 border-none uppercase text-[11px]">
                           {item.size}
                         </span>
                       </p>
                     ) : (
-                      <p className="mt-1 text-xs text-neutral-400 flex items-center gap-1.5">
+                      <p className="mt-1 text-xs text-neutral-500 flex items-center gap-1.5">
                         <span>Size:</span>
-                        <span className="font-medium text-neutral-300 px-1.5 py-0.5 rounded-none bg-white/10 border border-white/15 uppercase text-[11px]">
+                        <span className="font-medium text-neutral-800 px-1.5 py-0.5 rounded-none bg-neutral-100 border-none uppercase text-[11px]">
                           Standard
                         </span>
                       </p>
@@ -828,11 +828,11 @@ export function Header({ company, categories }: HeaderProps) {
 
                     <div className="mt-2.5 flex items-center justify-between">
                       {/* Quantity Controls */}
-                      <div className="flex items-center rounded-none bg-white/5 border border-white/15">
+                      <div className="flex items-center rounded-none bg-neutral-100 border-none">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                          className="p-1 text-neutral-700 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3.5 h-3.5" />
@@ -843,13 +843,13 @@ export function Header({ company, categories }: HeaderProps) {
                           max="999"
                           value={item.quantity}
                           onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 1)}
-                          className="w-10 text-center bg-transparent text-xs font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          className="w-10 text-center bg-transparent text-xs font-bold text-neutral-900 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           aria-label="Quantity"
                         />
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                          className="p-1 text-neutral-700 hover:text-black hover:bg-neutral-200 transition-colors cursor-pointer"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -860,11 +860,11 @@ export function Header({ company, categories }: HeaderProps) {
                       <div className="flex items-center gap-3">
                         {item.price != null && (
                           <div className="text-right">
-                            <span className="text-sm font-bold text-white" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
+                            <span className="text-sm font-bold text-neutral-900" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                               ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                             </span>
                             {item.quantity > 1 && (
-                              <span className="block text-[10px] text-neutral-400 font-medium">
+                              <span className="block text-[10px] text-neutral-500 font-medium">
                                 (₹{item.price.toLocaleString('en-IN')} ea)
                               </span>
                             )}
@@ -873,7 +873,7 @@ export function Header({ company, categories }: HeaderProps) {
                         <button
                           type="button"
                           onClick={() => removeCartItem(item.id)}
-                          className="p-1 text-neutral-400 hover:text-[#FF001E] hover:bg-white/10 rounded-none transition-colors cursor-pointer"
+                          className="p-1 text-neutral-400 hover:text-[#FF001E] hover:bg-neutral-100 rounded-none transition-colors cursor-pointer"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -884,7 +884,7 @@ export function Header({ company, categories }: HeaderProps) {
                 </div>
               ))
             ) : (
-              <div className="py-16 flex flex-col items-center justify-center text-center bg-[#0E121B] border border-white/10 p-8">
+              <div className="py-16 flex flex-col items-center justify-center text-center bg-[#0E121B] border-none p-8">
                 <div className="w-16 h-16 rounded-none bg-neutral-900 flex items-center justify-center text-neutral-400 mb-4">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
@@ -908,7 +908,7 @@ export function Header({ company, categories }: HeaderProps) {
 
           {/* Cart Footer */}
           {cartItems.length > 0 && (
-            <div className="p-5 sm:p-6 bg-[#0E121B] border-t border-white/10 space-y-4">
+            <div className="p-5 sm:p-6 bg-[#0E121B] border-none space-y-4">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-semibold text-neutral-400 uppercase tracking-wider text-xs">Subtotal</span>
@@ -1095,14 +1095,14 @@ export function Header({ company, categories }: HeaderProps) {
           role="dialog"
           aria-label="Search catalog"
           className={cn(
-            'relative w-full max-w-2xl bg-[#0E121B] border border-white/15 rounded-none shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform text-white',
+            'relative w-full max-w-2xl bg-[#0E121B] border-none rounded-none shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out transform text-white',
             searchOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-2 opacity-0'
           )}
         >
           {/* Main Search Input Form Header - Dark BG, Border Radius None */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-[#0E121B] border-b border-white/10 rounded-none shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-[#0E121B] border-none rounded-none shrink-0"
           >
             {searchLoading ? (
               <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#FF001E]" />
@@ -1114,7 +1114,7 @@ export function Header({ company, categories }: HeaderProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search footballs, custom jerseys, cricket, equipment…"
-              className="w-full bg-transparent text-sm sm:text-base font-semibold text-white placeholder:text-neutral-500 focus:outline-none rounded-none"
+              className="w-full bg-transparent text-xs sm:text-sm font-medium text-white placeholder:text-neutral-500 focus:outline-none rounded-none"
               autoComplete="off"
             />
             {searchQuery && (
@@ -1154,13 +1154,13 @@ export function Header({ company, categories }: HeaderProps) {
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="px-5 py-2.5 flex items-center justify-between bg-white/5 border-b border-white/10">
+                  <div className="px-5 py-2.5 flex items-center justify-between bg-white/5 border-none">
                     <p className="text-xs font-bold uppercase tracking-wider text-neutral-400" style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}>
                       Matching Products ({searchResults.length})
                     </p>
                   </div>
 
-                  <ul className="divide-y divide-white/10">
+                  <ul className="divide-y-0">
                     {searchResults.map((p, idx) => {
                       const isSelected = selectedIndex === idx;
                       return (

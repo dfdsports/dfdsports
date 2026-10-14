@@ -140,26 +140,7 @@ export function ProductCard({
           </span>
         )}
 
-        {/* Wishlist Button (Top Right) */}
-        <button
-          type="button"
-          onClick={handleToggleWishlist}
-          title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={cn(
-            'absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-none flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-90',
-            isWishlisted
-              ? 'text-rose-500 scale-105'
-              : 'text-white/60 hover:text-rose-500 hover:scale-110 drop-shadow-xs'
-          )}
-        >
-          <Heart
-            className={cn(
-              'w-4 h-4 transition-transform',
-              isWishlisted ? 'fill-rose-500 text-rose-500 scale-110' : ''
-            )}
-          />
-        </button>
+
 
         {/* Product Image Link - Fills full card */}
         <Link
