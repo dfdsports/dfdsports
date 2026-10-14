@@ -135,13 +135,13 @@ export function AdminModal({
       <div
         ref={modalRef}
         className={cn(
-          'relative z-10 w-full bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[94vh] sm:max-h-[90vh] animate-in zoom-in-95 duration-200',
+          'relative z-10 w-full bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] sm:max-h-[90vh] animate-in zoom-in-95 duration-200',
           MAX_WIDTH_CLASSES[maxWidth] || 'max-w-2xl',
           className
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-100 bg-slate-50/80 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4.5 bg-white shrink-0">
           <div className="min-w-0 pr-3">
             <h2
               id="admin-modal-title"

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Category } from '@/types/database';
@@ -12,6 +11,7 @@ import { deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 import { CategoryForm } from '@/components/admin/CategoryForm';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface CategoriesListProps {
   categories: Category[];
@@ -31,6 +31,12 @@ export function CategoriesList({ categories }: CategoriesListProps) {
     mode: 'create',
     category: null,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('action=new')) {
+      setModalState({ open: true, mode: 'create', category: null });
+    }
+  }, []);
 
   const handleToggleActive = async (cat: Category) => {
     const supabase = createClient();
@@ -65,43 +71,44 @@ export function CategoriesList({ categories }: CategoriesListProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Categories</h1>
-          <p className="text-sm text-slate-600 mt-0.5">{categories.length} total categories</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setModalState({ open: true, mode: 'create', category: null })}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Category</span>
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Categories"
+        description={`${categories.length} total categories`}
+        actions={
+          <button
+            type="button"
+            onClick={() => setModalState({ open: true, mode: 'create', category: null })}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Category</span>
+          </button>
+        }
+      />
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-800 text-sm shadow-xs">
+        <div className="p-4 rounded-xl bg-rose-50 flex items-center gap-3 text-rose-800 text-sm shadow-xs border-0">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {categories.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
-          <ImageIcon className="w-14 h-14 text-slate-300 mx-auto mb-4" />
+        <div className="rounded-xl bg-white p-10 sm:p-16 text-center shadow-sm border-0">
+          <ImageIcon className="w-14 h-14 text-black/20 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Categories Yet</h3>
-          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add sports categories to organize your product catalog.</p>
+          <p className="text-sm text-black/60 mb-6 max-w-sm mx-auto">Add sports categories to organize your product catalog.</p>
           <button
             type="button"
             onClick={() => setModalState({ open: true, mode: 'create', category: null })}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-sm cursor-pointer hover:bg-red-700 transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" /> Create First Category
           </button>
         </div>
       ) : (
-        <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+        <div className="rounded-xl bg-white shadow-sm overflow-hidden border-0">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-sm min-w-[500px]">
               <thead>
@@ -117,23 +124,7 @@ export function CategoriesList({ categories }: CategoriesListProps) {
                 {categories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                          {cat.image_url ? (
-                            <Image src={cat.image_url} alt={cat.name} fill className="object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-400">
-                              <ImageIcon className="w-4 h-4" />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-bold text-black">{cat.name}</p>
-                          {cat.short_description && (
-                            <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">{cat.short_description}</p>
-                          )}
-                        </div>
-                      </div>
+                      <p className="font-bold text-black">{cat.name}</p>
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell">
                       <code className="text-xs text-black font-semibold bg-slate-100 px-2 py-1 rounded border border-slate-200">{cat.slug}</code>

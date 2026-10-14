@@ -7,6 +7,7 @@ import { DualBannersSettings, DualBannerItem } from '@/types/dualBanners';
 import { Category, Product } from '@/types/database';
 import { uploadImageToCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 import {
   Upload,
   Image as ImageIcon,
@@ -184,43 +185,37 @@ export function DualBannersAdminClient({
 
   return (
     <div className="space-y-8 pb-16">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <Sparkles className="w-7 h-7 text-amber-500" />
-            Dual Promotional Banners
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Configure the two side-by-side promotional banners displayed on the homepage.
-          </p>
-        </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Dual Promotional Banners"
+        description="Configure the two side-by-side promotional banners displayed on the homepage."
+        actions={
+          <>
+            <Link
+              href="/"
+              target="_blank"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-black text-sm font-semibold shadow-xs transition-colors border-0"
+            >
+              <span>View Live Store</span>
+              <ExternalLink className="w-4 h-4 text-black/40" />
+            </Link>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold shadow-sm transition-colors"
-          >
-            <span>View Live Store</span>
-            <ExternalLink className="w-4 h-4 text-slate-400" />
-          </Link>
-
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold shadow-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer"
-          >
-            {isSaving ? (
-              <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            <span>{isSaving ? 'Saving...' : 'Save Banners'}</span>
-          </button>
-        </div>
-      </div>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSaving}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+            >
+              {isSaving ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              <span>{isSaving ? 'Saving...' : 'Save Banners'}</span>
+            </button>
+          </>
+        }
+      />
 
       {/* Notifications */}
       {saveSuccess && (

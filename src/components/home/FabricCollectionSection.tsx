@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fabric } from '@/types/database';
 import { Layers, Sparkles, X, Check, ArrowRight, Eye, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface FabricCollectionSectionProps {
@@ -78,7 +80,13 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
         }
       `}</style>
 
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.12 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Top Header Row */}
         <div className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
@@ -126,16 +134,16 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                 key={`${fabric.id}-${i}`}
                 aria-hidden={isClone || undefined}
                 onClick={() => setSelectedFabric(fabric)}
-                className="group relative flex flex-col w-[260px] sm:w-[280px] md:w-[300px] h-[340px] sm:h-[360px] shrink-0 rounded-xl bg-[#0E121B] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden text-left cursor-pointer select-none"
+                className="group relative flex flex-col w-[190px] sm:w-[245px] md:w-[260px] h-[285px] sm:h-[330px] shrink-0 rounded-xl bg-[#0E121B] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden text-left cursor-pointer select-none"
               >
                 {/* Fabric Image Window */}
-                <div className="relative h-[200px] sm:h-[215px] w-full overflow-hidden bg-neutral-900">
+                <div className="relative h-[145px] sm:h-[185px] w-full overflow-hidden bg-neutral-900">
                   {fabric.image_url ? (
                     <Image
                       src={fabric.image_url}
                       alt={isClone ? '' : fabric.name}
                       fill
-                      sizes="(min-width: 1024px) 300px, 280px"
+                      sizes="(min-width: 1024px) 260px, (min-width: 640px) 245px, 190px"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-108 motion-reduce:transition-none"
                     />
                   ) : (
@@ -157,25 +165,25 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
                 <div className="h-[2px] w-0 group-hover:w-full bg-[#E8192C] transition-all duration-300" />
 
                 {/* Card Content Body */}
-                <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 bg-[#0E121B]">
+                <div className="p-3 sm:p-4 flex flex-col justify-between flex-1 bg-[#0E121B]">
                   <div>
                     <h3
-                      className="text-lg sm:text-xl font-bold uppercase text-white group-hover:text-[#E8192C] transition-colors leading-snug line-clamp-1"
+                      className="text-base sm:text-xl font-bold uppercase text-white group-hover:text-[#E8192C] transition-colors leading-snug line-clamp-1"
                       style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
                     >
                       {fabric.name}
                     </h3>
 
                     {fabric.short_description && (
-                      <p className="mt-1 text-xs text-neutral-400 leading-relaxed line-clamp-2">
+                      <p className="mt-1 text-[11px] sm:text-xs text-white leading-relaxed line-clamp-2">
                         {fabric.short_description}
                       </p>
                     )}
                   </div>
 
                   {/* Bottom Specification Badge / Feature */}
-                  <div className="pt-2 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-400 line-clamp-1">
+                  <div className="pt-1.5 sm:pt-2 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-neutral-400 line-clamp-1">
                       <span className="w-1 h-1 rounded-full bg-neutral-500" />
                       {specs[0] || 'Moisture Wicking'}
                     </span>
@@ -187,6 +195,7 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
           })}
         </div>
       </div>
+      </motion.div>
 
       {/* Detailed Fabric Inspection Modal */}
       {selectedFabric && (
@@ -282,14 +291,14 @@ export function FabricCollectionSection({ fabrics, className }: FabricCollection
               <span className="text-xs text-neutral-400">
                 Available for custom sublimated jerseys and teamwear orders.
               </span>
-              <a
-                href="/custom-jerseys"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#E8192C] hover:bg-[#c91424] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              <Link
+                href={`/custom-jerseys?fabric=${encodeURIComponent(selectedFabric.name)}#builder`}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#E8192C] hover:bg-[#c91424] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
               >
                 Customize Jerseys With This Fabric
                 <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

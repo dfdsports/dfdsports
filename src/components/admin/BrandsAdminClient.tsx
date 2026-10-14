@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useTransition } from 'react';
+import React, { useState, useRef, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface BrandsAdminClientProps {
   brands: Brand[];
@@ -34,6 +35,12 @@ export function BrandsAdminClient({ brands }: BrandsAdminClientProps) {
   const [isSlugTouched, setIsSlugTouched] = useState(false);
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setIsSlugTouched(false); setShowForm(true); setError(''); };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('action=new')) {
+      openCreate();
+    }
+  }, []);
   const openEdit = (brand: Brand) => {
     setEditing(brand);
     setForm({ name: brand.name, slug: brand.slug, logo_url: brand.logo_url || '', description: brand.description || '', display_order: brand.display_order, is_active: brand.is_active });
@@ -136,18 +143,19 @@ export function BrandsAdminClient({ brands }: BrandsAdminClientProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Brands We Supply</h1>
-          <p className="text-sm text-slate-600 mt-0.5">{brands.length} brand partners listed</p>
-        </div>
-        <button
-          onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Add Brand
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Brands We Supply"
+        description={`${brands.length} brand partners listed`}
+        actions={
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> Add Brand
+          </button>
+        }
+      />
 
       {error && (
         <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-800 text-sm shadow-xs">
@@ -222,17 +230,17 @@ export function BrandsAdminClient({ brands }: BrandsAdminClientProps) {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-black hover:bg-slate-50 transition-colors text-center justify-center cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 text-sm font-bold text-black hover:bg-slate-200 transition-colors text-center justify-center cursor-pointer border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || uploading}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               {isPending ? (
-                <div className="w-4 h-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
               ) : (
                 <Save className="w-4 h-4" />
               )}
@@ -244,18 +252,18 @@ export function BrandsAdminClient({ brands }: BrandsAdminClientProps) {
 
       {/* Brands Grid */}
       {brands.length === 0 && !showForm ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
-          <Tag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
+        <div className="rounded-xl bg-white p-10 sm:p-16 text-center shadow-sm border-0">
+          <Tag className="w-14 h-14 text-black/20 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Brands Yet</h3>
-          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add brands that you supply to display them on the website.</p>
-          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer w-full sm:w-auto">
+          <p className="text-sm text-black/60 mb-6 max-w-sm mx-auto">Add brands that you supply to display them on the website.</p>
+          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-sm cursor-pointer w-full sm:w-auto">
             <Plus className="w-4 h-4" /> Add First Brand
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
           {brands.map((brand) => (
-            <div key={brand.id} className="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 hover:shadow-md transition-shadow">
+            <div key={brand.id} className="rounded-xl bg-white shadow-sm p-4 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 hover:shadow-md transition-shadow border-0">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-14 h-11 sm:w-16 sm:h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
                   {brand.logo_url ? (

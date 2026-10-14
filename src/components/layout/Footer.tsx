@@ -31,7 +31,7 @@ function FooterAccordion({
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-center justify-between py-4 md:hidden"
+        className="w-full flex items-center justify-between py-3 md:hidden text-left"
         aria-expanded={open}
       >
         <span
@@ -49,7 +49,7 @@ function FooterAccordion({
 
       {/* Desktop heading */}
       <h4
-        className="hidden md:block text-white font-bold text-xs uppercase tracking-[0.2em] mb-5"
+        className="hidden md:block text-white font-bold text-xs uppercase tracking-[0.2em] mb-4 lg:mb-5"
         style={{ fontFamily: "var(--font-mohave), 'Mohave', sans-serif" }}
       >
         {title}
@@ -58,7 +58,7 @@ function FooterAccordion({
       {/* Content: always visible on md+, collapsible on mobile */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out md:!max-h-none md:!opacity-100 md:!mb-0 ${
-          open ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'
+          open ? 'max-h-96 opacity-100 pb-3 mb-2' : 'max-h-0 opacity-0'
         }`}
       >
         {children}
@@ -112,14 +112,14 @@ export function Footer({ company }: FooterProps) {
   ];
 
   return (
-    <footer className="bg-[#0B1528] text-white text-sm w-full">
+    <footer className="bg-[#0E121B] text-white text-sm w-full">
       {/* ── Upper Footer ──────────────────────────────────────────────── */}
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 sm:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-12 lg:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 lg:gap-10">
 
           {/* Brand Info — 2 cols on lg */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-5 group">
+          <div className="lg:col-span-2 pb-2 md:pb-0">
+            <Link href="/" className="inline-block mb-3 sm:mb-5 group">
               <div className="relative w-36 h-14 sm:w-44 sm:h-16">
                 <Image
                   src={company?.logo_url || '/logo.png'}
@@ -131,13 +131,13 @@ export function Footer({ company }: FooterProps) {
               </div>
             </Link>
 
-            <p className="text-neutral-300 text-sm leading-relaxed max-w-sm mb-6 font-normal">
+            <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed max-w-sm mb-4 sm:mb-6 font-normal">
               {company?.short_description ||
                 'High-performance sports equipment supplier and custom teamwear provider for schools, clubs, academies and tournaments across India.'}
             </p>
 
             {/* Social icons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               {company?.instagram_url && (
                 <a
                   href={company.instagram_url}
@@ -286,8 +286,8 @@ export function Footer({ company }: FooterProps) {
       </div>
 
       {/* ── Sub Footer ────────────────────────────────────────────────── */}
-      <div className="bg-[#060D1E] py-6">
-        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
+      <div className="bg-[#080A0F] border-t border-white/5 py-4 sm:py-6">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-neutral-400 text-center sm:text-left">
           <p className="text-neutral-400">
             © {currentYear} {brandName} ({fullName}). All rights reserved.
           </p>

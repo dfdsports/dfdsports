@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -106,19 +107,20 @@ function SidebarContent({
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-[#0F172A] via-[#131E35] to-[#0A1020] text-white border-r border-slate-800 shadow-2xl">
+    <div className="flex flex-col h-full bg-black text-white shadow-none">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800/80">
-        <Link href="/admin" prefetch={true} className="flex flex-col group">
-          <div className="flex items-center gap-2">
-            <span className="text-base font-extrabold uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors">
-              DFD Sports
-            </span>
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              PRO
-            </span>
+      <div className="p-4 sm:p-5">
+        <Link href="/admin" prefetch={true} className="flex items-center justify-center group w-full">
+          <div className="relative w-36 h-10">
+            <Image
+              src="/logo.png"
+              alt="DFD Sports"
+              fill
+              sizes="144px"
+              className="object-contain object-center transition-transform group-hover:scale-105"
+              priority
+            />
           </div>
-          <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">Admin Management</p>
         </Link>
       </div>
 
@@ -127,10 +129,10 @@ function SidebarContent({
         {navSections.map((section, sIdx) => (
           <div key={section.title} className="space-y-1">
             {/* Section Heading */}
-            <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-400/80 flex items-center justify-between">
+            <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400 flex items-center justify-between">
               <span>{section.title}</span>
               {sIdx === 0 && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
               )}
             </div>
 
@@ -148,26 +150,26 @@ function SidebarContent({
                     className={cn(
                       'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all relative',
                       active
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 font-bold'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                        ? 'bg-red-600 text-white shadow-md font-bold'
+                        : 'text-white/80 hover:text-white hover:bg-neutral-900'
                     )}
                   >
                     <Icon
                       className={cn(
                         'w-4 h-4 shrink-0 transition-transform group-hover:scale-110',
-                        active ? 'text-slate-950' : 'text-slate-400 group-hover:text-amber-400'
+                        active ? 'text-white' : 'text-neutral-400 group-hover:text-red-500'
                       )}
                     />
                     <span className="truncate">{item.label}</span>
 
                     {item.badge && !active && (
-                      <span className="ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                      <span className="ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-red-600/20 text-red-400">
                         {item.badge}
                       </span>
                     )}
 
                     {active && (
-                      <ChevronRight className="w-3.5 h-3.5 ml-auto text-slate-950 shrink-0" />
+                      <ChevronRight className="w-3.5 h-3.5 ml-auto text-white shrink-0" />
                     )}
                   </Link>
                 );
@@ -178,25 +180,25 @@ function SidebarContent({
       </nav>
 
       {/* Footer Section */}
-      <div className="p-3 border-t border-slate-800/80 space-y-2 bg-[#0a0f1d]/60">
+      <div className="p-3 space-y-2 bg-black">
         <Link
           href="/"
           target="_blank"
           prefetch={false}
-          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all border border-slate-800"
+          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-white hover:text-white hover:bg-neutral-900 transition-all bg-neutral-950"
         >
           <span className="flex items-center gap-2">
-            <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+            <ExternalLink className="w-3.5 h-3.5 text-red-500" />
             <span>View Public Store</span>
           </span>
-          <ChevronRight className="w-3 h-3 text-slate-500" />
+          <ChevronRight className="w-3 h-3 text-neutral-400" />
         </Link>
 
         {/* User Card */}
-        <div className="p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-between gap-2">
+        <div className="p-2.5 rounded-xl bg-neutral-900 flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] text-slate-400 font-medium">Logged in</p>
-            <p className="text-xs text-slate-200 font-bold truncate">
+            <p className="text-[10px] text-neutral-400 font-medium">Logged in</p>
+            <p className="text-xs text-white font-bold truncate">
               {userEmail || 'Administrator'}
             </p>
           </div>
@@ -205,7 +207,7 @@ function SidebarContent({
             onClick={onLogoutRequest}
             disabled={loggingOut}
             title="Sign Out"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-400/10 transition-colors shrink-0 cursor-pointer"
+            className="p-1.5 rounded-xl text-neutral-400 hover:text-red-500 hover:bg-red-500/10 transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -244,17 +246,23 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800 sticky top-0 z-40">
-        <Link href="/admin" prefetch={true} className="flex items-center gap-2">
-          <span className="text-base font-extrabold uppercase text-white tracking-tight">DFD Sports</span>
-          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-            PRO
-          </span>
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-black sticky top-0 z-40">
+        <Link href="/admin" prefetch={true} className="flex items-center">
+          <div className="relative w-28 h-8">
+            <Image
+              src="/logo.png"
+              alt="DFD Sports"
+              fill
+              sizes="112px"
+              className="object-contain object-left"
+              priority
+            />
+          </div>
         </Link>
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-colors"
+          className="p-2 rounded-xl bg-neutral-900 text-neutral-300 hover:text-white transition-colors cursor-pointer"
           aria-label="Toggle admin menu"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

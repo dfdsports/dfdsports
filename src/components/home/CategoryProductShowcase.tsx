@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product, Category } from '@/types/database';
 import { ChevronLeft, ChevronRight, ArrowRight, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 export interface CategoryShowcaseItem {
@@ -85,11 +86,11 @@ function StudioCard({ item }: { item: CategoryShowcaseItem }) {
         )}
       </div>
 
-      {/* 2. Name placed at Bottom Center with black gradient background */}
+      {/* 2. Name placed at Bottom Center with white gradient background */}
       {item.title && (
-        <div className="absolute inset-x-0 bottom-0 z-20 pt-10 sm:pt-14 pb-3 sm:pb-4 px-2 sm:px-3 bg-gradient-to-t from-black via-black/75 to-transparent flex items-end justify-center text-center pointer-events-none">
+        <div className="absolute inset-x-0 bottom-0 z-20 pt-10 sm:pt-14 pb-3 sm:pb-4 px-2 sm:px-3 bg-gradient-to-t from-white via-white/85 to-transparent flex items-end justify-center text-center pointer-events-none">
           <h3
-            className="font-semibold text-[11px] sm:text-sm lg:text-[15px] uppercase tracking-wider text-white group-hover:text-[#E8192C] transition-colors line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+            className="font-bold text-[11px] sm:text-sm lg:text-[15px] uppercase tracking-wider text-black group-hover:text-[#E8192C] transition-colors line-clamp-1"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             {item.title}
@@ -154,7 +155,13 @@ export function CategoryProductShowcase({
   if (items.length === 0) return null;
 
   return (
-    <div className={cn('bg-[#080A0F] text-white pt-0 pb-6 sm:pb-14 w-full', className)}>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={cn('bg-[#080A0F] text-white pt-0 pb-6 sm:pb-14 w-full', className)}
+    >
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Category Heading Header (Left-aligned, Hero font, reduced bold, no underline) */}
         <div className="relative mb-6 sm:mb-8 flex items-end justify-between">
@@ -210,7 +217,7 @@ export function CategoryProductShowcase({
         {/* 1. DESKTOP VIEW: Cards Row / Carousel with all items (UNCHANGED) */}
         <div
           ref={scrollRef}
-          className="hidden sm:flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pt-3 pb-6 px-1 scroll-smooth"
+          className="hidden sm:flex gap-3 sm:gap-3 lg:gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pt-3 pb-6 px-1 scroll-smooth"
         >
           {items.map((item) => (
             <div
@@ -235,7 +242,7 @@ export function CategoryProductShowcase({
         <div className="mt-5 flex justify-center sm:hidden">
           <Link
             href={resolvedViewAll}
-            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 text-white bg-transparent hover:bg-[#E8192C] hover:text-white active:bg-[#E8192C] active:text-white transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-none group border border-[#E8192C]"
+            className="inline-flex items-center justify-center gap-2 px-8 py-2.5 text-white bg-[#E8192C] hover:bg-[#c91424] active:bg-[#a8101e] transition-colors text-xs font-bold uppercase tracking-[0.14em] rounded-none shadow-sm group border border-[#E8192C]"
             style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}
           >
             <span>View All</span>
@@ -243,7 +250,7 @@ export function CategoryProductShowcase({
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

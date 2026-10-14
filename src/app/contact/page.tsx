@@ -61,7 +61,7 @@ export default async function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Direct Contact Details from Supabase */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="p-6 sm:p-8 rounded-none bg-[#0E121B] shadow-xs space-y-6 text-white">
+            <div className="p-0 sm:p-8 rounded-none bg-transparent sm:bg-[#0E121B] shadow-none sm:shadow-xs space-y-6 text-white">
               <h3
                 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-white mb-4"
                 style={{ fontFamily: "var(--font-mohave), 'Mohave', var(--font-barlow), sans-serif" }}

@@ -26,7 +26,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CustomJerseysPage() {
+interface CustomJerseysPageProps {
+  searchParams?: Promise<{
+    fabric?: string;
+    [key: string]: string | string[] | undefined;
+  }>;
+}
+
+export default async function CustomJerseysPage({ searchParams }: CustomJerseysPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const initialFabric = typeof resolvedSearchParams?.fabric === 'string' ? resolvedSearchParams.fabric : undefined;
+
   const [company, fabrics] = await Promise.all([
     getCompanySettings(),
     getActiveFabrics(),
@@ -39,7 +49,7 @@ export default async function CustomJerseysPage() {
       <main className="flex-1 w-full space-y-12 sm:space-y-16">
         {/* Interactive Jersey Builder */}
         <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-12">
-          <CustomTeamwearBuilder company={company} fabrics={fabrics} />
+          <CustomTeamwearBuilder company={company} fabrics={fabrics} initialFabric={initialFabric} />
         </div>
 
         {/* Build Your Team Identity Bottom CTA Section */}

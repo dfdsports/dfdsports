@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import { deleteImageFromCloudinary } from '@/lib/media';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminConfirmModal } from '@/components/admin/AdminConfirmModal';
 import { ProductForm } from '@/components/admin/ProductForm';
+import { AdminHeader } from '@/components/admin/AdminHeader';
 
 interface ProductsListProps {
   products: Product[];
@@ -33,6 +34,12 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
     mode: 'create',
     product: null,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('action=new')) {
+      setModalState({ open: true, mode: 'create', product: null });
+    }
+  }, []);
 
   const handleToggle = async (product: Product, field: 'is_active' | 'is_featured') => {
     setError('');
@@ -89,42 +96,43 @@ export function ProductsList({ products, categories = [], brands = [] }: Product
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">Products Catalog</h1>
-          <p className="text-sm text-slate-600 mt-0.5">{products.length} total products in database</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setModalState({ open: true, mode: 'create', product: null })}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Product</span>
-        </button>
-      </div>
+      {/* Common Reusable Admin Header with Shadow */}
+      <AdminHeader
+        title="Products Catalog"
+        description={`${products.length} total products in database`}
+        actions={
+          <button
+            type="button"
+            onClick={() => setModalState({ open: true, mode: 'create', product: null })}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add New Product</span>
+          </button>
+        }
+      />
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-800 text-sm shadow-xs">
+        <div className="p-4 rounded-xl bg-rose-50 flex items-center gap-3 text-rose-800 text-sm shadow-xs border-0">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" /> {error}
         </div>
       )}
 
       {products.length === 0 ? (
-        <div className="rounded-2xl bg-white border border-slate-200 p-10 sm:p-16 text-center shadow-sm">
-          <Tag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
+        <div className="rounded-xl bg-white p-10 sm:p-16 text-center shadow-sm border-0">
+          <Tag className="w-14 h-14 text-black/20 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-black mb-2">No Products Yet</h3>
-          <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
+          <p className="text-sm text-black/60 mb-6 max-w-sm mx-auto">Add your first product to display on the storefront and allow customer WhatsApp orders.</p>
           <button
             type="button"
             onClick={() => setModalState({ open: true, mode: 'create', product: null })}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-sm cursor-pointer hover:bg-amber-600 transition-colors w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm shadow-sm cursor-pointer hover:bg-red-700 transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" /> Add First Product
           </button>
         </div>
       ) : (
-        <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+        <div className="rounded-xl bg-white shadow-sm overflow-hidden border-0">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-sm min-w-[540px]">
               <thead>

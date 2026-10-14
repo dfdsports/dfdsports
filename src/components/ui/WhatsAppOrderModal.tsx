@@ -291,7 +291,7 @@ export function WhatsAppOrderModal({
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-          <div className="relative z-10 w-full max-w-md bg-[#0E121B] border border-white/15 rounded-none shadow-2xl overflow-hidden max-h-[90vh] flex flex-col text-white">
+          <div className="relative z-10 w-full max-w-md bg-[#0E121B] rounded-none shadow-2xl overflow-hidden max-h-[90vh] flex flex-col text-white">
 
             {/* Header */}
             <div className="bg-[#121622] text-white px-6 pt-6 pb-5 shrink-0 border-b border-white/10">
@@ -444,8 +444,8 @@ export function WhatsAppOrderModal({
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function inputCls(hasError?: boolean) {
   return cn(
-    'w-full bg-white/5 rounded-none pl-9 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 border border-white/15 focus:outline-none focus:border-[#FF001E] focus:ring-1 focus:ring-[#FF001E] transition-colors',
-    hasError && 'border-red-500 focus:border-red-500 focus:ring-red-500'
+    'w-full bg-white/[0.07] hover:bg-white/[0.09] focus:bg-white/[0.11] rounded-none pl-9 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 border-0 border-none outline-none focus:outline-none focus:ring-0 transition-colors',
+    hasError && 'ring-1 ring-red-500 bg-red-500/10'
   );
 }
 
