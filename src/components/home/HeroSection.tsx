@@ -48,7 +48,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#0A0C12] h-[78vh] min-h-[480px] sm:h-[82vh] lg:h-[calc(100vh-73px)] lg:min-h-[520px]"
+      className="relative w-full overflow-hidden bg-[#0A0C12] h-[78vh] min-h-[480px] sm:h-[82vh] lg:h-screen lg:min-h-[100dvh]"
     >
       <style>{`
 @keyframes heroSlideIn {
